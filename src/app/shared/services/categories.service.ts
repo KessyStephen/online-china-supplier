@@ -80,10 +80,8 @@ export class CategoryService {
   }
 
 
-  getSubCategories(id: string): Observable<Category[]> {
-    let params = new HttpParams()
-      .append('parentId', `${id}`);
-
+  getSubCategories(id?: string): Observable<Category[]> {
+    let params = new HttpParams().append("parentId", `${id}`);
     return this.http.get(`${environment.url}/categories`, { params }).pipe(map((result: any) => {
       if (result.status === 200 && result.success) {
         return result.data;
@@ -93,5 +91,19 @@ export class CategoryService {
 
     }));
   }
+
+  getAllSubcategories(): Observable<Category[]> {
+    let params = new HttpParams()
+                      .append("all", `${true}`)
+    return this.http.get(`${environment.url}/categories`, { params }).pipe(map((result: any) => {
+      if (result.status === 200 && result.success) {
+        return result.data;
+      }
+      this.notificationService.error('Error', result.message);
+      return [];
+
+    }));
+  }
+
 
 }

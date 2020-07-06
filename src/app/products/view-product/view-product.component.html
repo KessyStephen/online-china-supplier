@@ -4,15 +4,15 @@
             <!-- <nz-avatar nzShape="square" [nzSize]="70" nzSrc="assets/images/others/thumb-16.jpg"></nz-avatar> -->
             <div class="m-l-15">
                 <h4 class="m-b-0"></h4>
-                <p class="text-muted m-b-0" *ngIf="!isLoading">Supplier: {{product.supplierId}}</p>
+                <p class="text-muted m-b-0" *ngIf="!isLoading && !isCreate">Supplier: {{product.supplierId}}</p>
             </div>
         </div>
         <div class="m-b-15">
-            <button nz-button nzType="primary" *ngIf="!isEdit" (click)="edit()">
+            <button nz-button nzType="primary" [disabled]="productEditForm.invalid && productImages.length <= 0" *ngIf="!isEdit" (click)="save()">
                 <i nz-icon nzType="edit" theme="outline"></i>
                 <span>Save</span>
             </button>
-            <button nz-button nzType="default" *ngIf="isEdit" (click)="save()">
+            <button nz-button nzType="default" *ngIf="isEdit" (click)="edit()">
                 <i nz-icon nzType="save" theme="outline"></i>
                 <span>Update</span>
             </button>
@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<form nz-form nzLayout="vertical" [formGroup]="productEditForm" *ngIf="!isCreate && !isLoading">
+<form nz-form nzLayout="vertical" [formGroup]="productEditForm" *ngIf="!isLoading">
     <nz-tabset class="page-header-tab">
         <nz-tab nzTitle="Basic Info">
             <nz-card>

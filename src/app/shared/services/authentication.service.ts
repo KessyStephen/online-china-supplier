@@ -49,8 +49,8 @@ export class AuthenticationService {
     }
 
 
-     // Register Supplier
-     register(data: {}) {
+    // Register Supplier
+    register(data: {}) {
         return this.http.post<any>(environment.url + '/register', data).pipe(map(result => {
             return result;
         }));
@@ -59,6 +59,13 @@ export class AuthenticationService {
     // Reset password Supplier
     resetPassword(data: {}) {
         return this.http.post<any>(environment.url + '/reset_password', data).pipe(map(result => {
+            return result;
+        }));
+    }
+
+    // Get Country codes
+    getCountryCodes() {
+        return this.http.get<any>(environment.url + '/country_codes').pipe(map(result => {
             return result;
         }));
     }

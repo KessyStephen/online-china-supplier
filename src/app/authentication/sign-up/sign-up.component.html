@@ -91,9 +91,9 @@
                                         <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
                                             <ng-template #addOnBeforeTemplate>
                                                 <nz-select [(ngModel)]="selectedCountry" formControlName="countryCode"
-                                                    class="phone-select">
-                                                    <nz-option *ngFor="let country of countries"
-                                                        [nzValue]="country.code" [nzLabel]="country.prefix"></nz-option>
+                                                    class="phone-select" style="width: 80px;" >
+                                                    <nz-option *ngFor="let country of countryCodes"
+                                                        [nzValue]="country.phonePrefix" [nzLabel]="country.phonePrefix"></nz-option>
                                                 </nz-select>
                                             </ng-template>
                                             <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />

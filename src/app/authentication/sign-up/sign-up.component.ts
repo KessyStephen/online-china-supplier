@@ -24,9 +24,10 @@ export class SignUp3Component {
     isResending: boolean = false;
     isVerifyingCode: boolean = false;
     isRegistering: boolean = false;
+    countryCodes: any[] = [];
 
     countries: any[] = [{ prefix: '+255', country: 'Tanzania', code: 'TZ' }, { prefix: '+254', country: 'Kenya', code: 'KE' }];
-    selectedCountry: any = this.countries[0].code;
+    selectedCountry: any = this.countries[0].prefix;
 
     submitForm(): void {
         switch (this.currentStep) {
@@ -126,6 +127,9 @@ export class SignUp3Component {
     }
 
     ngOnInit(): void {
+
+        this.getCountryCodes();
+
         this.emailForm = this.fb.group({
             email: [null, [Validators.required, Validators.email]],
         });
@@ -133,7 +137,6 @@ export class SignUp3Component {
         this.verificationCodeForm = this.fb.group({
             verificationCode: [null, [Validators.required, Validators.minLength(6)]],
         });
-
         this.signUpForm = this.fb.group({
             name: [null, [Validators.required]],
             countryCode: [],
@@ -148,5 +151,11 @@ export class SignUp3Component {
 
     nextStep(): void {
         this.currentStep++;
+    }
+
+    getCountryCodes() {
+        this.authService.getCountryCodes().subscribe((response) => {
+            this.countryCodes = response.data;
+        });
     }
 }    

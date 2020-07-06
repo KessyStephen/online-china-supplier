@@ -83,15 +83,16 @@ export class ListProductsComponent implements OnInit {
     }
 
     getCategories() {
-        this.categoryService.listCategories().subscribe((response: any) => {
-            if (response.success) {
-                this.categoryList = response.data;
-            }
-        })
+        this.categoryService.getAllSubcategories().subscribe((response: any) => {
+            response.forEach(element => {
+                if (element.parentId)
+                    this.categoryList.push(element);
+            });;
+        });
     }
 
     getCategoryName(id: string) {
-        this.categoryList.find((category) => category._id === id);
+       return this.categoryList.find((category) => category._id === id).translations.en.name;
     }
 
 

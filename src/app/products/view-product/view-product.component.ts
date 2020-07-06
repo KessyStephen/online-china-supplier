@@ -84,6 +84,7 @@ export class ViewProductComponent implements OnInit {
             if (Object.keys(params).length == 0) {
                 this.isLoading = false
                 this.isCreate = true;
+                this.initializeForm();
             } else {
                 this.getProduct(params.id)
                 this.isEdit = true;
