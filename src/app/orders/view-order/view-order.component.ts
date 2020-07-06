@@ -1,161 +1,73 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { OrderService } from 'src/app/shared/services/order.service';
+import { Order } from 'src/app/shared/interfaces/order.interface';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-view-order',
-  templateUrl: './view-order.component.html',
-  styleUrls: ['./view-order.component.css']
+    selector: 'app-view-order',
+    templateUrl: './view-order.component.html',
+    styleUrls: ['./view-order.component.css']
 })
 export class ViewOrderComponent implements OnInit {
 
-  constructor() { }
+    constructor(private activatedRoute: ActivatedRoute, private orderService: OrderService, private notificationService: NzNotificationService) { }
 
-  ngOnInit(): void {
-  }
-  checked: boolean = false; 
+    trackingForm: FormGroup;
 
-  memberList = [
-      {
-          name: 'Erin Gonzales',
-          avatar: 'assets/images/avatars/thumb-1.jpg'
-      },
-      {
-          name: 'Darryl Day',
-          avatar: 'assets/images/avatars/thumb-2.jpg'
-      },
-      {
-          name: 'Marshall Nichols',
-          avatar: 'assets/images/avatars/thumb-3.jpg'
-      },
-      {
-          name: 'Virgil Gonzales',
-          avatar: 'assets/images/avatars/thumb-4.jpg'
-      },
-      {
-          name: 'Riley Newman',
-          avatar: 'assets/images/avatars/thumb-6.jpg'
-      },
-      {
-          name: 'Pamela Wanda',
-          avatar: 'assets/images/avatars/thumb-7.jpg'
-      }
-  ]
+    ngOnInit(): void {
+        this.getOrderStatusList();
+        this.activatedRoute.params.subscribe(params => {
+            this.getOrderInformation(params.id);
+        });
 
-  taskList = [
-      {
-          task: "Irish skinny, grinder affogato",
-          checked: false
-      },
-      {
-          task: "Let us wax poetic about the beauty of the cheeseburger.",
-          checked: false
-      },
-      {
-          task: "I'm gonna build me an airport",
-          checked: false
-      },
-      {
-          task: "Efficiently unleash cross-media information",
-          checked: true
-      },
-      {
-          task: "Here's the story of a man named Brady",
-          checked: true
-      },
-      {
-          task: "Bugger bag egg's old boy willy jolly",
-          checked: true
-      },
-      {
-          task: "Hand-crafted exclusive finest tote bag Ettinger",
-          checked: true
-      },
-      {
-          task: "I'll be sure to note that in my log",
-          checked: true
-      }
-  ]
+        this.trackingForm = new FormGroup({
+            trackingId: new FormControl(this.order ? this.order.trackingId : '', [Validators.required])
+        })
+    }
+    checked: boolean = false;
+    order: Order;
+    loading: boolean = false;
+    supplierShowLoading: boolean = false;
+    orderStatusList: string[] = [];
 
-  fileList = [
-      {
-          name: "Mockup.zip",
-          size: "7 MB",
-          type: "zip"        
-      },
-      {
-          name: "Guideline.doc",
-          size: "128 KB",
-          type: "doc"        
-      },
-      {
-          name: "Logo.png",
-          size: "128 KB",
-          type: "image"        
-      }
-  ];
+    getOrderInformation(id: string) {
+        this.loading = true;
+        this.orderService.getOrder(id).subscribe((order: Order) => {
+            this.loading = false;
+            this.order = order;
+            this.trackingForm.setValue({ trackingId: order.trackingId })
+        });
+    }
 
-  activityList = [
-      {
-          name: "Virgil Gonzales",
-          avatar: "assets/images/avatars/thumb-4.jpg",
-          date: "24/01/2020 10:44 PM",
-          action: "Complete task",
-          target: "Pending",
-          actionType: "completed"
-      },
-      {
-          name: "Lilian Stone",
-          avatar: "assets/images/avatars/thumb-8.jpg",
-          date: "24/01/2020 8:34 PM",
-          action: "Attached file",
-          target: "Invoice Paid",
-          actionType: "completed"
-      },
-      {
-          name: "Erin Gonzales",
-          avatar: "assets/images/avatars/thumb-1.jpg",
-          date: "25/01/2020 8:34 PM",
-          action: "Commented",
-          target: "In Progress",
-          actionType: "loading"
-      }
-  ]
+    submitForm() {
+        this.updateOrder(this.trackingForm.value);
+    }
 
-  commentList = [
-      {
-          name: 'Lillian Stone',
-          img: 'assets/images/avatars/thumb-8.jpg',
-          date: '28th Jul 2018',
-          review: 'The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.'
-      },
-      {
-          name: 'Victor Terry',
-          img: 'assets/images/avatars/thumb-9.jpg',
-          date: '28th Jul 2018',
-          review: 'The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.'
-      },
-      {
-          name: 'Wilma Young',
-          img: 'assets/images/avatars/thumb-10.jpg',
-          date: '28th Jul 2018',
-          review: 'The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.'
-      }
-  ]
+    changeShowToSupplierFlag() {
+        if (!this.supplierShowLoading) {
+            this.supplierShowLoading = true;
+            this.order.showToSupplier = !this.order.showToSupplier;
+            this.updateOrder({ showToSupplier: this.order.showToSupplier });
+        }
+    } 
+    changeOrderStatus(status) {
+        this.updateOrder({ statusCode: status });
+    }
 
-  itemData = [
-    {
-        name   : 'Asus Zenfone 3 Zoom ZE553KL Dual Sim (4GB, 64GB)',
-        quantity   : 2,
-        price: 450
-    },
-    {
-        name   : 'HP Pavilion 15-au103TX 15.6˝ Laptop Red',
-        quantity   : 1,
-        price: 550
-    },
-    {
-        name   : 'Canon EOS 77D',
-        quantity   : 1,
-        price: 875
-    },
-];
+    updateOrder(data) {
+        this.orderService.updateOrder(this.order.id, data).subscribe((result) => {
+            this.supplierShowLoading = false;
+            if (result)
+                this.notificationService.success(`Order status: ${status}`, `Successfully updated Order # ${this.order.id}`);
+        });
+    }
+
+    getOrderStatusList() {
+        this.orderService.getOrderStatusList().subscribe((statuses) => {
+            this.orderStatusList = statuses;
+        })
+    }
+
 }

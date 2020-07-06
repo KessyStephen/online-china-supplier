@@ -17,6 +17,9 @@ import { FullLayoutComponent } from './layouts/full-layout/full-layout.component
 
 import { NgChartjsModule } from 'ng-chartjs';
 import { ThemeConstantService } from './shared/services/theme-constant.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from './shared/interceptor/token.interceptor';
+import { ErrorInterceptor } from './shared/interceptor/error.interceptor';
 
 registerLocaleData(en);
 
@@ -40,7 +43,9 @@ registerLocaleData(en);
             provide: NZ_I18N,
             useValue: en_US, 
         },
-        ThemeConstantService
+        ThemeConstantService,
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     ],
     bootstrap: [AppComponent]
 })

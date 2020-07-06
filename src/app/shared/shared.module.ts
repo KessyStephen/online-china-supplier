@@ -9,6 +9,7 @@ import { ThemeConstantService } from './services/theme-constant.service';
 import { SearchPipe } from './pipes/search.pipe';
 import { AuthenticationService } from './services/authentication.service';
 import { NzNotificationModule } from 'ng-zorro-antd';
+import { AuthGuardService } from './services/auth-guard.service';
 
 @NgModule({
     exports: [
@@ -32,7 +33,8 @@ import { NzNotificationModule } from 'ng-zorro-antd';
     ],
     providers: [
         ThemeConstantService,
-        AuthenticationService
+        AuthenticationService,
+        AuthGuardService
     ]
 })
 

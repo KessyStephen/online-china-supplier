@@ -14,10 +14,15 @@ import {
   NzIconModule,
   NzTimelineModule,
   NzTagModule,
+  NzSkeletonModule,
+  NzFormModule,
+  NzSwitchModule,
 } from 'ng-zorro-antd';
 import { ThemeConstantService } from '../shared/services/theme-constant.service';
 import { AppsService } from '../shared/services/apps.service';
 import { TableService } from '../shared/services/table.service';
+import { SharedModule } from '../shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ViewOrderComponent, ListOrdersComponent],
@@ -33,7 +38,13 @@ import { TableService } from '../shared/services/table.service';
     NzTableModule,
     CommonModule,
     NzIconModule,
+    NzInputModule,
+    NzFormModule,
+    NzSkeletonModule,
     OrderRoutingModule,
+    ReactiveFormsModule,
+    NzSwitchModule,
+    SharedModule,
   ],
   providers: [ThemeConstantService, AppsService, TableService],
 })

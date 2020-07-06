@@ -28,7 +28,7 @@ export class Login3Component {
             if (result.success) {
                 this.notification.success(`Hi ${result.name}`, 'Welcome Back!');
                 // Redirect to dashboard Screen
-                this.router.navigate(['/dashboard']);
+                this.router.navigate(['dashboard']);
             } else {
                 this.notification.error('Error', result.message);
             }

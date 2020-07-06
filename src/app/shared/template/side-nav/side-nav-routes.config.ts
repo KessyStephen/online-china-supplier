@@ -23,5 +23,5 @@ export const ROUTES: SideNavInterface[] = [
     iconTheme: 'outline',
     icon: 'mobile',
     submenu: [],
-  },
+  }
 ];

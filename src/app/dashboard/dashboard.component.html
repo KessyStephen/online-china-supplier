@@ -29,6 +29,7 @@
       </div>
     </nz-card>
   </div>
+ 
 </div>
 
 <div class="row">
@@ -37,7 +38,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <h5>Recent Orders</h5>
         <div>
-          <a nz-button nzType="default" nzSize="small">View All</a>
+          <a nz-button nzType="default" nzSize="small" routerLink="/orders">View All</a>
         </div>
       </div>
       <div class="m-t-30">
@@ -45,11 +46,11 @@
           #ordersListTable
           [nzData]="ordersList"
           [nzShowPagination]="false"
+          [nzLoading]="loading"
           class="no-border-last"
         >
           <thead>
             <tr>
-              <th>ID</th>
               <th>Customer</th>
               <th>Supplier</th>
               <th>Date</th>
@@ -59,15 +60,14 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of ordersListTable.data">
-              <td>#{{ item.id }}</td>
               <td>
-                <h6 class="m-b-0">{{ item.name }}</h6>
+                <h6 class="m-b-0">{{ item.user.name }}</h6>
               </td>
               <td>
-                <h6 class="m-b-0">{{ item.name }}</h6>
+                <h6 class="m-b-0">{{ item.supplier.name }}</h6>
               </td>
-              <td>{{ item.date }}</td>
-              <td>${{ item.amount | number: "3.2-5" }}</td>
+              <td>{{ item.createdAt | date:'fullDate' }}</td>
+              <td>{{ item.total | currency: item.totalCurrency }}</td>
               <td>
                 <nz-badge
                   *ngIf="item.status == 'approved'"

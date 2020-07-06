@@ -1,149 +1,112 @@
 import { Component, OnInit } from '@angular/core';
 import { TableService } from 'src/app/shared/services/table.service';
-
-interface DataItem {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  quantity: number;
-  status:  string;
-}
+import { ProductsService } from 'src/app/shared/services/products.service';
+import { Product } from 'src/app/shared/interfaces/product.interface';
+import { NzTableQueryParams } from 'ng-zorro-antd';
+import { CategoryService } from 'src/app/shared/services/categories.service';
 
 @Component({
-  selector: 'app-list-products',
-  templateUrl: './list-products.component.html',
-  styleUrls: ['./list-products.component.css']
+    selector: 'app-list-products',
+    templateUrl: './list-products.component.html',
+    styleUrls: ['./list-products.component.css']
 })
 export class ListProductsComponent implements OnInit {
 
-  constructor(private tableSvc : TableService) {
-    this.displayData = this.productsList
-}
+    constructor(private tableSvc: TableService, private productService: ProductsService, private categoryService: CategoryService) {
+        this.displayData = this.productsList
+    }
 
-  ngOnInit(): void {
-  }
-  selectedCategory: string;
-  selectedStatus: string;
-  searchInput: any;
-  displayData = [];
+    ngOnInit(): void {
+        this.loadDataFromServer(this.page, this.perPage, "createdAt:desc");
+        this.getCategories();
+    }
+    selectedCategory: string;
+    selectedStatus: string;
+    searchInput: any;
+    displayData = [];
+    loading: boolean = false;
+    page: number = 1;
+    perPage: number = 10;
+    total: number = 1;
 
-  orderColumn = [
-      {
-          title: 'ID',
-          compare: (a: DataItem, b: DataItem) => a.id - b.id,
-      },
-      {
-          title: 'Product',
-          compare: (a: DataItem, b: DataItem) => a.name.localeCompare(b.name)
-      },
-      {
-          title: 'Category',
-          compare: (a: DataItem, b: DataItem) => a.category.localeCompare(b.category)
-      },
-      {
-          title: 'Price',
-          compare: (a: DataItem, b: DataItem) => a.price - b.price,
-      },
-      {
-          title: 'Stock',
-          compare: (a: DataItem, b: DataItem) => a.quantity - b.quantity,
-      },
-      {
-          title: 'Status',
-          compare: (a: DataItem, b: DataItem) => a.name.localeCompare(b.name)
-      },
-      {
-          title: ''
-      }
-  ]
+    orderColumn = [
+        {
+            title: 'Created Date',
+            key: 'createdAt',
+            compare: (a: Product, b: Product) => a.createdAt.localeCompare(b.createdAt)
+        },
+        {
+            title: 'Product',
+            key: 'translations',
+        },
+        {
+            title: 'Category',
+            key: 'categoryId',
+        },
+        {
+            title: 'Price',
+            key: 'price',
+            compare: (a: Product, b: Product) => a.price - b.price,
+        },
+        {
+            title: 'Status',
 
-  productsList = [
-      {
-          id: 31,
-          name: 'Gray Sofa',
-          avatar: 'assets/images/others/thumb-9.jpg',
-          category: 'Home Decoration',
-          price: 912,
-          quantity: 23,
-          status: 'in stock',
-          checked : false
-      },
-      {
-          id: 32,
-          name: 'Beat Headphone',
-          avatar: 'assets/images/others/thumb-10.jpg',
-          category: 'Eletronic',
-          price: 137,
-          quantity: 56,
-          status: 'in stock',
-          checked : false
-      },
-      {
-          id: 33,
-          name: 'Wooden Rhino',
-          avatar: 'assets/images/others/thumb-11.jpg',
-          category: 'Home Decoration',
-          price: 912,
-          quantity: 12,
-          status: 'in stock',
-          checked : false
-      },
-      {
-          id: 34,
-          name: 'Red Chair',
-          avatar: 'assets/images/others/thumb-12.jpg',
-          category: 'Home Decoration',
-          price: 128,
-          quantity: 0,
-          status: 'out of stock',
-          checked : false
-      },
-      {
-          id: 35,
-          name: 'Wristband',
-          avatar: 'assets/images/others/thumb-13.jpg',
-          category: 'Eletronic',
-          price: 776,
-          quantity: 0,
-          status: 'out of stock',
-          checked : false
-      },
-      {
-          id: 36,
-          name: 'Charging Cable',
-          avatar: 'assets/images/others/thumb-14.jpg',
-          category: 'Eletronic',
-          price: 119,
-          quantity: 37,
-          status: 'in stock',
-          checked : false
-      },
-      {
-          id: 37,
-          name: 'Three Legs',
-          avatar: 'assets/images/others/thumb-15.jpg',
-          category: 'Home Decoration',
-          price: 199,
-          quantity: 17,
-          status: 'in stock',
-          checked : false
-      },
-  ]  
-  
+        },
+        {
+            title: ''
+        }
+    ]
 
-  search(): void {
-      const data = this.productsList
-      this.displayData = this.tableSvc.search(this.searchInput, data )
-  }
+    productsList = [];
+    categoryList: any[] = [];
 
-  categoryChange(value: string): void {
-      const data = this.productsList
-      value !== 'All'? this.displayData = data.filter(elm => elm.category === value) : this.displayData = data
-  }
+    onQueryParamsChange(params: NzTableQueryParams) {
+        const { pageSize, pageIndex, sort, filter } = params;
+        const currentSort = sort.find(item => item.value !== null);
+        let sortString = '';
+        if (currentSort)
+            sortString = `${currentSort.key}:${currentSort.value === 'ascend' ? 'asc' : 'desc'}`;
+        this.loadDataFromServer(pageIndex, pageSize, sortString);
+    }
 
-  statusChange(value: string): void {
-      const data = this.productsList
-      value !== 'All'? this.displayData = data.filter(elm => elm.status === value) : this.displayData = data
-  }
+    loadDataFromServer(
+        pageIndex: number,
+        pageSize: number,
+        sort?: string
+    ): void {
+        this.loading = true;
+        this.productService.listProducts(pageIndex, pageSize, sort).subscribe((result: { total: number, results: Product[] }) => {
+            this.loading = false;
+            this.productsList = result.results;
+            this.total = result.total;
+        });
+    }
+
+    getCategories() {
+        this.categoryService.listCategories().subscribe((response: any) => {
+            if (response.success) {
+                this.categoryList = response.data;
+            }
+        })
+    }
+
+    getCategoryName(id: string) {
+        this.categoryList.find((category) => category._id === id);
+    }
+
+
+    search(): void {
+        const data = this.productsList
+        this.displayData = this.tableSvc.search(this.searchInput, data)
+    }
+
+    categoryChange(value: string): void {
+        const data = this.productsList
+        value !== 'All' ? this.displayData = data.filter(elm => elm.category === value) : this.displayData = data
+    }
+
+    statusChange(value: string): void {
+        const data = this.productsList
+        value !== 'All' ? this.displayData = data.filter(elm => elm.status === value) : this.displayData = data
+    }
 }    
