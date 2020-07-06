@@ -44,7 +44,6 @@ export class SignUp3Component {
 
             case 2:
                 if (this.signUpForm.valid) {
-                    console.log(this.signUpForm.value);
                     this.submitUserDetails(this.signUpForm.value);
                 }
                 break;

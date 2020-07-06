@@ -48,6 +48,14 @@ export class AuthenticationService {
         }));
     }
 
+
+     // Register Supplier
+     register(data: {}) {
+        return this.http.post<any>(environment.url + '/register', data).pipe(map(result => {
+            return result;
+        }));
+    }
+
     // Reset password Supplier
     resetPassword(data: {}) {
         return this.http.post<any>(environment.url + '/reset_password', data).pipe(map(result => {
