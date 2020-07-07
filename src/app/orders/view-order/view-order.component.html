@@ -6,47 +6,8 @@
           <div class="media align-items-center">
             <nz-avatar nzShape="circle" nzSrc="assets/images/logo/online-china-small.png"></nz-avatar>
             <div class="m-l-10">
-              <h4 class="m-b-0">Order #1234</h4>
+              <h4 class="m-b-0">Order #{{order.referenceId}}</h4>
             </div>
-          </div>
-          <div style="margin-top: 30px;">
-            <nz-form-item>
-              <nz-form-control>
-                <nz-input-group>
-                  <nz-form-label nzFor="category" nzRequired>Show To Supplier</nz-form-label>
-                  <nz-switch [(ngModel)]="order.showToSupplier" [nzControl]="true" (click)="changeShowToSupplierFlag()"
-                    [nzLoading]="supplierShowLoading"></nz-switch>
-                </nz-input-group>
-              </nz-form-control>
-            </nz-form-item>
-
-          </div>
-        </div>
-      </nz-card>
-
-      <nz-card>
-        <div class="d-flex justify-content-between">
-          <div class="media align-items-center">
-            <form nz-form [nzLayout]="'inline'" [formGroup]="trackingForm" (ngSubmit)="submitForm()">
-              <nz-form-item>
-                <nz-form-control nzErrorTip="Please input your Tracking Number!">
-                  <nz-input-group nzPrefixIcon="aim">
-                    <input formControlName="trackingId" nz-input placeholder="Tracking Number" />
-                  </nz-input-group>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-control>
-                  <button nz-button nzType="primary" [disabled]="!trackingForm.valid">Update</button>
-                </nz-form-control>
-              </nz-form-item>
-            </form>
-          </div>
-          <div class="media align-items-center">
-            <nz-select [(ngModel)]="order.status" (ngModelChange)="changeOrderStatus($event)" nzLoading style="width: 200px;">
-              <nz-option *ngFor="let status of orderStatusList" [nzValue]="status.code" [nzLabel]="status.name">
-              </nz-option>
-            </nz-select>
           </div>
         </div>
       </nz-card>

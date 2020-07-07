@@ -4,6 +4,7 @@ export interface Order {
     id: string;
     status: string;
     orderNo: number;
+    referenceId: string;
     supplier: {
         _id: string;
         name: string;

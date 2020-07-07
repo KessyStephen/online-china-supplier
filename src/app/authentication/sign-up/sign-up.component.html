@@ -93,7 +93,7 @@
                                                 <nz-select [(ngModel)]="selectedCountry" formControlName="countryCode"
                                                     class="phone-select" style="width: 80px;" >
                                                     <nz-option *ngFor="let country of countryCodes"
-                                                        [nzValue]="country.phonePrefix" [nzLabel]="country.phonePrefix"></nz-option>
+                                                        [nzValue]="country.code2" [nzLabel]="country.phonePrefix"></nz-option>
                                                 </nz-select>
                                             </ng-template>
                                             <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />

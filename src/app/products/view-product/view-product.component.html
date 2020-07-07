@@ -1,11 +1,10 @@
 <div class="page-header has-tab">
     <div class="d-md-flex m-b-15 align-items-center justify-content-between">
         <div class="media align-items-center m-b-15">
-            <!-- <nz-avatar nzShape="square" [nzSize]="70" nzSrc="assets/images/others/thumb-16.jpg"></nz-avatar> -->
+            <nz-avatar nzShape="square" [nzSize]="70" [nzSrc]="product.thumbnail"></nz-avatar>
             <div class="m-l-15">
-                <h4 class="m-b-0"></h4>
-                <p class="text-muted m-b-0" *ngIf="!isLoading && !isCreate">Supplier: {{product.supplierId}}</p>
-            </div>
+                <h4 class="m-b-0">{{product.translations.en.name}}</h4>
+            </div>           
         </div>
         <div class="m-b-15">
             <button nz-button nzType="primary" [disabled]="productEditForm.invalid && productImages.length <= 0" *ngIf="!isEdit" (click)="save()">

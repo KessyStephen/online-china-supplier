@@ -10,6 +10,7 @@ export interface Product {
     thumbnail: string;
     images: any;
     translations: any;
+    supplier: any;
     isApproved: boolean;
     supplierId: string;
     canRequestSample: boolean;

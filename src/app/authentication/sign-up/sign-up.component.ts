@@ -26,8 +26,8 @@ export class SignUp3Component {
     isRegistering: boolean = false;
     countryCodes: any[] = [];
 
-    countries: any[] = [{ prefix: '+255', country: 'Tanzania', code: 'TZ' }, { prefix: '+254', country: 'Kenya', code: 'KE' }];
-    selectedCountry: any = this.countries[0].prefix;
+    countries: any[] = [{ prefix: '+255', country: 'Tanzania', code2: 'TZ' }, { prefix: '+254', country: 'Kenya', code2: 'KE' }];
+    selectedCountry: any = this.countries[0].code2;
 
     submitForm(): void {
         switch (this.currentStep) {
