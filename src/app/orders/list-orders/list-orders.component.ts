@@ -39,9 +39,6 @@ export class ListOrdersComponent implements OnInit {
       title: 'Customer',
     },
     {
-      title: 'Supplier',
-    },
-    {
       title: 'Amount',
       key: 'total',
       compare: (a: Order, b: Order) => a.total - b.total,

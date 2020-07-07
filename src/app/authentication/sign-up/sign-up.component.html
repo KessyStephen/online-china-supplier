@@ -66,7 +66,7 @@
                             </form>
                             <div nz-row>
                                 <div nz-col nzSpan="12" nzOffset="10" *ngIf="!isResending">
-                                    <a class="small" (click)="resendOTP()" >Resend OTP</a>
+                                    <a class="small" (click)="resendOTP()">Resend OTP</a>
                                 </div>
                                 <div nz-col nzSpan="12" nzOffset="11" *ngIf="isResending">
                                     <nz-spin nzSimple *ngIf="isResending"></nz-spin>
@@ -85,19 +85,24 @@
                                     </nz-form-control>
                                 </nz-form-item>
                                 <nz-form-item>
+                                    <nz-form-label nzRequired nzFor="countryCode">Country</nz-form-label>
+                                    <nz-form-control>
+
+                                        <nz-select nzPlaceHolder="Select Country" nzAllowClear
+                                            formControlName="countryCode" nzShowSearch nzServerSearch
+                                            (nzOnSearch)="onSearch($event)" style="width: 100%;">
+                                            <ng-container *ngFor="let country of searchResults">
+                                                <nz-option [nzValue]="country.code2" [nzLabel]="country.country"></nz-option>
+                                            </ng-container>
+                                        </nz-select>
+
+                                    </nz-form-control>
+                                </nz-form-item>
+                                <nz-form-item>
                                     <nz-form-label nzFor="phoneNumber" nzRequired>Phone Number
                                     </nz-form-label>
                                     <nz-form-control nzErrorTip="Please input your phone number!">
-                                        <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
-                                            <ng-template #addOnBeforeTemplate>
-                                                <nz-select [(ngModel)]="selectedCountry" formControlName="countryCode"
-                                                    class="phone-select" style="width: 80px;" >
-                                                    <nz-option *ngFor="let country of countryCodes"
-                                                        [nzValue]="country.code2" [nzLabel]="country.phonePrefix"></nz-option>
-                                                </nz-select>
-                                            </ng-template>
-                                            <input formControlName="phoneNumber" id="'phoneNumber'" nz-input />
-                                        </nz-input-group>
+                                        <input placeholder="Phone Number" formControlName="phoneNumber" id="'phoneNumber'" nz-input />
                                     </nz-form-control>
                                 </nz-form-item>
                                 <nz-form-item>

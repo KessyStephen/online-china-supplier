@@ -43,9 +43,6 @@
                 <td>
                     <h6 class="m-b-0">{{item.user.name}}</h6>
                 </td>
-                <td>
-                    <h6 class="m-b-0">{{item.supplier.name}}</h6>
-                </td>
                 <td>{{item.total | currency: item.totalCurrency}}</td>
                 <td>
                     <nz-badge *ngIf="item.status == 'approved'" nzStatus="success"></nz-badge>

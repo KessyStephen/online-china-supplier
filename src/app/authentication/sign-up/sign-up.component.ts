@@ -25,6 +25,7 @@ export class SignUp3Component {
     isVerifyingCode: boolean = false;
     isRegistering: boolean = false;
     countryCodes: any[] = [];
+    searchResults: any[] = [];
 
     countries: any[] = [{ prefix: '+255', country: 'Tanzania', code2: 'TZ' }, { prefix: '+254', country: 'Kenya', code2: 'KE' }];
     selectedCountry: any = this.countries[0].code2;
@@ -66,6 +67,11 @@ export class SignUp3Component {
                 this.notification.error('Error', result.message);
             }
         });
+    }
+
+    onSearch(value: string): void {
+        if (value)
+            this.searchResults = this.countryCodes.filter((countryCode) => countryCode.country.toLowerCase().includes(value.toLowerCase().trim()))
     }
 
     resendOTP() {
@@ -156,6 +162,7 @@ export class SignUp3Component {
     getCountryCodes() {
         this.authService.getCountryCodes().subscribe((response) => {
             this.countryCodes = response.data;
+            this.searchResults = response.data;
         });
     }
 }    
