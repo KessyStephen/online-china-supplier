@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../shared/services/order.service';
+import { DashboardService } from '../shared/services/dashboard.service';
+import { Statistics } from '../shared/interfaces/stat.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,8 +10,9 @@ import { OrderService } from '../shared/services/order.service';
 export class DashboardComponent implements OnInit {
   ordersList = [];
   loading: boolean = false;
+  stats: Statistics;
 
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService, private dashboardStatics: DashboardService) { }
 
   getRecentOrders() {
     this.loading = true;
@@ -19,7 +22,16 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  getDashboardStats() {
+    this.loading = true;
+    this.dashboardStatics.getStats().subscribe((response) => {
+      this.loading = false;
+      this.stats = response;
+    });
+  }
+
   ngOnInit(): void {
+    this.getDashboardStats();
     this.getRecentOrders();
   }
 }

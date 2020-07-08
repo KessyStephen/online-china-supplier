@@ -41,6 +41,16 @@ export class ProductsService {
     }));
   }
 
+  updateProduct(id: string, product: Product) {
+    return this.http.put(`${environment.url}/products/${id}`, product).pipe(map((result: any) => {
+      if (result.status === 200 && result.success) {
+        return result.success;
+      }
+      this.notificationService.error('Error', result.message);
+      return null;
+    }));
+  }
+
   getProduct(id: string): Observable<Product> {
     return this.http.get(`${environment.url}/products/${id}`).pipe(map((result: any) => {
       if (result.status === 200 && result.success) {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { NzModalService, NzMessageService, UploadFile } from 'ng-zorro-antd';
+import { NzModalService, NzMessageService, UploadFile, NzNotificationService } from 'ng-zorro-antd';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryService } from 'src/app/shared/services/categories.service';
 import { Category } from 'src/app/shared/interfaces/categories.model';
@@ -28,54 +28,17 @@ export class ViewProductComponent implements OnInit {
     product: Product;
     fileList = [];
     isLoading: boolean = false;
+    saveLoading: boolean = false;
 
-    attributeData = [
-        {
-            "required": false,
-            "options": [
-                "Red",
-                "Blue",
-                "Green"
-            ],
-            "_id": "5ef81dfdebab5903a32c8b90",
-            "name": "Color",
-            "type": "string"
-        },
-        {
-            "required": false,
-            "options": [
-                "S",
-                "M",
-                "L",
-                "XL",
-                "XXL",
-                "XXXL",
-                "4XL"
-            ],
-            "_id": "5ef81dfdebab5903a32c8b91",
-            "name": "Size",
-            "type": "string"
-        },
-        {
-            "required": false,
-            "options": [
-                "Fur",
-                "Leather",
-                "Cotton",
-                "Polyester",
-                "Microfiber"
-            ],
-            "_id": "5ef81dfdebab5903a32c8b92",
-            "name": "Material",
-            "type": "string"
-        }
-    ];
+    attributeData: any[] = [];
 
     productData: Product;
 
     constructor(private modalService: NzModalService, private fb: FormBuilder,
         private categoryService: CategoryService, private route: ActivatedRoute,
-        private uploadService: UploadService, private productService: ProductsService) { }
+        private uploadService: UploadService, private productService: ProductsService,
+        private notificationService: NzNotificationService,
+        private router: Router) { }
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -143,8 +106,42 @@ export class ViewProductComponent implements OnInit {
         return attributeGroup;
     }
 
+    onSubcategoryChanged(id) {
+        const sub = this.subCategories.find(sub => sub._id === id);
+        console.log(sub.attributes)
+        if (sub.attributes) {
+            this.attributeData = sub.attributes;
+        }
+    }
+
     edit() {
-        this.isEdit = true;
+        this.saveLoading = true;
+        const id = this.product._id;
+        this.product = this.productEditForm.value;
+
+        this.product.images = this.productImages;
+        const attr = [];
+        Object.keys(this.product.attributes).forEach((key) => {
+            attr.push({
+                name: key,
+                value: this.product.attributes[key]
+            })
+        });
+
+        this.product.attributes = attr;
+        this.product.translations = {
+            en: {
+                name: this.productEditForm.value.productName,
+                description: this.productEditForm.value.description
+            }
+        }
+        delete this.product._id;
+        this.modalService.confirm({
+            nzTitle: 'Update this product?',
+            nzOnOk: () => {
+                this.updateProduct(id, this.product);
+            }
+        });
     }
 
     editClose() {
@@ -152,13 +149,8 @@ export class ViewProductComponent implements OnInit {
     }
 
     save() {
-        console.log(this.productEditForm.value)
-        this.modalService.confirm({
-            nzTitle: '<i>Do you want your changes?</i>',
-            nzOnOk: () => { }
-        });
+        this.saveLoading = true;
         let product: Product = this.productEditForm.value;
-        product.currency = 'USD';
 
         product.images = this.productImages;
         const attr = [];
@@ -183,8 +175,30 @@ export class ViewProductComponent implements OnInit {
 
     createProduct(product: Product) {
         this.productService.createProduct(product).subscribe(result => {
-            console.log(result);
-        })
+            this.saveLoading = false;
+            if (result) {
+                this.notificationService.success("Success", `Successfully created ${product.translations.en.name}`);
+                this.router.navigate(['/products']);
+            }
+        },
+            error => {
+                this.notificationService.error('Error', error.message);
+
+            });
+    }
+
+    updateProduct(id: string, product: Product) {
+        this.productService.updateProduct(id, product).subscribe(result => {
+            this.saveLoading = false;
+            if (result) {
+                this.notificationService.success("Success", `Successfully updated ${product.translations.en.name}`);
+                this.router.navigate(['/products']);
+            }
+        },
+            error => {
+                this.notificationService.error('Error', error.message);
+
+            });
     }
 
     handlePreview = (file: UploadFile) => {

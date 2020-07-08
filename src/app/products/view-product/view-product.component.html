@@ -7,12 +7,12 @@
             </div>           
         </div>
         <div class="m-b-15">
-            <button nz-button nzType="primary" [disabled]="productEditForm.invalid && productImages.length <= 0" *ngIf="!isEdit" (click)="save()">
-                <i nz-icon nzType="edit" theme="outline"></i>
+            <button [nzLoading]="saveLoading" nz-button nzType="primary" [disabled]="productEditForm.invalid && productImages.length == 0" *ngIf="!isEdit" (click)="save()">
+                <i nz-icon nzType="save" theme="outline"></i>
                 <span>Save</span>
             </button>
             <button nz-button nzType="default" *ngIf="isEdit" (click)="edit()">
-                <i nz-icon nzType="save" theme="outline"></i>
+                <i nz-icon nzType="edit" theme="outline"></i>
                 <span>Update</span>
             </button>
         </div>
@@ -38,8 +38,8 @@
                     <nz-form-item class="col-md-6">
                         <nz-form-label nzFor="category" nzRequired>Sub Category</nz-form-label>
                         <nz-form-control nzErrorTip="Category can not be empty">
-                            <nz-select formControlName="categoryId" class="w-100">
-                                <nz-option *ngFor='let category of subCategories' [nzValue]='category._id'
+                            <nz-select formControlName="categoryId" class="w-100" (ngModelChange)="onSubcategoryChanged($event)">
+                                <nz-option *ngFor='let category of subCategories' [nzValue]='category._id' 
                                     [nzLabel]='category.translations.en.name'></nz-option>
                             </nz-select>
                         </nz-form-control>
@@ -61,7 +61,7 @@
 
             </nz-card>
         </nz-tab>
-        <nz-tab nzTitle="Option Info">
+        <nz-tab nzTitle="Option Info" *ngIf="attributeData.length > 0">
             <nz-card>
                 <div [formGroup]='attributes'>
                     <div *ngFor="let attribute of attributeData; let i = index;">
@@ -105,14 +105,14 @@
                 </nz-form-item>
 
                 <nz-form-item>
-                    <nz-form-label nzFor="sku" nzRequired>Sku</nz-form-label>
+                    <nz-form-label nzFor="sku" nzRequired>SKU</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <input nz-input formControlName="sku" type="text">
                     </nz-form-control>
                 </nz-form-item>
 
                 <nz-form-item>
-                    <nz-form-label nzFor="quality" nzRequired>Qualtiy</nz-form-label>
+                    <nz-form-label nzFor="quality" nzRequired>Quality</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <input nz-input formControlName="quality" type="text">
                     </nz-form-control>

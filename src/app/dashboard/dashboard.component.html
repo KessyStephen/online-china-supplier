@@ -1,35 +1,27 @@
 <div class="row">
   <div class="col-md-6 col-lg-6">
     <nz-card>
-      <div class="media align-items-center">
-        <nz-avatar
-          [nzSize]="50"
-          nzIcon="appstore"
-          class="ant-avatar-cyan"
-        ></nz-avatar>
+      <div class="media align-items-center" *ngIf="!loading">
+        <nz-avatar [nzSize]="50" nzIcon="appstore" class="ant-avatar-cyan"></nz-avatar>
         <div class="m-l-15">
-          <h2 class="m-b-0">0</h2>
+          <h2 class="m-b-0">{{stats.productsCount}}</h2>
           <p class="m-b-0 text-muted">Products</p>
         </div>
       </div>
     </nz-card>
   </div>
-  <div class="col-md-6 col-lg-6">
+  <div class="col-md-6 col-lg-6" *ngIf="!loading">
     <nz-card>
       <div class="media align-items-center">
-        <nz-avatar
-          [nzSize]="50"
-          nzIcon="profile"
-          class="ant-avatar-gold"
-        ></nz-avatar>
+        <nz-avatar [nzSize]="50" nzIcon="profile" class="ant-avatar-gold"></nz-avatar>
         <div class="m-l-15">
-          <h2 class="m-b-0">0</h2>
+          <h2 class="m-b-0">{{stats.ordersCount}}</h2>
           <p class="m-b-0 text-muted">Orders</p>
         </div>
       </div>
     </nz-card>
   </div>
- 
+
 </div>
 
 <div class="row">
@@ -42,13 +34,8 @@
         </div>
       </div>
       <div class="m-t-30">
-        <nz-table
-          #ordersListTable
-          [nzData]="ordersList"
-          [nzShowPagination]="false"
-          [nzLoading]="loading"
-          class="no-border-last"
-        >
+        <nz-table #ordersListTable [nzData]="ordersList" [nzShowPagination]="false" [nzLoading]="loading"
+          class="no-border-last">
           <thead>
             <tr>
               <th>Customer</th>
@@ -65,18 +52,9 @@
               <td>{{ item.createdAt | date:'fullDate' }}</td>
               <td>{{ item.total | currency: item.totalCurrency }}</td>
               <td>
-                <nz-badge
-                  *ngIf="item.status == 'approved'"
-                  nzStatus="success"
-                ></nz-badge>
-                <nz-badge
-                  *ngIf="item.status == 'rejected'"
-                  nzStatus="error"
-                ></nz-badge>
-                <nz-badge
-                  *ngIf="item.status == 'pending'"
-                  nzStatus="processing"
-                ></nz-badge>
+                <nz-badge *ngIf="item.status == 'approved'" nzStatus="success"></nz-badge>
+                <nz-badge *ngIf="item.status == 'rejected'" nzStatus="error"></nz-badge>
+                <nz-badge *ngIf="item.status == 'pending'" nzStatus="processing"></nz-badge>
                 <span class="text-capitalize">{{ item.status }}</span>
               </td>
             </tr>
