@@ -1,9 +1,9 @@
-<div class="page-header has-tab">
+<div class="page-header has-tab" *ngIf="!isLoading">
     <div class="d-md-flex m-b-15 align-items-center justify-content-between">
         <div class="media align-items-center m-b-15">
-            <nz-avatar nzShape="square" [nzSize]="70" [nzSrc]="product.thumbnail"></nz-avatar>
+            <nz-avatar nzShape="square" *ngIf="isEdit" [nzSize]="70" [nzSrc]="product.thumbnail"></nz-avatar>
             <div class="m-l-15">
-                <h4 class="m-b-0">{{product.translations.en.name}}</h4>
+                <h4 class="m-b-0" *ngIf="isEdit">{{product.translations.en.name}}</h4>
             </div>           
         </div>
         <div class="m-b-15">

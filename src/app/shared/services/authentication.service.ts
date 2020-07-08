@@ -19,14 +19,19 @@ export class AuthenticationService {
     }
 
     public get currentUserValue(): User {
-        return this.currentUserSubject.value;
+        if (this.currentUserSubject.value)
+            return this.currentUserSubject.value;
+        else {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            return user;
+        }
     }
 
     login(email: string, password: string) {
         return this.http.post<any>(environment.url + '/login', { email, password })
             .pipe(map(result => {
                 if (result.success && result.accessToken) {
-                    const user: User = { ...result }
+                    const user: User = { ...result, email: email }
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
                 }

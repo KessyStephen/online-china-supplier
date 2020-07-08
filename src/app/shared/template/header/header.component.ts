@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ThemeConstantService } from '../../services/theme-constant.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Router } from '@angular/router';
+import { User } from '../../interfaces/user.type';
 
 @Component({
     selector: 'app-header',
@@ -14,10 +15,12 @@ export class HeaderComponent {
     quickViewVisible: boolean = false;
     isFolded: boolean;
     isExpand: boolean;
+    user: User;
 
     constructor(private themeService: ThemeConstantService, private authService: AuthenticationService, private router: Router) { }
 
     ngOnInit(): void {
+        this.user = this.authService.currentUserValue;
         this.themeService.isMenuFoldedChanges.subscribe(isFolded => this.isFolded = isFolded);
         this.themeService.isExpandChanges.subscribe(isExpand => this.isExpand = isExpand);
     }
@@ -41,6 +44,6 @@ export class HeaderComponent {
     logout() {
         this.authService.logout();
         // Redirect to login
-        
+
     }
 }

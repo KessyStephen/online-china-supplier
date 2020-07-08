@@ -26,9 +26,9 @@ export class Login3Component {
         this.authService.login(email, password).subscribe((result: any) => {
             this.isLoggingIn = !this.isLoggingIn;
             if (result.success) {
-                this.notification.success(`Hi ${result.name}`, 'Welcome Back!');
                 // Redirect to dashboard Screen
                 this.router.navigate(['/dashboard']);
+                this.notification.success(`Hi ${this.authService.currentUserValue.name}`, 'Welcome Back!');
             } else {
                 this.notification.error('Error', result.message);
             }
