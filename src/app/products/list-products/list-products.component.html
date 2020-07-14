@@ -4,7 +4,7 @@
             <div class="d-md-flex">
                 <div class="m-b-10 m-r-20">
                     <nz-input-group [nzPrefix]="prefixTemplate">
-                        <input type="text" nz-input placeholder="Search Product" (ngModelChange)="search()">
+                        <input type="text" [(ngModel)]="searchInput" nz-input placeholder="Search Product" (ngModelChange)="search()">
                     </nz-input-group>
                     <ng-template #prefixTemplate>
                         <i nz-icon nzType="search" class="opacity-05"></i>
@@ -12,6 +12,7 @@
                 </div>
                 <div class="m-b-10 m-r-20 d-flex align-items-center">
                     <nz-select style="min-width: 300px;" class="w-100" nzPlaceHolder="Category"
+                        [(ngModel)]="categoryId"
                         (ngModelChange)="categoryChange($event)">
                         <nz-option *ngFor="let category of categoryList" [nzLabel]="category.translations.en.name" [nzValue]="category._id"></nz-option>
                         
@@ -19,9 +20,11 @@
                 </div>
                 <div class="m-b-10 m-r-20 d-flex align-items-center">
                     <nz-select style="min-width: 220px;" class="w-100" nzPlaceHolder="Status"
+                        [(ngModel)]="status"
                         (ngModelChange)="statusChange($event)">
-                        <nz-option nzLabel="Approved" nzValue="Approved"></nz-option>
-                        <nz-option nzLabel="Not Approved" nzValue="Not Approved"></nz-option>
+                        <nz-option nzLabel="All" nzValue="all"></nz-option>
+                        <nz-option nzLabel="Approved" nzValue="true"></nz-option>
+                        <nz-option nzLabel="Not Approved" nzValue="false"></nz-option>
                     </nz-select>
                 </div>
             </div>

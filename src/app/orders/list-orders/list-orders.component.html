@@ -12,11 +12,10 @@
                     </ng-template>
                 </div>
                 <div class="m-b-10 m-r-20 d-flex align-items-center">
-                    <nz-select style="min-width: 220px;" class="w-100" (ngModelChange)="filterStatus($event)" nzPlaceHolder="Status">
-                        <nz-option nzLabel="All" nzValue="all"></nz-option>
-                        <nz-option nzLabel="Approved" nzValue="approved"></nz-option>
-                        <nz-option nzLabel="Pending" nzValue="pending"></nz-option>
-                        <nz-option nzLabel="Rejected" nzValue="rejected"></nz-option>
+                    <nz-select style="min-width: 220px;" class="w-100" [(ngModel)]="statusInput" (ngModelChange)="filterStatus($event)"
+                        nzPlaceHolder="Status">
+                        <nz-option *ngFor="let status of orderStatusList;" [nzLabel]="status.name"
+                            [nzValue]="status.code"></nz-option>
                     </nz-select>
                 </div>
             </div>
@@ -33,12 +32,13 @@
         (nzQueryParams)="onQueryParamsChange($event)">
         <thead>
             <tr>
-                <th *ngFor="let column of orderColumn" [nzColumnKey]="column.key" [nzSortFn]="column.compare">{{ column.title }}</th>
+                <th *ngFor="let column of orderColumn" [nzColumnKey]="column.key" [nzSortFn]="column.compare">
+                    {{ column.title }}</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let item of ordersListTable.data;  let i=index">
-                <td>#{{i+1}}</td>
+                <td>#{{item.referenceId}}</td>
                 <td>{{item.createdAt | date:'fullDate' }}</td>
                 <td>
                     <h6 class="m-b-0">{{item.user.name}}</h6>
@@ -51,13 +51,13 @@
                     <span class="text-capitalize">{{item.status}}</span>
                 </td>
                 <td class="text-md-right">
-                    <a class="m-r-5" nz-button nzType="default" nzShape="circle" [routerLink]="['/orders/view/', item.id]"
-                        nz-tooltip nzTooltipTitle="View">
+                    <a class="m-r-5" nz-button nzType="default" nzShape="circle"
+                        [routerLink]="['/orders/view/', item.id]" nz-tooltip nzTooltipTitle="View">
                         <i nz-icon nzType="eye" theme="outline"></i>
                     </a>
-                    <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Cancel">
+                    <!-- <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Cancel">
                         <i nz-icon nzType="close" theme="outline"></i>
-                    </button>
+                    </button> -->
                 </td>
             </tr>
         </tbody>

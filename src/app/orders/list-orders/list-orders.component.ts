@@ -13,6 +13,7 @@ import { Order } from 'src/app/shared/interfaces/order.interface';
 export class ListOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.loadDataFromServer(this.page, this.perPage);
+    this.getOrderStatusList();
   }
 
   allChecked: boolean = false;
@@ -23,6 +24,8 @@ export class ListOrdersComponent implements OnInit {
   page: number = 1;
   perPage: number = 10;
   total: number = 1;
+  orderStatusList: any[] = [];
+  statusInput: any;
 
   orderColumn = [
     {
@@ -83,7 +86,13 @@ export class ListOrdersComponent implements OnInit {
     });
   }
 
-  filterStatus($event) {
+  filterStatus(status) {
+    this.loadDataFromServer(1, 10, `status:${status}`);
+  }
 
+  getOrderStatusList() {
+    this.orderService.getOrderStatusList().subscribe((statuses) => {
+      this.orderStatusList = statuses;
+    })
   }
 }

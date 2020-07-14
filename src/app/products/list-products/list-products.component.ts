@@ -28,6 +28,8 @@ export class ListProductsComponent implements OnInit {
     page: number = 1;
     perPage: number = 10;
     total: number = 1;
+    categoryId: string;
+    status: string;
 
     orderColumn = [
         {
@@ -58,7 +60,14 @@ export class ListProductsComponent implements OnInit {
     ]
 
     productsList = [];
-    categoryList: any[] = [];
+    categoryList: any[] = [{
+        translations: {
+            en: {
+                name: 'All'
+            }
+        },
+        id: 'all'
+    }];
 
     onQueryParamsChange(params: NzTableQueryParams) {
         const { pageSize, pageIndex, sort, filter } = params;
@@ -72,10 +81,13 @@ export class ListProductsComponent implements OnInit {
     loadDataFromServer(
         pageIndex: number,
         pageSize: number,
-        sort?: string
+        sort?: string,
+        categoryIds?: string,
+        isApproved?: string,
+        query?: string
     ): void {
         this.loading = true;
-        this.productService.listProducts(pageIndex, pageSize, sort).subscribe((result: { total: number, results: Product[] }) => {
+        this.productService.listProducts(pageIndex, pageSize, sort, categoryIds, isApproved, query).subscribe((result: { total: number, results: Product[] }) => {
             this.loading = false;
             this.productsList = result.results;
             this.total = result.total;
@@ -92,22 +104,29 @@ export class ListProductsComponent implements OnInit {
     }
 
     getCategoryName(id: string) {
-       return this.categoryList.find((category) => category._id === id).translations.en.name;
+        return this.categoryList.find((category) => category._id === id).translations.en.name;
     }
 
 
     search(): void {
-        const data = this.productsList
-        this.displayData = this.tableSvc.search(this.searchInput, data)
+        // const data = this.productsList
+        // this.displayData = this.tableSvc.search(this.searchInput, data)
+        this.loadDataFromServer(1, 10, null, null, null, this.searchInput);
     }
 
     categoryChange(value: string): void {
-        const data = this.productsList
-        value !== 'All' ? this.displayData = data.filter(elm => elm.category === value) : this.displayData = data
+        this.page = 1;
+        this.perPage = 10;
+        if (value === 'all')
+            this.loadDataFromServer(this.page, this.perPage, null, null);
+        else
+            this.loadDataFromServer(this.page, this.perPage, null, value);
     }
 
     statusChange(value: string): void {
-        const data = this.productsList
-        value !== 'All' ? this.displayData = data.filter(elm => elm.status === value) : this.displayData = data
+        if (value === 'all')
+            this.loadDataFromServer(this.page, this.perPage, null, null, null);
+        else
+            this.loadDataFromServer(this.page, this.perPage, null, null, value);
     }
 }    

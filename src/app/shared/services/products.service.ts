@@ -16,13 +16,22 @@ export class ProductsService {
 
   productList: Product[] = []
 
-  listProducts(page: number, perPage: number, sort?: string): Observable<{ results: Product[], total: number }>{
+  listProducts(page: number, perPage: number, sort?: string, categoryIds?: string, isApproved?: string, query?: string): Observable<{ results: Product[], total: number }> {
     let params = new HttpParams()
       .append('page', `${page}`)
       .append('perPage', `${perPage}`)
-      .append('sort', `${sort}`)
+    console.log(query);
 
-    return this.http.get(`${environment.url}/products`, { params }).pipe(map((result: any) => {
+    if (query)
+      params = params.append('query', `${query}`);
+    if (categoryIds)
+      params = params.append('sort', `${sort}`)
+    if (categoryIds)
+      params = params.append('categoryIds', `${categoryIds}`);
+    if (isApproved)
+      params = params.append('isApproved', `${isApproved}`);
+
+    return this.http.get(`${environment.url}/products${query ? '/search' : ''}`, { params }).pipe(map((result: any) => {
       if (result.status === 200 && result.success) {
         return { total: result.total, results: result.data };
       }
