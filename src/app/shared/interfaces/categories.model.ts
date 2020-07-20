@@ -1,6 +1,7 @@
 export interface Category {
-    translations: {},
+    translations: any,
     _id: string;
     createdAt: string;
-    attributes?: any[]
+    attributes?: any[];
+    parentId: string;
 }

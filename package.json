@@ -12,7 +12,7 @@
     "build-prod": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --prod --base-href ./",
     "build-prod-state": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --prod --stats-json",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-    "deploy:dev": "ng build --aot --prod --extract-css false && aws s3 sync dist s3://oc-supplier --delete --profile oline-china --acl public-read"
+    "deploy:dev": "ng build --aot --prod --base-href /supplier/ --extract-css false && aws s3 sync dist s3://oc-supplier/supplier --delete --profile oline-china --acl public-read"
   },
   "private": true,
   "dependencies": {

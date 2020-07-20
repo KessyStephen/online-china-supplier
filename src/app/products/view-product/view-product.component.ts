@@ -6,7 +6,6 @@ import { CategoryService } from 'src/app/shared/services/categories.service';
 import { Category } from 'src/app/shared/interfaces/categories.model';
 import { Product } from 'src/app/shared/interfaces/product.interface';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { Observable, Observer } from 'rxjs';
 import { ProductsService } from 'src/app/shared/services/products.service';
 
 @Component({
@@ -26,9 +25,10 @@ export class ViewProductComponent implements OnInit {
     attributes: FormGroup;
     productImages: any[] = [];
     product: Product;
-    fileList = [];
+    fileList: any[] = [];
     isLoading: boolean = false;
     saveLoading: boolean = false;
+    isCategoryLoading: boolean = false;
 
     attributeData: any[] = [];
 
@@ -64,7 +64,6 @@ export class ViewProductComponent implements OnInit {
                 currency: [product.currency, [Validators.required]],
                 price: [product.price, [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
-                category: ['', [Validators.required]],
                 sku: [product.sku, [Validators.required]],
                 quality: [product.quality, [Validators.required]],
                 description: [product.translations.en.description, [Validators.required]],
@@ -76,6 +75,8 @@ export class ViewProductComponent implements OnInit {
                     {
                         uid: `-${i + 1}`,
                         name: image._id,
+                        _id: image._id,
+                        position: image.position,
                         url: image.src,
                         status: 'done'
                     }
@@ -89,7 +90,6 @@ export class ViewProductComponent implements OnInit {
                 currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
                 categoryId: ['', [Validators.required]],
-                category: ['', [Validators.required]],
                 sku: ['', [Validators.required]],
                 quality: ['', [Validators.required]],
                 description: ['', [Validators.required]],
@@ -106,9 +106,8 @@ export class ViewProductComponent implements OnInit {
         return attributeGroup;
     }
 
-    onSubcategoryChanged(id) {
-        const sub = this.subCategories.find(sub => sub._id === id);
-        console.log(sub.attributes)
+    onCategorySelected(id) {
+        const sub = this.categoryService.categories.find(sub => sub._id === id);
         if (sub.attributes) {
             this.attributeData = sub.attributes;
         }
@@ -119,7 +118,7 @@ export class ViewProductComponent implements OnInit {
         const id = this.product._id;
         this.product = this.productEditForm.value;
 
-        this.product.images = this.productImages;
+        this.product.images = this.fileList.map((image) => { return { _id: image._id, src: image.url, position: image.position } });
         const attr = [];
         Object.keys(this.product.attributes).forEach((key) => {
             attr.push({
@@ -208,9 +207,9 @@ export class ViewProductComponent implements OnInit {
     }
 
     getCategories() {
-        this.categoryService.listCategories().subscribe((result: any) => {
-            if (result.success) {
-                this.categories = result.data;
+        this.categoryService.getAllCategories().subscribe((result: any) => {
+            if (result) {
+                this.categories = this.categoryService.childCategories;
             }
         });
     }
@@ -221,9 +220,6 @@ export class ViewProductComponent implements OnInit {
         });
     }
 
-    onCategorySelected(id: string) {
-        this.getSubCategories(id);
-    }
 
     handleRequest = (data: any) => {
         const file = data.file;

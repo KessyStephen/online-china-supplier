@@ -16,18 +16,17 @@ export class ProductsService {
 
   productList: Product[] = []
 
-  listProducts(page: number, perPage: number, sort?: string, categoryIds?: string, isApproved?: string, query?: string): Observable<{ results: Product[], total: number }> {
+  listProducts(page: number, perPage: number, sort?: string, categoryIds?: string[], isApproved?: string, query?: string): Observable<{ results: Product[], total: number }> {
     let params = new HttpParams()
       .append('page', `${page}`)
       .append('perPage', `${perPage}`)
-    console.log(query);
 
     if (query)
       params = params.append('query', `${query}`);
     if (categoryIds)
       params = params.append('sort', `${sort}`)
     if (categoryIds)
-      params = params.append('categoryIds', `${categoryIds}`);
+      params = params.append('categoryIds', `${categoryIds.join(',')}`);
     if (isApproved)
       params = params.append('isApproved', `${isApproved}`);
 

@@ -82,7 +82,7 @@ export class ListProductsComponent implements OnInit {
         pageIndex: number,
         pageSize: number,
         sort?: string,
-        categoryIds?: string,
+        categoryIds?: string[],
         isApproved?: string,
         query?: string
     ): void {
@@ -95,16 +95,13 @@ export class ListProductsComponent implements OnInit {
     }
 
     getCategories() {
-        this.categoryService.getAllSubcategories().subscribe((response: any) => {
-            response.forEach(element => {
-                if (element.parentId)
-                    this.categoryList.push(element);
-            });;
+        this.categoryService.getAllCategories().subscribe((success: boolean) => {
+            this.categoryList = this.categoryService.categories;
         });
     }
 
     getCategoryName(id: string) {
-        return this.categoryList.find((category) => category._id === id).translations.en.name;
+        return this.categoryService.categories.find((category) => category._id === id).translations.en.name;
     }
 
 
@@ -115,12 +112,19 @@ export class ListProductsComponent implements OnInit {
     }
 
     categoryChange(value: string): void {
+        let subCategories = [];
+        if (value !== 'all') {
+            subCategories = this.categoryService.categories.filter(category => category.parentId === value).map((subs) => {
+                return subs._id;
+            });
+            subCategories.push(value);
+        }
         this.page = 1;
         this.perPage = 10;
         if (value === 'all')
             this.loadDataFromServer(this.page, this.perPage, null, null);
         else
-            this.loadDataFromServer(this.page, this.perPage, null, value);
+            this.loadDataFromServer(this.page, this.perPage, null, subCategories);
     }
 
     statusChange(value: string): void {

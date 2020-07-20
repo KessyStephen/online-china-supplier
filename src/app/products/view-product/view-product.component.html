@@ -24,22 +24,12 @@
         <nz-tab nzTitle="Basic Info">
             <nz-card>
                 <div class='row'>
-                    <nz-form-item class="col-md-6">
+                    <nz-form-item class="col-md-12">
                         <nz-form-label nzFor="category" nzRequired>Category</nz-form-label>
                         <nz-form-control nzErrorTip="Category can not be empty">
-                            <nz-select formControlName="category" class="w-100"
+                            <nz-select formControlName="categoryId" class="w-100"
                                 (ngModelChange)="onCategorySelected($event)">
                                 <nz-option *ngFor='let category of categories' [nzValue]='category._id'
-                                    [nzLabel]='category.translations.en.name'></nz-option>
-                            </nz-select>
-                        </nz-form-control>
-                    </nz-form-item>
-
-                    <nz-form-item class="col-md-6">
-                        <nz-form-label nzFor="category" nzRequired>Sub Category</nz-form-label>
-                        <nz-form-control nzErrorTip="Category can not be empty">
-                            <nz-select formControlName="categoryId" class="w-100" (ngModelChange)="onSubcategoryChanged($event)">
-                                <nz-option *ngFor='let category of subCategories' [nzValue]='category._id' 
                                     [nzLabel]='category.translations.en.name'></nz-option>
                             </nz-select>
                         </nz-form-control>

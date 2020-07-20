@@ -11,6 +11,10 @@ import { NzNotificationService } from 'ng-zorro-antd';
 })
 export class CategoryService {
 
+  categories: Category[] = [];
+  childCategories: Category[] = [];
+  parentCategories: Category[] = [];
+
   constructor(private http: HttpClient, private notificationService: NzNotificationService) {
 
   }
@@ -92,15 +96,17 @@ export class CategoryService {
     }));
   }
 
-  getAllSubcategories(): Observable<Category[]> {
+  getAllCategories(): Observable<boolean> {
     let params = new HttpParams()
-                      .append("all", `${true}`)
+      .append("all", `${true}`)
     return this.http.get(`${environment.url}/categories`, { params }).pipe(map((result: any) => {
       if (result.status === 200 && result.success) {
-        return result.data;
+        this.categories = result.data;
+        this.childCategories = this.categories.filter((category) => { if (category.parentId) return category });
+        return true;
       }
       this.notificationService.error('Error', result.message);
-      return [];
+      return false;
 
     }));
   }
