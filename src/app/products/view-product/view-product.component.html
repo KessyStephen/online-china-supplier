@@ -4,10 +4,11 @@
             <nz-avatar nzShape="square" *ngIf="isEdit" [nzSize]="70" [nzSrc]="product.thumbnail"></nz-avatar>
             <div class="m-l-15">
                 <h4 class="m-b-0" *ngIf="isEdit">{{product.translations.en.name}}</h4>
-            </div>           
+            </div>
         </div>
         <div class="m-b-15">
-            <button [nzLoading]="saveLoading" nz-button nzType="primary" [disabled]="productEditForm.invalid && productImages.length == 0" *ngIf="!isEdit" (click)="save()">
+            <button [nzLoading]="saveLoading" nz-button nzType="primary"
+                [disabled]="productEditForm.invalid && productImages.length == 0" *ngIf="!isEdit" (click)="save()">
                 <i nz-icon nzType="save" theme="outline"></i>
                 <span>Save</span>
             </button>
@@ -23,6 +24,20 @@
     <nz-tabset class="page-header-tab">
         <nz-tab nzTitle="Basic Info">
             <nz-card>
+
+                <div class='row'>
+                    <nz-form-item class="col-md-12">
+                        <nz-form-label nzFor="category" nzRequired>Product Type</nz-form-label>
+                        <nz-form-control nzErrorTip="Category can not be empty">
+                            <nz-select formControlName="categoryId" class="w-100"
+                                (ngModelChange)="onProductTypeSelected($event)">
+                                <nz-option *ngFor='let type of productTypes' [nzValue]='type' [nzLabel]='type'>
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
                 <div class='row'>
                     <nz-form-item class="col-md-12">
                         <nz-form-label nzFor="category" nzRequired>Category</nz-form-label>
@@ -43,6 +58,23 @@
                     </nz-form-control>
                 </nz-form-item>
 
+                <nz-form-item nz-row class="register-area">
+                    <nz-form-label nzFor="description" nzRequired>Sample Request</nz-form-label>
+                    <nz-form-control>
+                        <label nz-checkbox formControlName="canRequestSample"
+                            (ngModelChange)="onRequestSampleChanged($event)">
+                            <span>Can users request sample</span>
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="minOrderQuantity" nzRequired>Minimum Order Quantity</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <input nz-input formControlName="minOrderQuantity" type="text">
+                    </nz-form-control>
+                </nz-form-item>
+
                 <nz-form-item>
                     <nz-form-label nzFor="description" nzRequired>Description</nz-form-label>
                     <quill-editor formControlName="description" [style]="{height: '250px'}" [modules]="editorConfig"
@@ -56,16 +88,89 @@
                 <div [formGroup]='attributes'>
                     <div *ngFor="let attribute of attributeData; let i = index;">
                         <nz-form-item>
+
                             <nz-form-control nzErrorTip="Please input this field!">
-                                <nz-form-label [nzFor]="attribute.name">{{attribute.name}}</nz-form-label>
+                                <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+                                    <div>
+                                        <nz-form-label [nzFor]="attribute.name">{{attribute.name}}
+                                        </nz-form-label>
+                                    </div>
+                                    <!-- <div>
+                                        <label nz-checkbox [formControlName]="attribute.toVariate">Use for Product
+                                            variation</label>
+                                    </div> -->
+                                </div>
+
                                 <nz-select [formControlName]="attribute.name" class="w-100" nzMode="multiple">
                                     <nz-option *ngFor="let option of attribute.options" [nzLabel]="option"
                                         [nzValue]="option"></nz-option>
                                 </nz-select>
                             </nz-form-control>
+
                         </nz-form-item>
                     </div>
                 </div>
+                <div *ngIf="!isSimpleProduct">
+                    <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+                        <div>
+                            <nz-divider nzText="Product Variations" style="margin-top: 10px;" nzOrientation="left">
+                            </nz-divider>
+                        </div>
+                        <div>
+                            <button nz-button nzType="primary" nzSize="small" (click)="checkIfVariationAttrPresent()"><i
+                                    nz-icon nzType="download"></i>Generate Variations</button>
+                        </div>
+                    </div>
+
+                    <div [formGroup]='variations'>
+                        <div *ngFor="let variation of variationData; let i = index;">
+                            <nz-form-item>
+                                <!-- <nz-tag [nzColor]="'magenta'">{{variation.}}</nz-tag> -->
+                            </nz-form-item>
+                        </div>
+                    </div>
+                </div>
+
+            </nz-card>
+        </nz-tab>
+        <nz-tab nzTitle="Sample Details" *ngIf="productEditForm.value.canRequestSample">
+            <nz-card>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="currency" nzRequired>Sample Currency</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <nz-select style="min-width: 220px;" formControlName="sampleCurrency" class="w-100"
+                            nzPlaceHolder="Currency">
+                            <nz-option nzLabel="USD" nzValue="USD"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="price" nzRequired>Sample Price</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <nz-input-group [nzPrefix]="pricePrefix">
+                            <input nz-input formControlName="samplePrice" type="text">
+                        </nz-input-group>
+                        <ng-template #pricePrefix>
+                            <span>$</span>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="sku" nzRequired>Sample Unit</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <input nz-input formControlName="sampleUnit" type="text">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="quality" nzRequired>Quantity</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <input nz-input formControlName="quality" type="text">
+                    </nz-form-control>
+                </nz-form-item>
 
             </nz-card>
         </nz-tab>
@@ -75,7 +180,8 @@
                 <nz-form-item>
                     <nz-form-label nzFor="currency" nzRequired>Currency</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-select style="min-width: 220px;" formControlName="currency" class="w-100" nzPlaceHolder="Currency">
+                        <nz-select style="min-width: 220px;" formControlName="currency" class="w-100"
+                            nzPlaceHolder="Currency">
                             <nz-option nzLabel="USD" nzValue="USD"></nz-option>
                             <nz-option nzLabel="TZS" nzValue="TZS"></nz-option>
                         </nz-select>

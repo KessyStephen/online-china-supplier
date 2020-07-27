@@ -34,6 +34,7 @@ import {
   NzCheckboxModule,
   NzMessageModule,
   NzIconModule,
+  NzDividerModule,
 } from 'ng-zorro-antd';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
@@ -50,6 +51,7 @@ const antdModule = [
   NzDropDownModule,
   NzTimelineModule,
   NzTabsModule,
+  NzDividerModule,
   NzTagModule,
   NzListModule,
   NzCalendarModule,

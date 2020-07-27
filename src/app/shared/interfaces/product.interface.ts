@@ -14,6 +14,11 @@ export interface Product {
     isApproved: boolean;
     supplierId: string;
     canRequestSample: boolean;
+    samplePrice: number;
+    sampleQuantity: number;
+    minOrderQuantity: number;
+    sampleCurrency: string;
+    sampleUnit: string;
     attributes: Attribute[],
     variations: [
         {

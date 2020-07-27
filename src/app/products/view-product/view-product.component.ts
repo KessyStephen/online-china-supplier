@@ -22,15 +22,19 @@ export class ViewProductComponent implements OnInit {
     previewVisible: boolean = false;
     categories: Category[] = [];
     subCategories: Category[] = [];
-    attributes: FormGroup;
+    attributes: FormGroup = new FormGroup({});
+    variations: FormGroup = new FormGroup({});
     productImages: any[] = [];
     product: Product;
     fileList: any[] = [];
     isLoading: boolean = false;
     saveLoading: boolean = false;
     isCategoryLoading: boolean = false;
-
+    productTypes: string[] = ['Simple', 'Variable'];
+    isSimpleProduct: boolean = true;
+    canSampleRequest: boolean = false;
     attributeData: any[] = [];
+    variationData: any[] = [];
 
     productData: Product;
 
@@ -61,11 +65,17 @@ export class ViewProductComponent implements OnInit {
             this.attributes = this.addProductAttributes();
             this.productEditForm = this.fb.group({
                 productName: [product.translations.en.name, [Validators.required]],
+                canRequestSample: [product.canRequestSample, [Validators.required]],
                 currency: [product.currency, [Validators.required]],
                 price: [product.price, [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
                 quality: [product.quality, [Validators.required]],
+                samplePrice: [product.samplePrice, this.canSampleRequest ? [Validators.required] : []],
+                minOrderQuantity: [product.minOrderQuantity, [Validators.required]],
+                sampleCurrency: [product.sampleCurrency, this.canSampleRequest ? [Validators.required] : []],
+                sampleQuantity: [product.sampleQuantity, this.canSampleRequest ? [Validators.required] : []],
+                sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
                 description: [product.translations.en.description, [Validators.required]],
                 attributes: this.attributes
             });
@@ -84,16 +94,21 @@ export class ViewProductComponent implements OnInit {
 
             }
         } else {
-            this.attributes = this.addProductAttributes();
             this.productEditForm = this.fb.group({
                 productName: ['', [Validators.required]],
                 currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
+                canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
                 sku: ['', [Validators.required]],
                 quality: ['', [Validators.required]],
                 description: ['', [Validators.required]],
-                attributes: this.attributes
+                samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
+                minOrderQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
+                sampleCurrency: ['', this.canSampleRequest ? [Validators.required] : []],
+                sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
+                sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
+                attributes: []
             });
         }
     }
@@ -110,6 +125,15 @@ export class ViewProductComponent implements OnInit {
         const sub = this.categoryService.categories.find(sub => sub._id === id);
         if (sub.attributes) {
             this.attributeData = sub.attributes;
+            this.attributes = this.addProductAttributes();
+        }
+    }
+
+    onProductTypeSelected(type: string) {
+        if (type.toLowerCase() === 'simple') {
+            this.isSimpleProduct = true;
+        } else {
+            this.isSimpleProduct = false;
         }
     }
 
@@ -159,6 +183,8 @@ export class ViewProductComponent implements OnInit {
                 value: product.attributes[key]
             })
         });
+
+        console.log(product)
 
         product.attributes = attr;
         product.translations = {
@@ -255,5 +281,27 @@ export class ViewProductComponent implements OnInit {
             this.initializeForm(product);
 
         });
+    }
+
+    checkIfVariationAttrPresent() {
+        console.log(this.attributes.value);
+
+        let parts = [];
+        let result = [];
+
+        Object.keys(this.attributes.value).forEach((attr) => {
+            parts.push(this.attributes.value[attr]);
+        });
+        result = parts.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []));
+
+        // this.variationData = 
+    }
+
+    generateVariations() {
+        console.log('cl: [] icked');
+    }
+
+    onRequestSampleChanged(value) {
+        this.canSampleRequest = value;
     }
 }
