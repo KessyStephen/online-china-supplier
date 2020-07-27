@@ -27,9 +27,9 @@
 
                 <div class='row'>
                     <nz-form-item class="col-md-12">
-                        <nz-form-label nzFor="category" nzRequired>Product Type</nz-form-label>
-                        <nz-form-control nzErrorTip="Category can not be empty">
-                            <nz-select formControlName="categoryId" class="w-100"
+                        <nz-form-label nzFor="type" nzRequired>Product Type</nz-form-label>
+                        <nz-form-control nzErrorTip="Product Type can not be empty">
+                            <nz-select formControlName="type" class="w-100"
                                 (ngModelChange)="onProductTypeSelected($event)">
                                 <nz-option *ngFor='let type of productTypes' [nzValue]='type' [nzLabel]='type'>
                                 </nz-option>

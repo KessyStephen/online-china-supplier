@@ -67,6 +67,7 @@ export class ViewProductComponent implements OnInit {
                 productName: [product.translations.en.name, [Validators.required]],
                 canRequestSample: [product.canRequestSample, [Validators.required]],
                 currency: [product.currency, [Validators.required]],
+                type: [product.type, [Validators.required]],
                 price: [product.price, [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
@@ -96,6 +97,7 @@ export class ViewProductComponent implements OnInit {
         } else {
             this.productEditForm = this.fb.group({
                 productName: ['', [Validators.required]],
+                type: ['simple', [Validators.required]],
                 currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
                 canRequestSample: [false, [Validators.required]],
