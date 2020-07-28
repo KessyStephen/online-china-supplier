@@ -20,16 +20,16 @@ export interface Product {
     sampleCurrency: string;
     sampleUnit: string;
     attributes: Attribute[],
-    variations: [
-        {
-            price: number;
-            currency: string;
-            attributes: Attribute[]
-        }
-    ]
+    variations: any[]
 }
 
 interface Attribute {
     name: string;
     value: string;
+}
+
+interface Variation {
+    price: number;
+    currency: string;
+    attributes: Attribute[]
 }

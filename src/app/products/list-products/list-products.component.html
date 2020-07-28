@@ -65,7 +65,7 @@
                         [routerLink]="['/products/view/', item._id]">
                         <i nz-icon nzType="edit" theme="outline"></i>
                     </a>
-                    <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete">
+                    <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete" (click)="deleteProduct(item)">
                         <i nz-icon nzType="delete" theme="outline"></i>
                     </button>
                 </td>

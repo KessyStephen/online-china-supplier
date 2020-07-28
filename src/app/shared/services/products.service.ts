@@ -69,4 +69,14 @@ export class ProductsService {
     }));
   }
 
+  deleteProduct(id: string) {
+    return this.http.delete(`${environment.url}/products/${id}`).pipe(map((result: any) => {
+      if (result.status === 200 && result.success) {
+        return true;
+      }
+      this.notificationService.error('Error', result.message);
+      return false;
+    }));
+  }
+
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TableService } from 'src/app/shared/services/table.service';
 import { ProductsService } from 'src/app/shared/services/products.service';
 import { Product } from 'src/app/shared/interfaces/product.interface';
-import { NzTableQueryParams } from 'ng-zorro-antd';
+import { NzTableQueryParams, NzModalService } from 'ng-zorro-antd';
 import { CategoryService } from 'src/app/shared/services/categories.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { CategoryService } from 'src/app/shared/services/categories.service';
 })
 export class ListProductsComponent implements OnInit {
 
-    constructor(private tableSvc: TableService, private productService: ProductsService, private categoryService: CategoryService) {
+    constructor(private tableSvc: TableService, private productService: ProductsService, private categoryService: CategoryService, private modalService: NzModalService) {
         this.displayData = this.productsList
     }
 
@@ -132,5 +132,19 @@ export class ListProductsComponent implements OnInit {
             this.loadDataFromServer(this.page, this.perPage, null, null, null);
         else
             this.loadDataFromServer(this.page, this.perPage, null, null, value);
+    }
+
+    deleteProduct(product: Product) {
+        this.modalService.confirm({
+            nzTitle: `Are you sure you want to delete ${product.translations.en.name}`,
+            nzOnOk: () => {
+                this.productService.deleteProduct(product._id).subscribe((result) => {
+                    if(result){
+                        let index = this.productsList.findIndex(prod => prod._id === product._id);
+                        this.productsList.splice(index, 1);
+                    }
+                });
+            }
+        });
     }
 }    

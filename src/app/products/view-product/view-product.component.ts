@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { NzModalService, NzMessageService, UploadFile, NzNotificationService } from 'ng-zorro-antd';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -35,6 +35,8 @@ export class ViewProductComponent implements OnInit {
     canSampleRequest: boolean = false;
     attributeData: any[] = [];
     variationData: any[] = [];
+    variationKeys: string[] = [];
+    price: string;
 
     productData: Product;
 
@@ -78,8 +80,18 @@ export class ViewProductComponent implements OnInit {
                 sampleQuantity: [product.sampleQuantity, this.canSampleRequest ? [Validators.required] : []],
                 sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
                 description: [product.translations.en.description, [Validators.required]],
-                attributes: this.attributes
+                variations: [product.variations, []],
             });
+            const sub = this.categoryService.categories.find(sub => sub._id === product.categoryId);
+            if (sub.attributes) {
+                this.attributeData = sub.attributes;
+                this.attributes = this.addProductAttributes(product.attributes);
+                this.isSimpleProduct = false;
+            }
+
+            if (product.variations.length > 0) {
+                this.variationData = product.variations;
+            }
             for (let i = 0; i < product.images.length; i++) {
                 const image = product.images[i];
                 this.fileList.push(
@@ -110,15 +122,22 @@ export class ViewProductComponent implements OnInit {
                 sampleCurrency: ['', this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
                 sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
-                attributes: []
+                attributes: [],
+                variations: []
             });
         }
     }
 
-    addProductAttributes() {
+    addProductAttributes(data?) {
         const attributeGroup = this.fb.group({});
         this.attributeData.forEach((attribute) => {
-            attributeGroup.addControl(attribute.name, this.fb.control([], attribute.required ? [Validators.required] : []));
+            if (data) {
+                let attrVariation = data.find((attr) => attr.name === attribute.name)
+                attributeGroup.addControl(attribute.name, this.fb.control(attrVariation.value, attribute.required ? [Validators.required] : []));
+            } else {
+                attributeGroup.addControl(attribute.name, this.fb.control([], attribute.required ? [Validators.required] : []));
+            }
+
         });
         return attributeGroup;
     }
@@ -146,12 +165,17 @@ export class ViewProductComponent implements OnInit {
 
         this.product.images = this.fileList.map((image) => { return { _id: image._id, src: image.url, position: image.position } });
         const attr = [];
-        Object.keys(this.product.attributes).forEach((key) => {
-            attr.push({
-                name: key,
-                value: this.product.attributes[key]
-            })
-        });
+        if (this.attributes.value)
+            Object.keys(this.attributes.value).forEach((key) => {
+                attr.push({
+                    name: key,
+                    value: this.attributes.value[key]
+                })
+            });
+
+        if (this.variationData.length > 0)
+            this.product.variations = this.variationData;
+
 
         this.product.attributes = attr;
         this.product.translations = {
@@ -179,14 +203,17 @@ export class ViewProductComponent implements OnInit {
 
         product.images = this.productImages;
         const attr = [];
-        Object.keys(product.attributes).forEach((key) => {
-            attr.push({
-                name: key,
-                value: product.attributes[key]
-            })
-        });
+        if (this.attributes.value)
+            Object.keys(this.attributes.value).forEach((key) => {
+                attr.push({
+                    name: key,
+                    value: this.attributes.value[key]
+                })
+            });
 
-        console.log(product)
+        if (this.variationData.length > 0)
+            product.variations = this.variationData;
+
 
         product.attributes = attr;
         product.translations = {
@@ -285,25 +312,61 @@ export class ViewProductComponent implements OnInit {
         });
     }
 
-    checkIfVariationAttrPresent() {
-        console.log(this.attributes.value);
-
+    generateVariationsArray() {
         let parts = [];
         let result = [];
+        let data = [];
+        this.variationKeys = [];
 
         Object.keys(this.attributes.value).forEach((attr) => {
-            parts.push(this.attributes.value[attr]);
+            if (this.attributes.value[attr].length > 0) {
+                parts.push(this.attributes.value[attr]);
+                this.variationKeys.push(attr);
+            }
         });
         result = parts.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []));
-
-        // this.variationData = 
+        for (let i = 0; i < result.length; i++) {
+            let obj = {
+                price: 0,
+                currency: 'USD',
+                attributes: []
+            };
+            for (let j = 0; j < result[i].length; j++) {
+                const element = result[i][j];
+                let d = { name: this.variationKeys[j], value: element };
+                obj.attributes.push(d);
+            }
+            data.push(obj)
+        }
+        this.variationData = data;
     }
-
-    generateVariations() {
-        console.log('cl: [] icked');
-    }
-
     onRequestSampleChanged(value) {
         this.canSampleRequest = value;
+    }
+
+    checkIfAttributesIsEmpty() {
+        if (Object.keys(this.attributes.value).length > 0)
+            return false;
+        else
+            return true;
+    }
+
+    showEditPrice(modalRef: TemplateRef<{}>, index: number) {
+        const modal = this.modalService.create({
+            nzTitle: 'Modify the price',
+            nzContent: modalRef,
+            nzFooter: [
+                {
+                    label: 'Submit',
+                    type: 'primary',
+                    onClick: () => {
+                        this.variationData[index].price = this.price;
+                        this.modalService.closeAll();
+                        this.price = '';
+                    }
+                },
+            ],
+            nzWidth: 800
+        })
     }
 }
