@@ -101,7 +101,7 @@
                                     </div> -->
                                 </div>
 
-                                <nz-select [formControlName]="attribute.name" class="w-100" nzMode="multiple">
+                                <nz-select nzMode="tags" [formControlName]="attribute.name" class="w-100">
                                     <nz-option *ngFor="let option of attribute.options" [nzLabel]="option"
                                         [nzValue]="option"></nz-option>
                                 </nz-select>

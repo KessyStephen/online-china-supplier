@@ -12,55 +12,6 @@
         </div>
       </nz-card>
 
-      <div class="row">
-        <div class="col-md-6">
-          <nz-card>
-            <nz-skeleton [nzLoading]="loading" [nzActive]="true" [nzAvatar]="true">
-              <h5>Customer Info</h5>
-              <table class="product-info-table m-t-20">
-                <tbody>
-                  <tr>
-                    <td>Full Name :</td>
-                    <td class="text-dark font-weight-semibold">{{order.user.name}}</td>
-                  </tr>
-                  <tr>
-                    <td>Mobile Number :</td>
-                    <td>{{order.user.phoneNumber}}</td>
-                  </tr>
-                  <tr *ngIf='order.user.email'>
-                    <td>Email :</td>
-                    <td>{{order.user.email}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </nz-skeleton>
-          </nz-card>
-        </div>
-
-        <div class="col-md-6">
-          <nz-card>
-            <nz-skeleton [nzLoading]="loading" [nzActive]="true" [nzAvatar]="true">
-              <h5>Supplier Info</h5>
-              <table class="product-info-table m-t-20">
-                <tbody>
-                  <tr>
-                    <td>Full Name :</td>
-                    <td class="text-dark font-weight-semibold">{{order.supplier.name}}</td>
-                  </tr>
-                  <tr *ngIf='order.supplier.phoneNumber'>
-                    <td>Mobile Number :</td>
-                    <td>{{order.supplier.phoneNumber}}</td>
-                  </tr>
-                  <tr>
-                    <td>Email :</td>
-                    <td>{{order.supplier.email}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </nz-skeleton>
-          </nz-card>
-        </div>
-      </div>
 
       <nz-card>
         <nz-skeleton [nzLoading]="loading" [nzActive]="true" [nzAvatar]="true">

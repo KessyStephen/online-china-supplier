@@ -14,7 +14,7 @@ import { ProductsService } from 'src/app/shared/services/products.service';
     styleUrls: ['./view-product.component.css']
 })
 export class ViewProductComponent implements OnInit {
-
+    listOfTagOptions = [];
     isEdit: boolean = false;
     isCreate: boolean = false;
     productEditForm: FormGroup;

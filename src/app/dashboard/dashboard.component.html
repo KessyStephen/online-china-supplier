@@ -1,8 +1,8 @@
 <div class="row">
-  <div class="col-md-6 col-lg-6">
+  <div class="col-md-3 col-lg-4">
     <nz-card>
       <div class="media align-items-center" *ngIf="!loading">
-        <nz-avatar [nzSize]="50" nzIcon="appstore" class="ant-avatar-cyan"></nz-avatar>
+        <nz-avatar [nzSize]="50" nzIcon="appstore" class="ant-avatar-gold"></nz-avatar>
         <div class="m-l-15">
           <h2 class="m-b-0">{{stats.productsCount}}</h2>
           <p class="m-b-0 text-muted">Products</p>
@@ -10,13 +10,25 @@
       </div>
     </nz-card>
   </div>
-  <div class="col-md-6 col-lg-6" *ngIf="!loading">
+  <div class="col-md-3 col-lg-4" *ngIf="!loading">
     <nz-card>
       <div class="media align-items-center">
         <nz-avatar [nzSize]="50" nzIcon="profile" class="ant-avatar-gold"></nz-avatar>
         <div class="m-l-15">
           <h2 class="m-b-0">{{stats.ordersCount}}</h2>
           <p class="m-b-0 text-muted">Orders</p>
+        </div>
+      </div>
+    </nz-card>
+  </div>
+
+  <div class="col-md-3 col-lg-4" *ngIf="!loading">
+    <nz-card>
+      <div class="media align-items-center">
+        <nz-avatar [nzSize]="50" nzIcon="dollar" class="ant-avatar-gold"></nz-avatar>
+        <div class="m-l-15">
+          <h2 class="m-b-0">$5000</h2>
+          <p class="m-b-0 text-muted">Total</p>
         </div>
       </div>
     </nz-card>
