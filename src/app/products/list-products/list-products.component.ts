@@ -139,12 +139,18 @@ export class ListProductsComponent implements OnInit {
             nzTitle: `Are you sure you want to delete ${product.translations.en.name}`,
             nzOnOk: () => {
                 this.productService.deleteProduct(product._id).subscribe((result) => {
-                    if(result){
+                    if (result) {
                         let index = this.productsList.findIndex(prod => prod._id === product._id);
                         this.productsList.splice(index, 1);
                     }
                 });
             }
         });
+    }
+
+    getPriceRange(variations: any[]) {
+        const prices = variations.map((variation) => variation.price);
+        prices.sort((a, b) => a - b);
+        return `$${prices[0]} - $${prices[1]}`
     }
 }    

@@ -54,8 +54,9 @@
                     </div>
                 </td>
                 <td>{{getCategoryName(item.categoryId)}}</td>
-                <td>{{item.price | currency: item.currency}}</td>
-
+                <td *ngIf="item.type === 'simple'">{{item.price | currency: item.currency}}</td>
+                <td *ngIf="item.type === 'variable'">{{getPriceRange(item.variations) }}</td>
+                
                 <td>
                     <nz-tag *ngIf="!item.isApproved" [nzColor]="'magenta'">Not Approved</nz-tag>
                     <nz-tag *ngIf="item.isApproved" [nzColor]="'green'">Approved</nz-tag>
