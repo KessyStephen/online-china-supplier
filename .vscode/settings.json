@@ -1,3 +1,7 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "files.associations": {
+        ".xtm": "xml",
+        ".ngI18nconfig": "json"
+    }
 }

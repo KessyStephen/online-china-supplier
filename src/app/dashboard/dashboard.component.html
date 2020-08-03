@@ -27,7 +27,7 @@
       <div class="media align-items-center">
         <nz-avatar [nzSize]="50" nzIcon="dollar" class="ant-avatar-gold"></nz-avatar>
         <div class="m-l-15">
-          <h2 class="m-b-0">$5000</h2>
+          <h2 class="m-b-0">{{stats.ordersTotal.total | currency: stats.ordersTotal.totalCurrency}}</h2>
           <p class="m-b-0 text-muted">Total</p>
         </div>
       </div>
