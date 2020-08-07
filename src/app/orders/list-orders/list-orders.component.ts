@@ -47,6 +47,11 @@ export class ListOrdersComponent implements OnInit {
       compare: (a: Order, b: Order) => a.total - b.total,
     },
     {
+      title: 'Sample Request',
+      key: 'isSampleRequest',
+      compare: (a: Order, b: Order) => a.total - b.total,
+    },
+    {
       title: 'Status',
       key: 'status',
       compare: (a: Order, b: Order) => a.status.localeCompare(b.status),

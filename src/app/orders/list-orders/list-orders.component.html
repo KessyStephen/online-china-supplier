@@ -12,8 +12,8 @@
                     </ng-template>
                 </div>
                 <div class="m-b-10 m-r-20 d-flex align-items-center">
-                    <nz-select style="min-width: 220px;" class="w-100" [(ngModel)]="statusInput" (ngModelChange)="filterStatus($event)"
-                        nzPlaceHolder="Status">
+                    <nz-select style="min-width: 220px;" class="w-100" [(ngModel)]="statusInput"
+                        (ngModelChange)="filterStatus($event)" nzPlaceHolder="Status">
                         <nz-option *ngFor="let status of orderStatusList;" [nzLabel]="status.name"
                             [nzValue]="status.code"></nz-option>
                     </nz-select>
@@ -44,6 +44,7 @@
                     <h6 class="m-b-0">{{item.user.name}}</h6>
                 </td>
                 <td>{{item.total | currency: item.totalCurrency}}</td>
+                <td><i *ngIf="item.isSampleRequest" nz-icon nzType="check" nzTheme="outline"></i></td>
                 <td>
                     <nz-badge *ngIf="item.status == 'approved'" nzStatus="success"></nz-badge>
                     <nz-badge *ngIf="item.status == 'rejected'" nzStatus="error"></nz-badge>

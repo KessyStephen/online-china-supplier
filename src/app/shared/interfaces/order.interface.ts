@@ -18,6 +18,7 @@ export interface Order {
         email?: string;
     },
     showToSupplier: boolean;
+    isSampleRequest: boolean;
     trackingId: string;
     quantity: number;
     total: number;
