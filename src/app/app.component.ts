@@ -6,7 +6,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
     templateUrl: './app.component.html'
 })
 export class AppComponent {
- title='Online China'
+ title='Shamwaa'
  mySubscription;
 
  constructor(private router: Router, private activatedRoute: ActivatedRoute){
