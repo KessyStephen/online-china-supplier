@@ -17,6 +17,7 @@ export interface Product {
     samplePrice: number;
     sampleQuantity: number;
     minOrderQuantity: number;
+    minOrderUnit: string;
     sampleCurrency: string;
     sampleUnit: string;
     attributes: Attribute[],
