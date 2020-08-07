@@ -361,6 +361,7 @@ export class ViewProductComponent implements OnInit {
     }
 
     showEditPrice(modalRef: TemplateRef<{}>, index: number) {
+        this.price = this.variationData[index].price;
         const modal = this.modalService.create({
             nzTitle: 'Modify the price',
             nzContent: modalRef,
@@ -371,11 +372,14 @@ export class ViewProductComponent implements OnInit {
                     onClick: () => {
                         this.variationData[index].price = this.price;
                         this.modalService.closeAll();
-                        this.price = '';
                     }
                 },
             ],
             nzWidth: 800
         })
+    }
+
+    deleteVariation(index: number) {
+        this.variationData.splice(index, 1);
     }
 }

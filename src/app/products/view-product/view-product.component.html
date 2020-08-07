@@ -210,7 +210,7 @@
                 <div [formGroup]="variations">
                     <div>
 
-                        <nz-table #editRowTable nzBordered [nzData]="variationData">
+                        <nz-table nzBordered [nzData]="variationData">
                             <thead>
                                 <tr>
                                     <th *ngFor="let da of variationKeys;">{{da}}</th>
@@ -220,7 +220,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of editRowTable.data; let i = index" class="editable-row">
+                                <tr *ngFor="let data of variationData; let i = index" class="editable-row">
 
                                     <td *ngFor="let da of data.attributes; let j = index">{{da.value}}</td>
                                     <td>
@@ -229,8 +229,10 @@
                                     <td class="editable-cell" (click)="showEditPrice(editPrice, i)">
                                         {{data.price}}
                                     </td>
-                                    <td class="editable-cell" (click)="showEditPrice(editPrice, i)">
-                                        {{data.price}}
+                                    <td>
+                                        <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete" (click)="deleteVariation(i)">
+                                            <i nz-icon nzType="delete" theme="outline"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
