@@ -11,7 +11,7 @@ export class JwtInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let currentUser = this.authenticationService.currentUserValue;
         var m = request.url.match(/^(([^:\/?#]+:)?(?:\/\/((?:([^\/?#:]*):([^\/?#:]*)@)?([^\/?#:]*)(?::([^\/?#:]*))?)))?([^?#]*)(\?[^#]*)?(#.*)?$/);
-        if (currentUser && currentUser.accessToken && m[6] === 'dev.onlinechina.co') {
+        if (currentUser && currentUser.accessToken && m[6] === 'api.shamwaa.com') {
             request = request.clone({
                 setHeaders: {
                     Authorization: `Bearer ${currentUser.accessToken}`

@@ -4,9 +4,8 @@
 
 export const environment = {
   production: false,
-  url: 'http://dev.onlinechina.co:3000/cms/supplier'
+  url: 'https://api.shamwaa.com/cms/supplier'
 };
-
 /*
  * In development mode, to ignore zone related error stack frames such as
  * `zone.run`, `zoneDelegate.invokeTask` for easier debugging, you can

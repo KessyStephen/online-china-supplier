@@ -216,6 +216,7 @@
                                     <th *ngFor="let da of variationKeys;">{{da}}</th>
                                     <th *ngIf="variationKeys.length > 0">Currency</th>
                                     <th *ngIf="variationKeys.length > 0">Amount</th>
+                                    <th *ngIf="variationKeys.length > 0">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -224,6 +225,9 @@
                                     <td *ngFor="let da of data.attributes; let j = index">{{da.value}}</td>
                                     <td>
                                         {{data.currency}}
+                                    </td>
+                                    <td class="editable-cell" (click)="showEditPrice(editPrice, i)">
+                                        {{data.price}}
                                     </td>
                                     <td class="editable-cell" (click)="showEditPrice(editPrice, i)">
                                         {{data.price}}

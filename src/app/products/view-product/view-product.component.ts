@@ -162,8 +162,17 @@ export class ViewProductComponent implements OnInit {
         this.saveLoading = true;
         const id = this.product._id;
         this.product = this.productEditForm.value;
+        this.product.images = this.fileList.map((image, index) => {
 
-        this.product.images = this.fileList.map((image) => { return { _id: image._id, src: image.url, position: image.position } });
+            if (image.url) {
+                return { _id: image._id, src: image.url, position: image.position }
+            } else {
+                return {
+                    src: image.response,
+                    position: index
+                }
+            }
+        });
         const attr = [];
         if (this.attributes.value)
             Object.keys(this.attributes.value).forEach((key) => {
@@ -282,7 +291,7 @@ export class ViewProductComponent implements OnInit {
             let url = result.getUrl;
             return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
                 this.productImages.push({ src: url, position: this.productImages.length });
-                data.onSuccess(data.file);
+                data.onSuccess(url);
             }, (err) => {
                 data.onError(err, data.file);
             })
