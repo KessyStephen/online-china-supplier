@@ -65,6 +65,7 @@ export class ViewProductComponent implements OnInit {
     initializeForm(product?: Product) {
         if (product) {
             this.attributes = this.addProductAttributes();
+            this.onProductTypeSelected(product.type);
             this.productEditForm = this.fb.group({
                 productName: [product.translations.en.name, [Validators.required]],
                 canRequestSample: [product.canRequestSample, [Validators.required]],
@@ -87,7 +88,6 @@ export class ViewProductComponent implements OnInit {
             if (sub.attributes) {
                 this.attributeData = sub.attributes;
                 this.attributes = this.addProductAttributes(product.attributes);
-                this.isSimpleProduct = false;
             }
 
             if (product.variations.length > 0) {

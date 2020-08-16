@@ -21,5 +21,11 @@ export const CommonLayout_ROUTES: Routes = [
     loadChildren: () =>
       import('../../products/products.module').then((m) => m.ProductsModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile',
+    loadChildren: () =>
+      import('../../profile/profile.module').then((m) => m.ProfileModule),
+    canActivate: [AuthGuard]
   }
 ];
