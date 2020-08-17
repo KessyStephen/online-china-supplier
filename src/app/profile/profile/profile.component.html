@@ -11,7 +11,7 @@
                         <h2 class="m-b-5">{{profile.name}}</h2>
                         <p class="text-opacity font-size-13"></p>
                         <p class="text-dark m-b-20"></p>
-                        
+
 
                     </div>
                 </div>
@@ -21,21 +21,21 @@
                     <div class="d-md-block d-none border-left col-1"></div>
                     <div class="col">
                         <ul class="list-unstyled m-t-10">
-                            <li class="row">
+                            <li class="row" *ngIf="profile.email">
                                 <p class="col-sm-3 col-4 font-weight-semibold text-dark m-b-5">
                                     <i class="m-r-10 text-primary" nz-icon nzType="mail" theme="outline"></i>
                                     <span>Email: </span>
                                 </p>
                                 <p class="col font-weight-semibold"> {{profile.email}}</p>
                             </li>
-                            <li class="row">
+                            <li class="row" *ngIf="profile.phoneNumber">
                                 <p class="col-sm-3 col-4 font-weight-semibold text-dark m-b-5">
                                     <i class="m-r-10 text-primary" nz-icon nzType="phone" theme="outline"></i>
                                     <span>Phone: </span>
                                 </p>
                                 <p class="col font-weight-semibold"> {{profile.phoneNumber}}</p>
                             </li>
-                            <li class="row">
+                            <li class="row" *ngIf="profile.countryCode">
                                 <p class="col-sm-3 col-4 font-weight-semibold text-dark m-b-5">
                                     <i class="m-r-10 text-primary" nz-icon nzType="compass" theme="outline"></i>
                                     <span>Place: </span>
@@ -43,20 +43,6 @@
                                 <p class="col font-weight-semibold"> {{profile.countryCode}}</p>
                             </li>
                         </ul>
-                        <div class="d-flex font-size-22">
-                            <a href="" class="text-gray p-r-20">
-                                <i nz-icon nzType="facebook" theme="outline"></i>
-                            </a>
-                            <a href="" class="text-gray p-r-20">
-                                <i nz-icon nzType="twitter" theme="outline"></i>
-                            </a>
-                            <a href="" class="text-gray p-r-20">
-                                <i nz-icon nzType="behance" theme="outline"></i>
-                            </a>
-                            <a href="" class="text-gray p-r-20">
-                                <i nz-icon nzType="dribbble" theme="outline"></i>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -64,42 +50,83 @@
     </nz-card>
     <div class="row">
         <div class="col-md-12">
-            <!-- <nz-card>
-                <h5>Bio</h5>
-                <p>It is a long established fact that a reader will be distracted by the readable content of a page when
-                    looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal
-                    distribution of letters, as opposed to using 'Content here, content here'.</p>
-                <hr>
-                <h5>Specialilty</h5>
-                <div class="m-t-20">
-                    <nz-tag *ngFor="let item of skillListData">{{item}}</nz-tag>
+            <nz-card>
+                <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+                    <div class="media align-items-center m-b-15">
+
+                    </div>
+                    <div class="m-b-15">
+                        <button style="margin-right: 10px;" nz-button nzType="default" (click)="edit()">
+                            <i nz-icon nzType="edit" theme="outline"></i>
+                            <span>Edit</span>
+                        </button>
+
+                        <button nz-button nzType="default" *ngIf="isEdit" (click)="save()">
+                            <i nz-icon nzType="save" theme="outline"></i>
+                            <span>Update</span>
+                        </button>
+                    </div>
                 </div>
-            </nz-card> -->
-            <!-- <nz-card>
-                <h5>Reviews (18)</h5>
-                <div class="m-t-20">
-                    <nz-list [nzDataSource]="reviewListData" [nzRenderItem]="review" [nzItemLayout]="'vertical'" [nzPagination]="pagination">
-                        <ng-template #review let-item>
-                            <nz-list-item class="d-block" [nzContent]="item.review" [nzActions]="[rating]">
-                                <ng-template #rating>
-                                    <nz-rate [ngModel]="item.rating" nzDisabled></nz-rate>
-                                </ng-template>
-                                <nz-list-item-meta
-                                    [nzTitle]="reviewTitle"
-                                    [nzAvatar]="item.img"
-                                    [nzDescription]="item.date">
-                                    <ng-template #reviewTitle>
-                                        <a class="font-size-15" href="">{{item.name}}</a>
-                                    </ng-template>
-                                </nz-list-item-meta>
-                            </nz-list-item>
-                        </ng-template>
-                        <ng-template #pagination>
-                            <nz-pagination [nzPageIndex]="1" [nzTotal]="50"></nz-pagination>
-                        </ng-template>
-                    </nz-list>
+                <div class="col-md-6">
+                    <form nz-form [formGroup]="profileDetailsForm" nzLayout="horizontal">
+                        <nz-form-item>
+                            <nz-form-label nzRequired nzFor="businessLicense">Business License</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input your Business License!">
+                                <input type="text" nz-input formControlName="businessLicense"
+                                    placeholder="Business License" id="businessLicense">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label nzRequired nzFor="companyName">Company Name</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input your Company Name!">
+                                <input type="text" nz-input formControlName="companyName" placeholder="Company Name"
+                                    id="companyName">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label nzRequired nzFor="companyAddress">Company Address</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input your Company Address!">
+                                <input type="text" nz-input formControlName="companyAddress"
+                                    placeholder="Company Address" id="companyAddress">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label nzRequired nzFor="bankName">Bank Name</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input your Bank Name!">
+                                <input type="text" nz-input formControlName="bankName" placeholder="Bank Name"
+                                    id="bankName">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label nzRequired nzFor="bankAccountNumber">Bank Account Number</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input your Bank Account Number!">
+                                <input type="text" nz-input formControlName="bankAccountNumber"
+                                    placeholder="Bank Account Number" id="bankAccountNumber">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label nzRequired nzFor="swiftCode">Swift Code</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input your Swift Code!">
+                                <input type="text" nz-input formControlName="swiftCode" placeholder="Swift Code"
+                                    id="swiftCode">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label nzRequired nzFor="postCode">Post Code</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input your Post Code!">
+                                <input type="text" nz-input formControlName="postCode" placeholder="Post Code"
+                                    id="postCode">
+                            </nz-form-control>
+                        </nz-form-item>
+                    </form>
                 </div>
-            </nz-card>     -->
+            </nz-card>
         </div>
     </div>
 </div>

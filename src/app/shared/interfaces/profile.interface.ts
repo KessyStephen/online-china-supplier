@@ -5,4 +5,11 @@ export interface Profile {
     isApproved: boolean;
     name: string;
     phoneNumber: string;
+    businessLicense: string;
+    companyName: string;
+    companyAddress: string;
+    bankName: string;
+    bankAccountNumber: string;
+    swiftCode: string;
+    postCode: string;
 }

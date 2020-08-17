@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 export class Login3Component {
     loginForm: FormGroup;
     isLoggingIn: boolean = false;
+    passwordVisible = false;
+
 
     submitForm(): void {
         if (this.loginForm.valid) {

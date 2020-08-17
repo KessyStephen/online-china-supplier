@@ -1,4 +1,4 @@
-<div class="container-fluid p-h-0 p-v-20 h-100 bg" >
+<div class="container-fluid p-h-0 p-v-20 h-100 bg">
     <div class="d-flex flex-column justify-content-between h-100">
         <div class="d-none d-md-block"></div>
         <div class="container">
@@ -74,7 +74,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="currentStep === 2">
+                        <div *ngIf="currentStep === 0">
                             <form nz-form [formGroup]="signUpForm" class="login-form" nzLayout="vertical"
                                 (ngSubmit)="submitForm()">
 
@@ -83,23 +83,24 @@
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="name">Username</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your username!">
-                                                <input type="text" nz-input formControlName="name" placeholder="Username"
-                                                    id="name">
+                                                <input type="text" nz-input formControlName="name"
+                                                    placeholder="Username" id="name">
                                             </nz-form-control>
                                         </nz-form-item>
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="countryCode">Country</nz-form-label>
                                             <nz-form-control>
-        
+
                                                 <nz-select nzPlaceHolder="Select Country" nzAllowClear
                                                     formControlName="countryCode" nzShowSearch nzServerSearch
                                                     (nzOnSearch)="onSearch($event)" style="width: 100%;">
                                                     <ng-container *ngFor="let country of searchResults">
-                                                        <nz-option [nzValue]="country.code2" [nzLabel]="country.country">
+                                                        <nz-option [nzValue]="country.code2"
+                                                            [nzLabel]="country.country">
                                                         </nz-option>
                                                     </ng-container>
                                                 </nz-select>
-        
+
                                             </nz-form-control>
                                         </nz-form-item>
                                         <nz-form-item>
@@ -113,78 +114,95 @@
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="password">Password</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Password!">
-                                                <input type="password" nz-input formControlName="password"
-                                                    placeholder="Password" id="password">
+                                                <nz-input-group [nzSuffix]="suffixTemplate">
+                                                    <input [type]="passwordVisible ? 'text' : 'password'" nz-input
+                                                        formControlName="password" placeholder="Password" id="password">
+                                                </nz-input-group>
                                             </nz-form-control>
+                                            <ng-template #suffixTemplate>
+                                                <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                                                    (click)="passwordVisible = !passwordVisible"></i>
+                                            </ng-template>
                                         </nz-form-item>
                                         <nz-form-item>
-                                            <nz-form-label nzFor="confirmPassword" nzRequired>Confirm Password</nz-form-label>
+                                            <nz-form-label nzFor="confirmPassword" nzRequired>Confirm Password
+                                            </nz-form-label>
                                             <nz-form-control nzErrorTip="Password does not match">
-                                                <input nz-input type="password" formControlName="confirmPassword"
-                                                    placeholder="Confirm Password" id="confirmPassword">
+                                                <nz-input-group [nzSuffix]="confirmsuffixTemplate">
+                                                    <input nz-input [type]="confirmPasswordVisible ? 'text' : 'password'"
+                                                        formControlName="confirmPassword" placeholder="Confirm Password"
+                                                        id="confirmPassword">
+                                                </nz-input-group>
                                             </nz-form-control>
+                                            <ng-template #confirmsuffixTemplate>
+                                                <i nz-icon [nzType]="confirmPasswordVisible ? 'eye-invisible' : 'eye'"
+                                                    (click)="confirmPasswordVisible = !confirmPasswordVisible"></i>
+                                            </ng-template>
                                         </nz-form-item>
                                     </div>
 
                                     <div class="col-md-6">
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="businessLicense">Business License</nz-form-label>
+                                            <nz-form-label nzRequired nzFor="businessLicense">Business License
+                                            </nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Business License!">
-                                                <input type="text" nz-input formControlName="businessLicense" placeholder="Business License"
-                                                    id="businessLicense">
+                                                <input type="text" nz-input formControlName="businessLicense"
+                                                    placeholder="Business License" id="businessLicense">
                                             </nz-form-control>
                                         </nz-form-item>
 
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="companyName">Company Name</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Company Name!">
-                                                <input type="text" nz-input formControlName="companyName" placeholder="Company Name"
-                                                    id="companyName">
+                                                <input type="text" nz-input formControlName="companyName"
+                                                    placeholder="Company Name" id="companyName">
                                             </nz-form-control>
                                         </nz-form-item>
 
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="companyAddress">Company Address</nz-form-label>
+                                            <nz-form-label nzRequired nzFor="companyAddress">Company Address
+                                            </nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Company Address!">
-                                                <input type="text" nz-input formControlName="companyAddress" placeholder="Company Address"
-                                                    id="companyAddress">
+                                                <input type="text" nz-input formControlName="companyAddress"
+                                                    placeholder="Company Address" id="companyAddress">
                                             </nz-form-control>
                                         </nz-form-item>
 
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="bankName">Bank Name</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Bank Name!">
-                                                <input type="text" nz-input formControlName="bankName" placeholder="Bank Name"
-                                                    id="bankName">
+                                                <input type="text" nz-input formControlName="bankName"
+                                                    placeholder="Bank Name" id="bankName">
                                             </nz-form-control>
                                         </nz-form-item>
 
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="bankAccountNumber">Bank Account Number</nz-form-label>
+                                            <nz-form-label nzRequired nzFor="bankAccountNumber">Bank Account Number
+                                            </nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Bank Account Number!">
-                                                <input type="text" nz-input formControlName="bankAccountNumber" placeholder="Bank Account Number"
-                                                    id="bankAccountNumber">
+                                                <input type="text" nz-input formControlName="bankAccountNumber"
+                                                    placeholder="Bank Account Number" id="bankAccountNumber">
                                             </nz-form-control>
                                         </nz-form-item>
 
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="swiftCode">Swift Code</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Swift Code!">
-                                                <input type="text" nz-input formControlName="swiftCode" placeholder="Swift Code"
-                                                    id="swiftCode">
+                                                <input type="text" nz-input formControlName="swiftCode"
+                                                    placeholder="Swift Code" id="swiftCode">
                                             </nz-form-control>
                                         </nz-form-item>
 
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="postCode">Post Code</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Post Code!">
-                                                <input type="text" nz-input formControlName="postCode" placeholder="Post Code"
-                                                    id="postCode">
+                                                <input type="text" nz-input formControlName="postCode"
+                                                    placeholder="Post Code" id="postCode">
                                             </nz-form-control>
                                         </nz-form-item>
                                     </div>
                                 </div>
-                                
+
                                 <!-- <nz-form-item>
                                         <nz-form-control>
                                             <label nz-checkbox formControlName="agree">

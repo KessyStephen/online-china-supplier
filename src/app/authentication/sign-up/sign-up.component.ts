@@ -15,7 +15,8 @@ const OTP_FOR = 'REGISTER';
 })
 
 export class SignUp3Component {
-
+    passwordVisible = false;
+    confirmPasswordVisible = false;
     signUpForm: FormGroup;
     emailForm: FormGroup;
     verificationCodeForm: FormGroup;

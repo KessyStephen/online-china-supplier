@@ -23,9 +23,12 @@
                                 <nz-form-label nzRequired nzFor="password">Password</nz-form-label>
                                 <a class="float-right font-size-13 p-t-10 text-muted" style="position:absolute; right: 0" [routerLink]="['/authentication/forget-password']">Forget Password?</a>
                                 <nz-form-control nzErrorTip="Please input your Password!">
-                                    <nz-input-group [nzPrefix]="prefixLock">
-                                        <input type="password" nz-input formControlName="password" placeholder="Password">
+                                    <nz-input-group [nzPrefix]="prefixLock" [nzSuffix]="suffixTemplate">
+                                        <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password" placeholder="Password">
                                     </nz-input-group>
+                                    <ng-template #suffixTemplate>
+                                        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+                                    </ng-template>
                                 </nz-form-control>
                             </nz-form-item>
                             <nz-form-item>

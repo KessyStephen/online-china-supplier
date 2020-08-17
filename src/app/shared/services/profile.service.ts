@@ -23,4 +23,15 @@ export class ProfileService {
         }));
     }
 
+    updateProfile(data) {
+        return this.http.put(`${environment.url}/profile`, data).pipe(map((result: any) => {
+            if (result.status === 200 && result.success) {
+                this.notificationService.success('Success', 'Successfully updated your profile details!');
+                return result.success;
+            }
+            this.notificationService.error('Error', result.message);
+            return result.success;
+        }));
+    }
+
 }
