@@ -1,4 +1,9 @@
 export interface Product {
+    model: any;
+    height: any;
+    weight: any;
+    moq: any;
+    width: any;
     _id: string;
     createdAt: string;
     categoryId: string;

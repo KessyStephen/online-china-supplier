@@ -13,7 +13,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { Login3Component } from './login/login.component';
 import { Error1Component } from './error-1/error-1.component';
 import { Error2Component } from './error-2/error-2.component';
-import { NzStepsModule, NzSelectModule, NzSpinModule } from 'ng-zorro-antd';
+import { NzStepsModule, NzSelectModule, NzSpinModule, NzModalModule } from 'ng-zorro-antd';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 import { SignUp3Component } from './sign-up/sign-up.component';
 
@@ -25,6 +25,7 @@ const antdModule= [
     NzCheckboxModule,
     NzStepsModule,
     NzSelectModule,
+    NzModalModule,
     NzSpinModule
 ]
 

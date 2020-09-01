@@ -20,12 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 text-right">
-            <button nz-button nzType="primary">
-                <i nz-icon nzType="file-excel" theme="outline"></i>
-                <span>Export</span>
-            </button>
-        </div>
+
     </div>
     <nz-table #ordersListTable [nzData]="displayData" nzShowSizeChanger [nzData]="ordersList" [nzTotal]="total"
         [nzFrontPagination]="false" [nzLoading]="loading" [nzPageSize]="perPage" [nzPageIndex]="page"

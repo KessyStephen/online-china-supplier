@@ -69,5 +69,18 @@ export class ViewOrderComponent implements OnInit {
             this.orderStatusList = statuses;
         })
     }
+    
+    getVariableOrderDescription(attributes: any[]) {
+        if (attributes && attributes.length > 0)
+            return attributes.reduce((accumulator, currentValue, index) => {
+                if (accumulator) {
+                    accumulator += `${currentValue.name} : ${currentValue.value}${attributes.length - 1 == index ? '' : ', '}`
+                } else {
+                    accumulator = `${currentValue.name} : ${currentValue.value}${attributes.length - 1 == index ? '' : ', '}`;
+                }
+                return accumulator;
+            }, '');
+
+    }
 
 }

@@ -34,7 +34,8 @@
                                 <nz-form-item>
                                     <nz-form-control>
                                         <button nz-button class="login-form-button" [disabled]="emailForm.invalid"
-                                            [nzLoading]="isVerifingEmail" [nzType]="'primary'" nzBlock>Continue
+                                            [nzLoading]="isVerifingEmail" [nzType]="'default'"
+                                            style="background-color: #E94A1C; color: white;" nzBlock>Continue
                                         </button>
                                     </nz-form-control>
                                 </nz-form-item>
@@ -57,7 +58,8 @@
                                 </nz-form-item>
                                 <nz-form-item>
                                     <nz-form-control>
-                                        <button nz-button class="login-form-button" [nzType]="'primary'"
+                                        <button nz-button class="login-form-button" [nzType]="'default'"
+                                            style="background-color: #E94A1C; color: white;"
                                             [disabled]="verificationCodeForm.invalid" [nzLoading]="isVerifyingCode"
                                             nzBlock>Submit
                                         </button>
@@ -129,7 +131,8 @@
                                             </nz-form-label>
                                             <nz-form-control nzErrorTip="Password does not match">
                                                 <nz-input-group [nzSuffix]="confirmsuffixTemplate">
-                                                    <input nz-input [type]="confirmPasswordVisible ? 'text' : 'password'"
+                                                    <input nz-input
+                                                        [type]="confirmPasswordVisible ? 'text' : 'password'"
                                                         formControlName="confirmPassword" placeholder="Confirm Password"
                                                         id="confirmPassword">
                                                 </nz-input-group>
@@ -139,6 +142,19 @@
                                                     (click)="confirmPasswordVisible = !confirmPasswordVisible"></i>
                                             </ng-template>
                                         </nz-form-item>
+                                        <nz-form-item>
+                                            <nz-form-control>
+                                                <label nz-checkbox formControlName="agree">
+                                                    <span>Check this if you agree with the <a class=" text-link"
+                                                            href="https://www.shamwaa.com/terms.html"
+                                                            (click)="createNewUser(newProjectContent)">Terms &
+                                                            Condtions</a>
+                                                    </span>
+                                                </label>
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+
                                     </div>
 
                                     <div class="col-md-6">
@@ -213,7 +229,8 @@
                                 <nz-form-item>
                                     <nz-form-control>
                                         <div>
-                                            <button nz-button class="login-form-button" [nzType]="'primary'"
+                                            <button nz-button class="login-form-button" [nzType]="'default'"
+                                                style="background-color: #E94A1C; color: white;"
                                                 [nzLoading]="isRegistering" nzBlock>Submit
                                             </button>
                                         </div>
@@ -226,6 +243,9 @@
                 </div>
             </div>
         </div>
+        <ng-template #newProjectContent>
+            <iframe src="https://www.shamwaa.com/terms.html" title="" style="width: 100%; height: 500px;"></iframe>
+        </ng-template>
         <div class="d-none d-md-flex p-h-40 justify-content-between">
             <span class="">© 2020 Shamwaa</span>
             <!-- <ul class="list-inline">

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core'
+import { Component, TemplateRef } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
-import { NzNotificationService } from 'ng-zorro-antd';
+import { NzNotificationService, NzModalService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
 
 const OTP_FOR = 'REGISTER';
@@ -27,6 +27,7 @@ export class SignUp3Component {
     isRegistering: boolean = false;
     countryCodes: any[] = [];
     searchResults: any[] = [];
+    isVisible: boolean = false;
 
     countries: any[] = [{ prefix: '+255', country: 'Tanzania', code2: 'TZ' }, { prefix: '+254', country: 'Kenya', code2: 'KE' }];
     selectedCountry: any = this.countries[0].code2;
@@ -55,6 +56,36 @@ export class SignUp3Component {
                 break;
         }
     }
+
+    createNewUser(newProjectContent: TemplateRef<{}>) {
+        const modal = this.modalService.create({
+            nzTitle: 'Terms & Conditions',
+            nzContent: newProjectContent,
+            nzFooter: [
+                {
+                    show: false,
+                    label: 'CREATE',
+                    type: 'primary',
+                    onClick: () => this.modalService.confirm(
+                        {
+                            nzTitle: 'Are you sure you want to create this User?',
+                            nzOnOk: () => {
+
+                            }
+                        }
+                    )
+                },
+                {
+                    show: false,
+                    label: 'CANCEL',
+                    type: 'default',
+                    onClick: () => this.modalService.closeAll()
+                },
+            ],
+            nzWidth: 800
+        })
+    }
+
 
     verifyEmailAddress(email: string, otpFor: string): void {
         this.isVerifingEmail = !this.isVerifingEmail;
@@ -130,7 +161,7 @@ export class SignUp3Component {
         }
     }
 
-    constructor(private fb: FormBuilder, private authService: AuthenticationService, private notification: NzNotificationService, private router: Router) {
+    constructor(private fb: FormBuilder, private authService: AuthenticationService, private notification: NzNotificationService, private router: Router, private modalService: NzModalService) {
     }
 
     ngOnInit(): void {
@@ -169,8 +200,12 @@ export class SignUp3Component {
 
     getCountryCodes() {
         this.authService.getCountryCodes().subscribe((response) => {
-            this.countryCodes = response.data;
-            this.searchResults = response.data;
+            const chinaOnly = response.data.filter((country) => {
+                if (country.country.toLowerCase() === 'china')
+                    return country;
+            });
+            this.countryCodes = chinaOnly;
+            this.searchResults = chinaOnly;
         });
     }
 }    
