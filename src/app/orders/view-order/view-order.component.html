@@ -1,6 +1,6 @@
 <div class="container-fluid" *ngIf="!loading">
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
       <nz-card>
         <div class="d-flex justify-content-between">
           <div class="media align-items-center">
@@ -56,7 +56,7 @@
         </nz-skeleton>
       </nz-card>
     </div>
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <nz-card nzTitle="Timeline">
         <nz-timeline>
           <nz-timeline-item *ngFor="let item of order.timeline; let i=index" [nzDot]="dotTemplate">
@@ -79,6 +79,6 @@
           </nz-timeline-item>
         </nz-timeline>
       </nz-card>
-    </div>
+    </div> -->
   </div>
 </div>

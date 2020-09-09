@@ -1,5 +1,6 @@
 export interface Product {
     model: any;
+    length: any;
     height: any;
     weight: any;
     moq: any;

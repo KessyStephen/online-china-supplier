@@ -35,8 +35,12 @@ export class ViewProductComponent implements OnInit {
     canSampleRequest: boolean = false;
     attributeData: any[] = [];
     variationData: any[] = [];
+    quantityData: any[] = [];
+    pricingRules: any[] = [];
     variationKeys: string[] = [];
     price: string;
+
+    current: number = 0;
 
     productData: Product;
 
@@ -74,6 +78,7 @@ export class ViewProductComponent implements OnInit {
                 price: [product.price, [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
+                length: [product.length, []],
                 width: [product.width, []],
                 height: [product.height, []],
                 weight: [product.weight, []],
@@ -91,7 +96,9 @@ export class ViewProductComponent implements OnInit {
             });
             const sub = this.categoryService.categories.find(sub => sub._id === product.categoryId);
             if (sub.attributes) {
-                this.attributeData = sub.attributes;
+                this.attributeData = product.attributes.map((prod) => {
+                    return { name: prod.name, options: prod.value }
+                });
                 this.attributes = this.addProductAttributes(product.attributes);
             }
 
@@ -187,13 +194,14 @@ export class ViewProductComponent implements OnInit {
             }
         });
         const attr = [];
-        if (this.attributes.value)
-            Object.keys(this.attributes.value).forEach((key) => {
+
+        if (this.attributeData.length > 0)
+            this.attributeData.forEach((attribute) => {
                 attr.push({
-                    name: key,
-                    value: this.attributes.value[key]
+                    name: attribute.name,
+                    value: attribute.options
                 })
-            });
+            })
 
         if (this.variationData.length > 0)
             this.product.variations = this.variationData;
@@ -225,14 +233,13 @@ export class ViewProductComponent implements OnInit {
 
         product.images = this.productImages;
         const attr = [];
-        if (this.attributes.value)
-            Object.keys(this.attributes.value).forEach((key) => {
+        if (this.attributeData.length > 0)
+            this.attributeData.forEach((attribute) => {
                 attr.push({
-                    name: key,
-                    value: this.attributes.value[key]
+                    name: attribute.name,
+                    value: attribute.options
                 })
-            });
-
+            })
         if (this.variationData.length > 0)
             product.variations = this.variationData;
 
@@ -340,17 +347,18 @@ export class ViewProductComponent implements OnInit {
         let data = [];
         this.variationKeys = [];
 
-        Object.keys(this.attributes.value).forEach((attr) => {
-            if (this.attributes.value[attr].length > 0) {
-                parts.push(this.attributes.value[attr]);
-                this.variationKeys.push(attr);
+
+        this.attributeData.forEach((attr) => {
+            if (attr.options.length > 0) {
+                parts.push(attr.options);
+                this.variationKeys.push(attr.name);
             }
-        });
+        })
         result = parts.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []));
         for (let i = 0; i < result.length; i++) {
             let obj = {
                 price: 0,
-                currency: 'USD',
+                currency: 'RMB',
                 attributes: []
             };
             for (let j = 0; j < result[i].length; j++) {
@@ -367,7 +375,7 @@ export class ViewProductComponent implements OnInit {
     }
 
     checkIfAttributesIsEmpty() {
-        if (Object.keys(this.attributes.value).length > 0)
+        if (Object.keys(this.attributeData).length > 0)
             return false;
         else
             return true;
@@ -395,4 +403,65 @@ export class ViewProductComponent implements OnInit {
     deleteVariation(index: number) {
         this.variationData.splice(index, 1);
     }
+
+    newQuantity(data) {
+        const { minQuantity, maxQuantity, amount, discountType, index } = data;
+        Object.assign(this.quantityData[index], { minQuantity, maxQuantity, amount, discountType })
+    }
+
+    addQuantitySale() {
+        this.quantityData.push({ minQuantity: 1, maxQuantity: 100, amount: 0 })
+    }
+
+    openPopup(view, index?) {
+        if (this.pricingRules)
+            this.quantityData = this.pricingRules
+
+        if (index != undefined && this.variationData[index].pricingRules)
+            this.quantityData = this.variationData[index].pricingRules;
+
+        const modal = this.modalService.create({
+            nzTitle: 'Quantity Of Sale',
+            nzContent: view,
+            nzFooter: [
+                {
+                    label: 'Dismiss',
+                    type: 'default',
+                    onClick: () => {
+                        this.modalService.closeAll()
+                        if (index != undefined) {
+                            this.variationData[index].pricingRules = this.quantityData;
+                        } else {
+                            this.pricingRules = this.quantityData;
+                        }
+                    }
+                },
+            ],
+            nzWidth: 800
+        });
+    }
+
+    addNewCustomAttribute() {
+        this.attributeData.push({ name: "", options: [] })
+    }
+
+    saveAttributes(data) {
+        console.log(data);
+        const { title, options, index } = data;
+        Object.assign(this.attributeData[index], { name: title, options });
+    }
+
+    pre(): void {
+        this.current -= 1;
+        // this.changeContent();
+      }
+    
+      next(): void {
+        this.current += 1;
+        // this.changeContent();
+      }
+    
+      done(): void {
+        console.log('done');
+      }
 }

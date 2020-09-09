@@ -35,9 +35,14 @@ import {
   NzMessageModule,
   NzIconModule,
   NzDividerModule,
+  NzInputNumberModule,
+  NzTypographyModule,
+  NzStepsModule,
 } from 'ng-zorro-antd';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { QuantitySaleComponent } from './quantity-sale/quantity-sale.component';
+import { CustomAttributeComponent } from './custom-attribute/custom-attribute.component';
 
 const antdModule = [
   NzButtonModule,
@@ -65,9 +70,12 @@ const antdModule = [
   NzDatePickerModule,
   NzCheckboxModule,
   NzMessageModule,
+  NzInputNumberModule,
+  NzTypographyModule,
+  NzStepsModule
 ];
 @NgModule({
-  declarations: [ListProductsComponent, ViewProductComponent],
+  declarations: [ListProductsComponent, ViewProductComponent, QuantitySaleComponent, CustomAttributeComponent],
   imports: [SharedModule, CommonModule, ProductRoutingModule, ReactiveFormsModule, ...antdModule, QuillModule],
   providers: [ThemeConstantService, AppsService, TableService],
 })

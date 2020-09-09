@@ -1,0 +1,48 @@
+<nz-card>
+    <div nz-row [nzGutter]="16">
+        <div nz-col class="gutter-row">
+            <nz-form-item>
+                <nz-form-label nzFor="from">From</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number [(ngModel)]="minQuantity" [nzMin]="1" [disabled]="disabled" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col class="gutter-row">
+            <nz-form-item>
+                <nz-form-label nzFor="to">To</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number [(ngModel)]="maxQuantity" [nzMin]="1" [disabled]="disabled" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <div class="row">
+        <nz-form-item class="col-md-12">
+            <nz-form-label nzFor="type" nzRequired>Discount Type</nz-form-label>
+            <nz-form-control nzErrorTip="Discount Type can not be empty">
+                <nz-select [(ngModel)]="discountType" [disabled]="disabled">
+                    <nz-option nzLabel="Discount Amount" nzValue="discountAmount"></nz-option>
+                    <nz-option nzLabel="Discount Percent" nzValue="discountPercent"></nz-option>
+                    <nz-option nzLabel="Fixed Price" nzValue="fixedPrice"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+
+    <div class="row">
+        <nz-form-item class="col-md-12">
+            <nz-form-label nzFor="amount" nzRequired>Amount</nz-form-label>
+            <nz-form-control nzErrorTip="Please input this field!">
+                <input nz-input [(ngModel)]="amount" type="text" [disabled]="disabled">
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <button *ngIf="!disabled" nz-button nzType="primary" nzBlock (click)="save()"><i nz-icon nzType="save" ></i>Save</button>
+    <button *ngIf="disabled" nz-button nzType="primary" nzBlock (click)="edit()"><i nz-icon nzType="edit"></i>Edit</button>
+
+
+</nz-card>
