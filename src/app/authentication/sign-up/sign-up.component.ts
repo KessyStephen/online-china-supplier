@@ -194,7 +194,14 @@ export class SignUp3Component {
             bankAccountNumber: [null, [Validators.required]],
             swiftCode: [null, [Validators.required]],
             postCode: [null, [Validators.required]],
-            // agree: [false]
+            agree: [false],
+            province: [null, Validators.required],
+            city: [null, Validators.required],
+            district: [null, Validators.required],
+            street: [null, Validators.required],
+            acceptedPaymentType: [null, Validators.required],
+            companyRegistrationNo: [null, Validators.required],
+            businessType: [null, Validators.required],
         });
     }
 
@@ -217,15 +224,15 @@ export class SignUp3Component {
         this.isUploading = true;
         const file = data.file;
         return this.uploadService.getUploadUrl(file.name, file.type).subscribe((result: any) => {
-          let url = result.getUrl;
-          return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
-            this.avatarUrl = url;
-            this.isUploading = false;
-            data.onSuccess(data.file);
-          }, (err) => {
-            data.onError(err, data.file);
-          })
-    
+            let url = result.getUrl;
+            return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
+                this.avatarUrl = url;
+                this.isUploading = false;
+                data.onSuccess(data.file);
+            }, (err) => {
+                data.onError(err, data.file);
+            })
+
         });
-      }
+    }
 }    
