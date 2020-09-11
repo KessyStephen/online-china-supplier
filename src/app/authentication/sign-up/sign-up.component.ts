@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 import { NzNotificationService, NzModalService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
+import { UploadService } from 'src/app/shared/services/upload.service';
 
 const OTP_FOR = 'REGISTER';
 @Component({
@@ -28,6 +29,9 @@ export class SignUp3Component {
     countryCodes: any[] = [];
     searchResults: any[] = [];
     isVisible: boolean = false;
+    avatarUrl: string;
+    loading: boolean = false;
+    isUploading: boolean = false;
 
     countries: any[] = [{ prefix: '+255', country: 'Tanzania', code2: 'TZ' }, { prefix: '+254', country: 'Kenya', code2: 'KE' }];
     selectedCountry: any = this.countries[0].code2;
@@ -161,7 +165,7 @@ export class SignUp3Component {
         }
     }
 
-    constructor(private fb: FormBuilder, private authService: AuthenticationService, private notification: NzNotificationService, private router: Router, private modalService: NzModalService) {
+    constructor(private fb: FormBuilder, private authService: AuthenticationService, private notification: NzNotificationService, private router: Router, private modalService: NzModalService, private uploadService: UploadService) {
     }
 
     ngOnInit(): void {
@@ -208,4 +212,20 @@ export class SignUp3Component {
             this.searchResults = chinaOnly;
         });
     }
+
+    handleRequest = (data: any) => {
+        this.isUploading = true;
+        const file = data.file;
+        return this.uploadService.getUploadUrl(file.name, file.type).subscribe((result: any) => {
+          let url = result.getUrl;
+          return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
+            this.avatarUrl = url;
+            this.isUploading = false;
+            data.onSuccess(data.file);
+          }, (err) => {
+            data.onError(err, data.file);
+          })
+    
+        });
+      }
 }    

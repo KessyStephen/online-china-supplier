@@ -81,7 +81,7 @@
                                 (ngSubmit)="submitForm()">
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <nz-form-item>
                                             <nz-form-label nzRequired nzFor="name">Username</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your username!">
@@ -157,14 +157,23 @@
 
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="businessLicense">Business License
-                                            </nz-form-label>
-                                            <nz-form-control nzErrorTip="Please input your Business License!">
-                                                <input type="text" nz-input formControlName="businessLicense"
-                                                    placeholder="Business License" id="businessLicense">
-                                            </nz-form-control>
+                                            <!-- <nz-form-label nzRequired nzFor="businessLicense">Business License
+                                            </nz-form-label> -->
+                                            <div class="clearfix"
+                                                style="text-align: center; align-items: center; align-self: center;">
+                                                <nz-upload class="avatar-uploader" nzName="avatar"
+                                                    nzListType="picture-card" [nzShowUploadList]="false"
+                                                    [nzCustomRequest]='handleRequest'>
+                                                    <ng-container style="width: 100%;" *ngIf="!avatarUrl">
+                                                        <i class="upload-icon" nz-icon
+                                                            [nzType]="isUploading ? 'loading' : 'plus'"></i>
+                                                        <div class="ant-upload-text">Upload Business License</div>
+                                                    </ng-container>
+                                                    <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+                                                </nz-upload>
+                                            </div>
                                         </nz-form-item>
 
                                         <nz-form-item>
@@ -210,10 +219,71 @@
                                         </nz-form-item>
 
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="postCode">Post Code</nz-form-label>
+                                            <nz-form-label nzRequired nzFor="businessType">Business Type</nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input your Business Type!">
+                                                <input type="text" nz-input formControlName="businessType"
+                                                    placeholder="Business Type" id="businessType">
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <nz-form-item>
+                                            <nz-form-label nzRequired nzFor="postCode">Post Code
+                                            </nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Post Code!">
                                                 <input type="text" nz-input formControlName="postCode"
                                                     placeholder="Post Code" id="postCode">
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <nz-form-item>
+                                            <nz-form-label nzRequired nzFor="province">Province</nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input your province!">
+                                                <input type="text" nz-input formControlName="province"
+                                                    placeholder="Province" id="province">
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <nz-form-item>
+                                            <nz-form-label nzRequired nzFor="city">City
+                                            </nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input your City!">
+                                                <input type="text" nz-input formControlName="city"
+                                                    placeholder="City" id="city">
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <nz-form-item>
+                                            <nz-form-label nzRequired nzFor="district">District</nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input your District!">
+                                                <input type="text" nz-input formControlName="district"
+                                                    placeholder="District" id="district">
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <nz-form-item>
+                                            <nz-form-label nzRequired nzFor="street">Street
+                                            </nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input your Street!">
+                                                <input type="text" nz-input formControlName="street"
+                                                    placeholder="Street" id="street">
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <nz-form-item>
+                                            <nz-form-label nzRequired nzFor="acceptedPaymentType">Accepted Payment Type</nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input your Accepted Payment Type!">
+                                                <input type="text" nz-input formControlName="acceptedPaymentType"
+                                                    placeholder="Accepted Payment Type" id="acceptedPaymentType">
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                        <nz-form-item>
+                                            <nz-form-label nzRequired nzFor="companyRegistrationNo">Company Registration No</nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input your Company Registration No!">
+                                                <input type="text" nz-input formControlName="companyRegistrationNo"
+                                                    placeholder="Company Registration No" id="companyRegistrationNo">
                                             </nz-form-control>
                                         </nz-form-item>
                                     </div>

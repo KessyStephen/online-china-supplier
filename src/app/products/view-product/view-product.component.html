@@ -76,25 +76,25 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item>
+                <!-- <nz-form-item>
                     <nz-form-label nzFor="minOrderQuantity">Minimum Order Quantity</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <input nz-input formControlName="minOrderQuantity" type="text">
                     </nz-form-control>
-                </nz-form-item>
+                </nz-form-item> -->
 
-                <nz-form-item>
+                <!-- <nz-form-item>
                     <nz-form-label nzFor="minOrderUnit">Minimum Order Quantity Unit</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <input nz-input formControlName="minOrderUnit" type="text">
                     </nz-form-control>
-                </nz-form-item>
+                </nz-form-item> -->
 
-                <nz-form-item>
+                <!-- <nz-form-item>
                     <nz-form-label nzFor="description" nzRequired>Description</nz-form-label>
                     <quill-editor formControlName="description" [style]="{height: '250px'}" [modules]="editorConfig"
                         placeholder=""></quill-editor>
-                </nz-form-item>
+                </nz-form-item> -->
 
 
             </nz-card>
@@ -192,15 +192,16 @@
             </nz-card>
             <nz-card *ngSwitchCase="4">
 
-                <nz-form-item>
+                <!-- <nz-form-item>
                     <nz-form-label nzFor="currency" nzRequired>Sample Currency</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <nz-select style="min-width: 220px;" formControlName="sampleCurrency" class="w-100"
                             nzPlaceHolder="Currency">
                             <nz-option nzLabel="USD" nzValue="USD"></nz-option>
+                            <nz-option nzLabel="RMB" nzValue="RMB"></nz-option>
                         </nz-select>
                     </nz-form-control>
-                </nz-form-item>
+                </nz-form-item> -->
 
                 <nz-form-item>
                     <nz-form-label nzFor="price" nzRequired>Sample Price</nz-form-label>
@@ -212,12 +213,12 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item>
+                <!-- <nz-form-item>
                     <nz-form-label nzFor="sku" nzRequired>Sample Unit</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <input nz-input formControlName="sampleUnit" type="text">
                     </nz-form-control>
-                </nz-form-item>
+                </nz-form-item> -->
 
                 <nz-form-item>
                     <nz-form-label nzFor="quality" nzRequired>Quantity</nz-form-label>
@@ -255,12 +256,12 @@
                         <button nz-button nzType="primary" (click)="openPopup(quantityOfSale)"> Quantity Sale</button>
                     </nz-form-item>
 
-                    <nz-form-item>
+                    <!-- <nz-form-item>
                         <nz-form-label nzFor="quality" nzRequired>Quality</nz-form-label>
                         <nz-form-control nzErrorTip="Please input this field!">
                             <input nz-input formControlName="quality" type="text">
                         </nz-form-control>
-                    </nz-form-item>
+                    </nz-form-item> -->
 
                 </nz-card>
 
