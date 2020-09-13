@@ -76,7 +76,7 @@ export class ViewProductComponent implements OnInit {
                 productName: [product.translations.en.name, [Validators.required]],
                 canRequestSample: [product.canRequestSample, [Validators.required]],
                 // currency: [product.currency, [Validators.required]],
-                type: [product.type, [Validators.required]],
+                // type: [product.type, [Validators.required]],
                 price: [product.price, [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
@@ -114,6 +114,11 @@ export class ViewProductComponent implements OnInit {
             if (product.variations.length > 0) {
                 this.variationData = product.variations;
             }
+            this.attributeData.forEach((attr) => {
+                if (attr.options.length > 0) {
+                    this.variationKeys.push(attr.name);
+                }
+            })
             for (let i = 0; i < product.images.length; i++) {
                 const image = product.images[i];
                 this.fileList.push(
@@ -131,7 +136,7 @@ export class ViewProductComponent implements OnInit {
         } else {
             this.productEditForm = this.fb.group({
                 productName: ['', [Validators.required]],
-                type: ['simple', [Validators.required]],
+                // type: ['simple', [Validators.required]],
                 // currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
                 canRequestSample: [false, [Validators.required]],
@@ -248,13 +253,18 @@ export class ViewProductComponent implements OnInit {
 
         product.images = this.productImages;
         const attr = [];
-        if (this.attributeData.length > 0)
+        if (this.attributeData.length > 0) {
+            product.type = 'variable';
             this.attributeData.forEach((attribute) => {
                 attr.push({
                     name: attribute.name,
                     value: attribute.options
                 })
             })
+        } else {
+            product.type = 'simple';
+        }
+
         if (this.variationData.length > 0)
             product.variations = this.variationData;
 

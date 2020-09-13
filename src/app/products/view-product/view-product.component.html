@@ -32,7 +32,7 @@
     <div class="steps-content">
         <div [ngSwitch]="current">
             <nz-card *ngSwitchCase="0">
-                <div class='row'>
+                <!-- <div class='row'>
                     <nz-form-item class="col-md-12">
                         <nz-form-label nzFor="type" nzRequired>Product Type</nz-form-label>
                         <nz-form-control nzErrorTip="Product Type can not be empty">
@@ -44,7 +44,7 @@
                             </nz-select>
                         </nz-form-control>
                     </nz-form-item>
-                </div>
+                </div> -->
 
                 <div class='row'>
                     <nz-form-item class="col-md-12">
@@ -311,9 +311,9 @@
                 </nz-form-item> -->
 
                 <nz-form-item>
-                    <nz-form-label nzFor="quality" nzRequired>Quantity</nz-form-label>
+                    <nz-form-label nzFor="sampleQuantity" nzRequired>Quantity</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
-                        <input nz-input formControlName="quality" type="text">
+                        <input nz-input formControlName="sampleQuantity" type="text">
                     </nz-form-control>
                 </nz-form-item>
 
