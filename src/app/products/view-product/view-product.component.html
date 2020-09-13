@@ -134,7 +134,14 @@
 
             </nz-card>
             <nz-card *ngSwitchCase="1">
+                <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
+                    <div nz-col>
+                        <button nz-button nzType="primary" (click)="addProductSpecification(specificationTemplate)">Add
+                            Product
+                            Specification</button>
+                    </div>
+                </div>
                 <nz-form-item>
                     <nz-form-label nzFor="length" nzRequired>Length (cm)</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
@@ -188,6 +195,29 @@
                         <input nz-input formControlName="model" type="text">
                     </nz-form-control>
                 </nz-form-item>
+
+                <div class="row" *ngFor="let specs of specifications; let i = index">
+                    <nz-card class="col-12">
+                        <div nz-row nzJustify="space-between">
+                            <div nz-col> 
+                                <h4 nz-typography>{{specs.key}}</h4>
+                                <h5 nz-typography>{{specs.value}}</h5>
+                            </div>
+                            <div nz-col>
+                                <a class="m-r-5" nz-button nzType="default" nzShape="circle" nz-tooltip
+                                    nzTooltipTitle="Edit" (click)="addProductSpecification(specificationTemplate, i)">
+                                    <i nz-icon nzType="edit" theme="outline"></i>
+                                </a>
+                                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete"
+                                    (click)="deleteSpec(i)">
+                                    <i nz-icon nzType="delete" theme="outline"></i>
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </nz-card>
+                </div>
 
             </nz-card>
             <nz-card *ngSwitchCase="4">
@@ -398,6 +428,31 @@
                 [index]="i" [discountType]="qs.discountType" (quantityEvent)="newQuantity($event)">
 
             </app-quantity-sale>
+        </div>
+    </ng-template>
+
+    <ng-template #specificationTemplate>
+        <div nz-row>
+            <form nz-form [formGroup]="specificationForm" nzLayout="vertical">
+
+                <div class="row">
+                    <nz-form-item class="col-md-12">
+                        <nz-form-label nzFor="key" nzRequired>Key</nz-form-label>
+                        <nz-form-control nzErrorTip="Please input this field!">
+                            <input nz-input formControlName="key" type="text">
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div class="row">
+                    <nz-form-item class="col-md-12">
+                        <nz-form-label nzFor="value" nzRequired>Value</nz-form-label>
+                        <nz-form-control nzErrorTip="Please input this field!">
+                            <input nz-input formControlName="value" type="text">
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </form>
         </div>
     </ng-template>
 </form>

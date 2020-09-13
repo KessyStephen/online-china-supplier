@@ -24,6 +24,8 @@ export class ViewProductComponent implements OnInit {
     subCategories: Category[] = [];
     attributes: FormGroup = new FormGroup({});
     variations: FormGroup = new FormGroup({});
+    specificationForm: FormGroup = new FormGroup({});
+    specifications: any[] = [];
     productImages: any[] = [];
     product: Product;
     fileList: any[] = [];
@@ -73,7 +75,7 @@ export class ViewProductComponent implements OnInit {
             this.productEditForm = this.fb.group({
                 productName: [product.translations.en.name, [Validators.required]],
                 canRequestSample: [product.canRequestSample, [Validators.required]],
-                currency: [product.currency, [Validators.required]],
+                // currency: [product.currency, [Validators.required]],
                 type: [product.type, [Validators.required]],
                 price: [product.price, [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
@@ -84,14 +86,14 @@ export class ViewProductComponent implements OnInit {
                 weight: [product.weight, []],
                 moq: [product.moq, []],
                 model: [product.model, []],
-                quality: [product.quality, [Validators.required]],
+                // quality: [product.quality, [Validators.required]],
                 samplePrice: [product.samplePrice, this.canSampleRequest ? [Validators.required] : []],
-                minOrderQuantity: [product.minOrderQuantity, []],
-                minOrderUnit: [product.minOrderUnit, []],
+                // minOrderQuantity: [product.minOrderQuantity, []],
+                // minOrderUnit: [product.minOrderUnit, []],
                 sampleCurrency: [product.sampleCurrency, this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: [product.sampleQuantity, this.canSampleRequest ? [Validators.required] : []],
-                sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
-                description: [product.translations.en.description, [Validators.required]],
+                // sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
+                // description: [product.translations.en.description, [Validators.required]],
                 variations: [product.variations, []],
             });
             const sub = this.categoryService.categories.find(sub => sub._id === product.categoryId);
@@ -101,6 +103,9 @@ export class ViewProductComponent implements OnInit {
                 });
                 this.attributes = this.addProductAttributes(product.attributes);
             }
+
+            if (product.specifications)
+                this.specifications = product.specifications;
 
             if (product.variations.length > 0) {
                 this.variationData = product.variations;
@@ -123,7 +128,7 @@ export class ViewProductComponent implements OnInit {
             this.productEditForm = this.fb.group({
                 productName: ['', [Validators.required]],
                 type: ['simple', [Validators.required]],
-                currency: ['', [Validators.required]],
+                // currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
@@ -134,14 +139,14 @@ export class ViewProductComponent implements OnInit {
                 weight: ['', []],
                 moq: ['', []],
                 model: ['', []],
-                quality: ['', [Validators.required]],
-                description: ['', [Validators.required]],
+                // quality: ['', [Validators.required]],
+                // description: ['', [Validators.required]],
                 samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
                 minOrderUnit: ['', []],
-                minOrderQuantity: ['', []],
+                // minOrderQuantity: ['', []],
                 sampleCurrency: ['', this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
-                sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
+                // sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
                 attributes: [],
                 variations: []
             });
@@ -214,6 +219,8 @@ export class ViewProductComponent implements OnInit {
                 description: this.productEditForm.value.description
             }
         }
+        this.product.specifications = this.specifications;
+
         delete this.product._id;
         this.modalService.confirm({
             nzTitle: 'Update this product?',
@@ -251,6 +258,8 @@ export class ViewProductComponent implements OnInit {
                 description: this.productEditForm.value.description
             }
         }
+
+        product.specifications = this.specifications;
 
         this.createProduct(product);
 
@@ -441,6 +450,57 @@ export class ViewProductComponent implements OnInit {
         });
     }
 
+    addProductSpecification(view, index?) {
+        if (index != undefined) {
+            this.specificationForm = this.fb.group({
+                key: [this.specifications[index].key, Validators.required],
+                value: [this.specifications[index].value, Validators.required]
+            })
+        } else {
+            this.specificationForm = this.fb.group({
+                key: [null, Validators.required],
+                value: [null, Validators.required]
+            })
+        }
+
+        const modal = this.modalService.create({
+            nzTitle: 'Product Specification',
+            nzContent: view,
+            nzFooter: [
+                {
+                    label: 'Save',
+                    type: 'primary',
+                    onClick: () => {
+                        if (this.specificationForm.valid) {
+                            if (index != undefined) {
+                                this.specifications[index] = this.specificationForm.value;
+                                this.modalService.closeAll();
+                            } else {
+                                this.specifications.push(this.specificationForm.value);
+                                this.modalService.closeAll();
+                            }
+
+                        }
+
+                    }
+                },
+                {
+                    label: 'Cancel',
+                    type: 'default',
+                    onClick: () => {
+                        this.modalService.closeAll()
+
+                    }
+                },
+            ],
+            nzWidth: 400
+        });
+    }
+
+    deleteSpec(index) {
+        this.specifications.splice(index, 1);
+    }
+
     addNewCustomAttribute() {
         this.attributeData.push({ name: "", options: [] })
     }
@@ -454,14 +514,14 @@ export class ViewProductComponent implements OnInit {
     pre(): void {
         this.current -= 1;
         // this.changeContent();
-      }
-    
-      next(): void {
+    }
+
+    next(): void {
         this.current += 1;
         // this.changeContent();
-      }
-    
-      done(): void {
+    }
+
+    done(): void {
         console.log('done');
-      }
+    }
 }

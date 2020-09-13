@@ -27,7 +27,8 @@ export interface Product {
     sampleCurrency: string;
     sampleUnit: string;
     attributes: Attribute[],
-    variations: any[]
+    variations: any[],
+    specifications: any[]
 }
 
 interface Attribute {

@@ -141,6 +141,7 @@ export class SignUp3Component {
 
     submitUserDetails(info: any) {
         this.isRegistering = !this.isRegistering;
+        info.businessLicense = this.avatarUrl;
         this.authService.register(info).subscribe((result) => {
             this.isRegistering = !this.isRegistering;
             if (result.success) {
