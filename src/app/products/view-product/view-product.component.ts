@@ -95,6 +95,10 @@ export class ViewProductComponent implements OnInit {
                 // sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
                 // description: [product.translations.en.description, [Validators.required]],
                 variations: [product.variations, []],
+                shippingCBMQuantity: [product.shippingCBMQuantity, []],
+                shippingCBMValue: [product.shippingCBMValue, []],
+                shippingWeightQuantity: [product.shippingWeightQuantity, []],
+                shippingWeightValue: [product.shippingWeightValue, []],
             });
             const sub = this.categoryService.categories.find(sub => sub._id === product.categoryId);
             if (sub.attributes) {
@@ -132,13 +136,17 @@ export class ViewProductComponent implements OnInit {
                 price: ['', [Validators.required]],
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
-                sku: ['', [Validators.required]],
+                sku: ['', []],
                 length: ['', []],
                 width: ['', []],
                 height: ['', []],
                 weight: ['', []],
                 moq: ['', []],
                 model: ['', []],
+                shippingCBMQuantity: ['', []],
+                shippingCBMValue: ['', []],
+                shippingWeightQuantity: ['', []],
+                shippingWeightValue: ['', []],
                 // quality: ['', [Validators.required]],
                 // description: ['', [Validators.required]],
                 samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
@@ -148,7 +156,7 @@ export class ViewProductComponent implements OnInit {
                 sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
                 // sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
                 attributes: [],
-                variations: []
+                variations: [],
             });
         }
     }

@@ -1,4 +1,8 @@
 export interface Product {
+    shippingCBMQuantity: any;
+    shippingCBMValue: any;
+    shippingWeightQuantity: any;
+    shippingWeightValue: any;
     model: any;
     length: any;
     height: any;

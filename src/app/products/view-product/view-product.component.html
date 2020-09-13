@@ -142,6 +142,66 @@
                             Specification</button>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <nz-form-item>
+                            <nz-form-label nzFor="shippingCBMQuantity" nzRequired>Quantity</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input this field!">
+                                <nz-input-group>
+                                    <input nz-input formControlName="shippingCBMQuantity" type="text">
+                                </nz-input-group>
+        
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <div class="col-md-2">
+                        <div nz-row nzJustify="center">
+                            =
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <nz-form-item>
+                            <nz-form-label nzFor="shippingCBMValue" nzRequired>CBM </nz-form-label>
+                            <nz-form-control nzErrorTip="Please input this field!">
+                                <nz-input-group>
+                                    <input nz-input formControlName="shippingCBMValue" type="text">
+                                </nz-input-group>
+        
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <nz-form-item>
+                            <nz-form-label nzFor="shippingWeightQuantity" nzRequired>Quantity</nz-form-label>
+                            <nz-form-control nzErrorTip="Please input this field!">
+                                <nz-input-group>
+                                    <input nz-input formControlName="shippingWeightQuantity" type="text">
+                                </nz-input-group>
+        
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <div class="col-md-2">
+                        <div nz-row nzJustify="center">
+                            =
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <nz-form-item>
+                            <nz-form-label nzFor="shippingWeightValue" nzRequired>Weight (kg) </nz-form-label>
+                            <nz-form-control nzErrorTip="Please input this field!">
+                                <nz-input-group>
+                                    <input nz-input formControlName="shippingWeightValue" type="text">
+                                </nz-input-group>
+        
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
                 <nz-form-item>
                     <nz-form-label nzFor="length" nzRequired>Length (cm)</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
@@ -259,8 +319,8 @@
 
             </nz-card>
             <div *ngSwitchCase="3">
-                <nz-card *ngIf="isSimpleProduct">
-                    <nz-form-item>
+                <nz-card *ngIf="attributeData.length === 0">
+                    <!-- <nz-form-item>
                         <nz-form-label nzFor="currency" nzRequired>Currency</nz-form-label>
                         <nz-form-control nzErrorTip="Please input this field!">
                             <nz-select style="min-width: 220px;" formControlName="currency" class="w-100"
@@ -271,7 +331,7 @@
 
                             </nz-select>
                         </nz-form-control>
-                    </nz-form-item>
+                    </nz-form-item> -->
 
                     <nz-form-item>
                         <nz-form-label nzFor="price" nzRequired>Price</nz-form-label>
@@ -295,7 +355,7 @@
 
                 </nz-card>
 
-                <nz-card *ngIf="!isSimpleProduct">
+                <nz-card *ngIf="attributeData.length > 0">
                     <div class="d-md-flex m-b-15 align-items-center justify-content-between">
                         <div>
                             <nz-divider nzText="Product Variations" style="margin-top: 10px;" nzOrientation="left">
@@ -315,7 +375,7 @@
                                 <thead>
                                     <tr>
                                         <th *ngFor="let da of variationKeys;">{{da}}</th>
-                                        <th *ngIf="variationKeys.length > 0">Currency</th>
+                                        <!-- <th *ngIf="variationKeys.length > 0">Currency</th> -->
                                         <th *ngIf="variationKeys.length > 0">Amount</th>
                                         <th *ngIf="variationKeys.length > 0">Actions</th>
                                     </tr>
@@ -324,9 +384,9 @@
                                     <tr *ngFor="let data of variationData; let i = index" class="editable-row">
 
                                         <td *ngFor="let da of data.attributes; let j = index">{{da.value}}</td>
-                                        <td>
+                                        <!-- <td>
                                             {{data.currency}}
-                                        </td>
+                                        </td> -->
                                         <td class="editable-cell" (click)="showEditPrice(editPrice, i)">
                                             {{data.price}}
                                         </td>
