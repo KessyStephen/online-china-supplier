@@ -378,11 +378,18 @@ export class ViewProductComponent implements OnInit {
                 currency: 'RMB',
                 attributes: []
             };
-            for (let j = 0; j < result[i].length; j++) {
-                const element = result[i][j];
-                let d = { name: this.variationKeys[j], value: element };
+            if (Array.isArray(result[i])) {
+                for (let j = 0; j < result[i].length; j++) {
+                    const element = result[i][j];
+                    let d = { name: this.variationKeys[j], value: element };
+                    obj.attributes.push(d);
+                }
+            } else {
+                const element = result[i];
+                let d = { name: this.variationKeys[i], value: element };
                 obj.attributes.push(d);
             }
+
             data.push(obj)
         }
         this.variationData = data;
