@@ -190,7 +190,6 @@ export class SignUp3Component {
             verificationId: [null, [Validators.required]],
             businessLicense: [null, [Validators.required]],
             companyName: [null, [Validators.required]],
-            companyAddress: [null, [Validators.required]],
             bankName: [null, [Validators.required]],
             bankAccountNumber: [null, [Validators.required]],
             swiftCode: [null, [Validators.required]],

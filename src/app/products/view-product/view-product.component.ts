@@ -385,7 +385,7 @@ export class ViewProductComponent implements OnInit {
         for (let i = 0; i < result.length; i++) {
             let obj = {
                 price: 0,
-                currency: 'RMB',
+                currency: 'CNY',
                 attributes: []
             };
             if (Array.isArray(result[i])) {

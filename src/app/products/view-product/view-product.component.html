@@ -26,7 +26,6 @@
         <nz-step nzTitle="Product Specification"></nz-step>
         <nz-step nzTitle="Option Info"></nz-step>
         <nz-step nzTitle="Price Details"></nz-step>
-        <nz-step nzTitle="Sample Details"></nz-step>
         <nz-step nzTitle="Product Images"></nz-step>
     </nz-steps>
     <div class="steps-content">
@@ -73,6 +72,41 @@
                             (ngModelChange)="onRequestSampleChanged($event)">
                             <span>Can users request sample</span>
                         </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                  <!-- <nz-form-item>
+                    <nz-form-label nzFor="currency" nzRequired>Sample Currency</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <nz-select style="min-width: 220px;" formControlName="sampleCurrency" class="w-100"
+                            nzPlaceHolder="Currency">
+                            <nz-option nzLabel="USD" nzValue="USD"></nz-option>
+                            <nz-option nzLabel="RMB" nzValue="RMB"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item> -->
+
+                <nz-form-item *ngIf="canSampleRequest">
+                    <nz-form-label nzFor="price" nzRequired>Sample Price</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <nz-input-group>
+                            <input nz-input formControlName="samplePrice" type="text">
+                        </nz-input-group>
+
+                    </nz-form-control>
+                </nz-form-item>
+
+                <!-- <nz-form-item>
+                    <nz-form-label nzFor="sku" nzRequired>Sample Unit</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <input nz-input formControlName="sampleUnit" type="text">
+                    </nz-form-control>
+                </nz-form-item> -->
+
+                <nz-form-item *ngIf="canSampleRequest">
+                    <nz-form-label nzFor="sampleQuantity" nzRequired>Quantity</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <input nz-input formControlName="sampleQuantity" type="text">
                     </nz-form-control>
                 </nz-form-item>
 
@@ -280,44 +314,6 @@
                 </div>
 
             </nz-card>
-            <nz-card *ngSwitchCase="4">
-
-                <!-- <nz-form-item>
-                    <nz-form-label nzFor="currency" nzRequired>Sample Currency</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-select style="min-width: 220px;" formControlName="sampleCurrency" class="w-100"
-                            nzPlaceHolder="Currency">
-                            <nz-option nzLabel="USD" nzValue="USD"></nz-option>
-                            <nz-option nzLabel="RMB" nzValue="RMB"></nz-option>
-                        </nz-select>
-                    </nz-form-control>
-                </nz-form-item> -->
-
-                <nz-form-item>
-                    <nz-form-label nzFor="price" nzRequired>Sample Price</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-input-group>
-                            <input nz-input formControlName="samplePrice" type="text">
-                        </nz-input-group>
-
-                    </nz-form-control>
-                </nz-form-item>
-
-                <!-- <nz-form-item>
-                    <nz-form-label nzFor="sku" nzRequired>Sample Unit</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <input nz-input formControlName="sampleUnit" type="text">
-                    </nz-form-control>
-                </nz-form-item> -->
-
-                <nz-form-item>
-                    <nz-form-label nzFor="sampleQuantity" nzRequired>Quantity</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <input nz-input formControlName="sampleQuantity" type="text">
-                    </nz-form-control>
-                </nz-form-item>
-
-            </nz-card>
             <div *ngSwitchCase="3">
                 <nz-card *ngIf="attributeData.length === 0">
                     <!-- <nz-form-item>
@@ -420,7 +416,7 @@
                     </div>
                 </nz-card>
             </div>
-            <nz-card *ngSwitchCase="5">
+            <nz-card *ngSwitchCase="4">
                 <nz-upload nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 15"
                     [nzPreview]="handlePreview" [nzCustomRequest]='handleRequest'>
                     <i nz-icon nzType="plus"></i>
