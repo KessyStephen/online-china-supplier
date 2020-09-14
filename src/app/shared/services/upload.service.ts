@@ -21,6 +21,26 @@ export class UploadService {
         }));
     }
 
+    getUploadUrlRegister(fileName: string, contentType, email?: string, verificationId?: string) {
+        if (email && verificationId)
+            return this.http.post(`${environment.url}/signed_post_url_register`, { fileName, contentType, email, verificationId }).pipe(map((result: any) => {
+                if (result.status === 200 && result.success) {
+                    return result.data;
+                }
+                this.notificationService.error('Error', result.message);
+                return null;
+            }));
+
+        else
+            return this.http.post(`${environment.url}/signed_post_url_register`, { fileName, contentType }).pipe(map((result: any) => {
+                if (result.status === 200 && result.success) {
+                    return result.data;
+                }
+                this.notificationService.error('Error', result.message);
+                return null;
+            }));
+    }
+
     uploadFile(file, data) {
         let form = new FormData();
         form.append("key", data.key)

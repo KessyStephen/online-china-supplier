@@ -101,7 +101,7 @@ export class ListProductsComponent implements OnInit {
     }
 
     getCategoryName(id: string) {
-        return this.categoryService.categories.find((category) => category._id === id).translations.en.name;
+        return this.categoryService.categories.find((category) => category._id === id)?.translations?.en?.name;
     }
 
 

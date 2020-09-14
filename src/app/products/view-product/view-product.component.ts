@@ -40,6 +40,7 @@ export class ViewProductComponent implements OnInit {
     quantityData: any[] = [];
     pricingRules: any[] = [];
     variationKeys: string[] = [];
+    checked:boolean = false;
     price: string;
 
     current: number = 0;

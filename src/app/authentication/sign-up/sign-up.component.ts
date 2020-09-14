@@ -223,7 +223,9 @@ export class SignUp3Component {
     handleRequest = (data: any) => {
         this.isUploading = true;
         const file = data.file;
-        return this.uploadService.getUploadUrl(file.name, file.type).subscribe((result: any) => {
+        const email = this.signUpForm.value.email;
+        const verificationId = this.signUpForm.value.verificationId;
+        return this.uploadService.getUploadUrlRegister(file.name, file.type, email, verificationId).subscribe((result: any) => {
             let url = result.getUrl;
             return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
                 this.avatarUrl = url;

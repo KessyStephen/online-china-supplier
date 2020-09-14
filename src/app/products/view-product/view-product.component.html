@@ -435,7 +435,7 @@
         <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
             <span>Previous</span>
         </button>
-        <button nz-button nzType="default" (click)="next()" *ngIf="current < 5">
+        <button nz-button nzType="default" (click)="next()" *ngIf="current < 4">
             <span>Next</span>
         </button>
         <!-- <button nz-button nzType="primary" (click)="done()" *ngIf="current === 5">
@@ -443,7 +443,7 @@
         </button> -->
 
         <button [nzLoading]="saveLoading" nz-button nzType="primary"
-            [disabled]="productEditForm.invalid && productImages.length == 0" *ngIf="!isEdit && current === 5"
+            [disabled]="productEditForm.invalid && productImages.length == 0" *ngIf="!isEdit && current === 4"
             (click)="save()">
             <i nz-icon nzType="save" theme="outline"></i>
             <span>Save</span>
@@ -453,24 +453,6 @@
             <span>Update</span>
         </button>
     </div>
-    <!-- <nz-tab nzTitle="Basic Info">
-        
-    </nz-tab>
-    <nz-tab nzTitle="Option Info">
-        
-    </nz-tab>
-    <nz-tab nzTitle="Product Specification">
-        
-    </nz-tab>
-    <nz-tab nzTitle="Sample Details" *ngIf="productEditForm.value.canRequestSample">
-        
-    </nz-tab>
-    <nz-tab nzTitle="Price Details">
-        
-    </nz-tab>
-    <nz-tab nzTitle="Product Images">
-        
-    </nz-tab> -->
 
     <ng-template #quantityOfSale>
         <div nz-row nzJustify="end" style="margin-bottom: 10px;">
