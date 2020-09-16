@@ -18,7 +18,7 @@
                     <div class="steps-content"></div>
                     <nz-card class="shadow-lg">
 
-                        <div *ngIf="currentStep === 0">
+                        <div *ngIf="currentStep === 2">
                             <form nz-form [formGroup]="emailForm" class="login-form" nzLayout="vertical"
                                 (ngSubmit)="submitForm()">
                                 <nz-form-item>
@@ -76,7 +76,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="currentStep === 2">
+                        <div *ngIf="currentStep === 0">
                             <form nz-form [formGroup]="signUpForm" class="login-form" nzLayout="vertical"
                                 (ngSubmit)="submitForm()">
 
@@ -211,10 +211,15 @@
                                         </nz-form-item>
 
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="businessType">Business Type</nz-form-label>
-                                            <nz-form-control nzErrorTip="Please input your Business Type!">
-                                                <input type="text" nz-input formControlName="businessType"
-                                                    placeholder="Business Type" id="businessType">
+                                            <nz-form-label nzFor="businessType" nzRequired>Business Type</nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input this field!">
+                                                <nz-select style="min-width: 220px;" formControlName="businessType"
+                                                    class="w-100" nzPlaceHolder="Business Type">
+                                                    <nz-option nzLabel="Manufacturer" nzValue="Manufacturer"></nz-option>
+                                                    <nz-option nzLabel="Wholesaler" nzValue="Wholesaler"></nz-option>
+                                                    <nz-option nzLabel="Trading Company" nzValue="Trading Company"></nz-option>
+                                                    <nz-option nzLabel="Agent" nzValue="Agent"></nz-option>
+                                                </nz-select>
                                             </nz-form-control>
                                         </nz-form-item>
                                     </div>
@@ -241,8 +246,8 @@
                                             <nz-form-label nzRequired nzFor="city">City
                                             </nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your City!">
-                                                <input type="text" nz-input formControlName="city"
-                                                    placeholder="City" id="city">
+                                                <input type="text" nz-input formControlName="city" placeholder="City"
+                                                    id="city">
                                             </nz-form-control>
                                         </nz-form-item>
 
@@ -264,7 +269,8 @@
                                         </nz-form-item>
 
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="acceptedPaymentType">Accepted Payment Type</nz-form-label>
+                                            <nz-form-label nzRequired nzFor="acceptedPaymentType">Accepted Payment Type
+                                            </nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Accepted Payment Type!">
                                                 <input type="text" nz-input formControlName="acceptedPaymentType"
                                                     placeholder="Accepted Payment Type" id="acceptedPaymentType">
@@ -272,7 +278,8 @@
                                         </nz-form-item>
 
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="companyRegistrationNo">Company Registration No</nz-form-label>
+                                            <nz-form-label nzRequired nzFor="companyRegistrationNo">Company Registration
+                                                No</nz-form-label>
                                             <nz-form-control nzErrorTip="Please input your Company Registration No!">
                                                 <input type="text" nz-input formControlName="companyRegistrationNo"
                                                     placeholder="Company Registration No" id="companyRegistrationNo">
