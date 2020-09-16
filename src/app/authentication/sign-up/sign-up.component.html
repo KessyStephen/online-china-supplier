@@ -18,7 +18,7 @@
                     <div class="steps-content"></div>
                     <nz-card class="shadow-lg">
 
-                        <div *ngIf="currentStep === 2">
+                        <div *ngIf="currentStep === 0">
                             <form nz-form [formGroup]="emailForm" class="login-form" nzLayout="vertical"
                                 (ngSubmit)="submitForm()">
                                 <nz-form-item>
@@ -76,7 +76,7 @@
                             </div>
                         </div>
 
-                        <div *ngIf="currentStep === 0">
+                        <div *ngIf="currentStep === 2">
                             <form nz-form [formGroup]="signUpForm" class="login-form" nzLayout="vertical"
                                 (ngSubmit)="submitForm()">
 
