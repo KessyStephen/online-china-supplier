@@ -25,6 +25,7 @@ export class ViewProductComponent implements OnInit {
     attributes: FormGroup = new FormGroup({});
     variations: FormGroup = new FormGroup({});
     specificationForm: FormGroup = new FormGroup({});
+    quantitySaleForm: FormGroup = new FormGroup({});
     specifications: any[] = [];
     productImages: any[] = [];
     product: Product;
@@ -40,8 +41,16 @@ export class ViewProductComponent implements OnInit {
     quantityData: any[] = [];
     pricingRules: any[] = [];
     variationKeys: string[] = [];
-    checked:boolean = false;
+    tagss: string[] = [];
+    checked: boolean = false;
     price: string;
+    quantityOfSales: any[] = [];
+    radioValue = 0;
+    style = {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px'
+    };
 
     current: number = 0;
 
@@ -79,6 +88,8 @@ export class ViewProductComponent implements OnInit {
                 // currency: [product.currency, [Validators.required]],
                 // type: [product.type, [Validators.required]],
                 price: [product.price, [Validators.required]],
+                unit: [product.unit, [Validators.required]],
+                tags: [product.tags, [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
                 length: [product.length, []],
@@ -87,6 +98,7 @@ export class ViewProductComponent implements OnInit {
                 weight: [product.weight, []],
                 moq: [product.moq, []],
                 model: [product.model, []],
+                radioValue: [],
                 // quality: [product.quality, [Validators.required]],
                 samplePrice: [product.samplePrice, this.canSampleRequest ? [Validators.required] : []],
                 // minOrderQuantity: [product.minOrderQuantity, []],
@@ -140,6 +152,8 @@ export class ViewProductComponent implements OnInit {
                 // type: ['simple', [Validators.required]],
                 // currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
+                unit: ['', [Validators.required]],
+                tags: [[]],
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
                 sku: ['', []],
@@ -148,6 +162,7 @@ export class ViewProductComponent implements OnInit {
                 height: ['', []],
                 weight: ['', []],
                 moq: ['', []],
+                radioValue: [],
                 model: ['', []],
                 shippingCBMQuantity: ['', []],
                 shippingCBMValue: ['', []],
@@ -387,7 +402,8 @@ export class ViewProductComponent implements OnInit {
             let obj = {
                 price: 0,
                 currency: 'CNY',
-                attributes: []
+                attributes: [],
+                pricingRules: []
             };
             if (Array.isArray(result[i])) {
                 for (let j = 0; j < result[i].length; j++) {
@@ -397,7 +413,11 @@ export class ViewProductComponent implements OnInit {
                 }
             } else {
                 const element = result[i];
-                let d = { name: this.variationKeys[i], value: element };
+                let d = {};
+                if (this.variationKeys.length == 1)
+                    d = { name: this.variationKeys[0], value: element };
+                else
+                    d = { name: this.variationKeys[i], value: element };
                 obj.attributes.push(d);
             }
 
@@ -428,6 +448,34 @@ export class ViewProductComponent implements OnInit {
                     onClick: () => {
                         this.variationData[index].price = this.price;
                         this.modalService.closeAll();
+                    }
+                },
+            ],
+            nzWidth: 800
+        })
+    }
+
+    showSalePrice(modalRef: TemplateRef<{}>, qosIndex?: number, variationIndex?: number) {
+        if (this.variationData[variationIndex].pricingRules[qosIndex] != undefined) {
+            this.price = this.variationData[variationIndex].pricingRules[qosIndex].amount;
+        }
+        const modal = this.modalService.create({
+            nzTitle: 'Modify the price',
+            nzContent: modalRef,
+            nzFooter: [
+                {
+                    label: 'Submit',
+                    type: 'primary',
+                    onClick: () => {
+                        if (this.variationData[variationIndex].pricingRules[qosIndex] != undefined) {
+                            this.variationData[variationIndex].pricingRules[qosIndex].amount = this.price;
+                        } else {
+                            this.variationData[variationIndex].pricingRules.push({ ...this.quantityOfSales[qosIndex], amount: this.price });
+                        }
+
+                        this.modalService.closeAll();
+                        this.price = '0';
+
                     }
                 },
             ],
@@ -523,8 +571,60 @@ export class ViewProductComponent implements OnInit {
         });
     }
 
+    addQuantitySaleModal(view, index?) {
+        if (index != undefined) {
+            this.quantitySaleForm = this.fb.group({
+                from: [this.quantityOfSales[index].from, Validators.required],
+                to: [this.quantityOfSales[index].to, Validators.required],
+            })
+        } else {
+            this.quantitySaleForm = this.fb.group({
+                from: [null, Validators.required],
+                to: [null, Validators.required],
+            })
+        }
+
+        const modal = this.modalService.create({
+            nzTitle: 'Quantity Sale',
+            nzContent: view,
+            nzFooter: [
+                {
+                    label: 'Save',
+                    type: 'primary',
+                    onClick: () => {
+                        if (this.quantitySaleForm.valid) {
+                            if (index != undefined) {
+                                this.quantityOfSales[index] = this.quantitySaleForm.value;
+                                this.modalService.closeAll();
+                            } else {
+                                this.quantitySaleForm.value['discountType'] = 'discountAmount'
+                                this.quantityOfSales.push(this.quantitySaleForm.value);
+                                this.modalService.closeAll();
+                            }
+
+                        }
+
+                    }
+                },
+                {
+                    label: 'Cancel',
+                    type: 'default',
+                    onClick: () => {
+                        this.modalService.closeAll()
+
+                    }
+                },
+            ],
+            nzWidth: 400
+        });
+    }
+
     deleteSpec(index) {
         this.specifications.splice(index, 1);
+    }
+
+    deleteQos(index) {
+        this.quantityOfSales.splice(index, 1);
     }
 
     addNewCustomAttribute() {
@@ -549,5 +649,20 @@ export class ViewProductComponent implements OnInit {
 
     done(): void {
         console.log('done');
+    }
+
+    changeImageOrder(index) {
+        this.productImages.map((productImage) => {
+            if (productImage.position === 0) {
+                productImage.position = index;
+                return productImage;
+            }
+
+            if (productImage.position === index) {
+                productImage.position = 0;
+                return productImage;
+            }
+        });
+
     }
 }

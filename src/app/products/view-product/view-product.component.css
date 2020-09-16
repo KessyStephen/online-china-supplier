@@ -35,3 +35,11 @@
   button {
     margin-right: 8px;
   }
+
+  [nz-radio] {
+    display: block;
+  }
+  /* input {
+    width: 100px;
+    margin-left: 10px;
+  } */

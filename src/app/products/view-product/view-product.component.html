@@ -61,7 +61,27 @@
                 <nz-form-item>
                     <nz-form-label nzFor="productName" nzRequired>Product Name</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
-                        <input nz-input formControlName="productName" type="text">
+                        <input nz-input formControlName="productName" class="w-100" type="text">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="unit" nzRequired>Unit</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <nz-input-group>
+                            <input nz-input formControlName="unit" type="text">
+                        </nz-input-group>
+
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzFor="tags">Tags (keywords) </nz-form-label>
+                    <nz-form-control nzErrorTip="Please input this field!">
+                        <nz-select nzMode="tags" formControlName="tags" class="w-100">
+                            <nz-option *ngFor="let option of tagss" [nzLabel]="option" [nzValue]="option">
+                            </nz-option>
+                        </nz-select>
                     </nz-form-control>
                 </nz-form-item>
 
@@ -75,7 +95,7 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                  <!-- <nz-form-item>
+                <!-- <nz-form-item>
                     <nz-form-label nzFor="currency" nzRequired>Sample Currency</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <nz-select style="min-width: 220px;" formControlName="sampleCurrency" class="w-100"
@@ -132,41 +152,72 @@
 
 
             </nz-card>
-            <nz-card *ngSwitchCase="2">
-                <div [formGroup]='attributes'>
+            <div *ngSwitchCase="2">
+                <nz-card>
+                    <div [formGroup]='attributes'>
+                        <div nz-row nzJustify="end" style="margin-bottom: 10px;">
+
+                            <div nz-col>
+                                <button nz-button nzType="primary" (click)="addNewCustomAttribute()">Add Custom
+                                    Attributes</button>
+                            </div>
+                        </div>
+                        <div *ngFor="let attribute of attributeData; let i = index;">
+                            <!-- <nz-form-item>
+        
+                                    <nz-form-control nzErrorTip="Please input this field!">
+                                        <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+                                            <div>
+                                                <nz-form-label [nzFor]="attribute.name">{{attribute.name}}
+                                                </nz-form-label>
+                                            </div>
+                                        </div>
+        
+                                        <nz-select nzMode="tags" [formControlName]="attribute.name" class="w-100">
+                                            <nz-option *ngFor="let option of attribute.options" [nzLabel]="option"
+                                                [nzValue]="option"></nz-option>
+                                        </nz-select>
+                                    </nz-form-control>
+        
+                                </nz-form-item> -->
+                            <app-custom-attribute [title]="attribute.name" [options]="attribute.options" [index]="i"
+                                (saveOptions)="saveAttributes($event)">
+
+                            </app-custom-attribute>
+                        </div>
+                    </div>
+                </nz-card>
+
+                <nz-card>
                     <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
                         <div nz-col>
-                            <button nz-button nzType="primary" (click)="addNewCustomAttribute()">Add Custom
-                                Attributes</button>
+                            <button nz-button nzType="primary" (click)="addQuantitySaleModal(quantitySaleTemplate)">Add
+                                Quantity of Sale</button>
                         </div>
                     </div>
-                    <div *ngFor="let attribute of attributeData; let i = index;">
-                        <!-- <nz-form-item>
-    
-                                <nz-form-control nzErrorTip="Please input this field!">
-                                    <div class="d-md-flex m-b-15 align-items-center justify-content-between">
-                                        <div>
-                                            <nz-form-label [nzFor]="attribute.name">{{attribute.name}}
-                                            </nz-form-label>
-                                        </div>
-                                    </div>
-    
-                                    <nz-select nzMode="tags" [formControlName]="attribute.name" class="w-100">
-                                        <nz-option *ngFor="let option of attribute.options" [nzLabel]="option"
-                                            [nzValue]="option"></nz-option>
-                                    </nz-select>
-                                </nz-form-control>
-    
-                            </nz-form-item> -->
-                        <app-custom-attribute [title]="attribute.name" [options]="attribute.options" [index]="i"
-                            (saveOptions)="saveAttributes($event)">
 
-                        </app-custom-attribute>
+                    <div *ngFor="let qos of quantityOfSales; let i =  index;">
+                        <nz-card class="col-12">
+                            <div nz-row nzJustify="space-between">
+                                <div nz-col>
+                                    <h4 nz-typography>From: {{qos.from}} - To: {{qos.to}}</h4>
+                                </div>
+                                <div nz-col>
+                                    <a class="m-r-5" nz-button nzType="default" nzShape="circle" nz-tooltip
+                                        nzTooltipTitle="Edit" (click)="addQuantitySaleModal(quantitySaleTemplate, i)">
+                                        <i nz-icon nzType="edit" theme="outline"></i>
+                                    </a>
+                                    <button nz-button nzType="default" nzShape="circle" nz-tooltip
+                                        nzTooltipTitle="Delete" (click)="deleteQos(i)">
+                                        <i nz-icon nzType="delete" theme="outline"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </nz-card>
                     </div>
-                </div>
-
-            </nz-card>
+                </nz-card>
+            </div>
             <nz-card *ngSwitchCase="1">
                 <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
@@ -185,7 +236,7 @@
                                 <nz-input-group>
                                     <input nz-input formControlName="shippingCBMQuantity" type="text">
                                 </nz-input-group>
-        
+
                             </nz-form-control>
                         </nz-form-item>
                     </div>
@@ -201,7 +252,7 @@
                                 <nz-input-group>
                                     <input nz-input formControlName="shippingCBMValue" type="text">
                                 </nz-input-group>
-        
+
                             </nz-form-control>
                         </nz-form-item>
                     </div>
@@ -215,7 +266,7 @@
                                 <nz-input-group>
                                     <input nz-input formControlName="shippingWeightQuantity" type="text">
                                 </nz-input-group>
-        
+
                             </nz-form-control>
                         </nz-form-item>
                     </div>
@@ -231,7 +282,7 @@
                                 <nz-input-group>
                                     <input nz-input formControlName="shippingWeightValue" type="text">
                                 </nz-input-group>
-        
+
                             </nz-form-control>
                         </nz-form-item>
                     </div>
@@ -293,7 +344,7 @@
                 <div class="row" *ngFor="let specs of specifications; let i = index">
                     <nz-card class="col-12">
                         <div nz-row nzJustify="space-between">
-                            <div nz-col> 
+                            <div nz-col>
                                 <h4 nz-typography>{{specs.key}}</h4>
                                 <h5 nz-typography>{{specs.value}}</h5>
                             </div>
@@ -308,8 +359,6 @@
                                 </button>
                             </div>
                         </div>
-
-
                     </nz-card>
                 </div>
 
@@ -367,12 +416,13 @@
                     <div [formGroup]="variations">
                         <div>
 
-                            <nz-table nzBordered [nzData]="variationData">
+                            <nz-table nzBordered [nzData]="variationData" *ngIf="variationKeys.length > 0">
                                 <thead>
                                     <tr>
                                         <th *ngFor="let da of variationKeys;">{{da}}</th>
                                         <!-- <th *ngIf="variationKeys.length > 0">Currency</th> -->
                                         <th *ngIf="variationKeys.length > 0">Amount</th>
+                                        <th *ngFor="let qo of quantityOfSales">Price({{qo.from}} - {{qo.to}})</th>
                                         <th *ngIf="variationKeys.length > 0">Actions</th>
                                     </tr>
                                 </thead>
@@ -386,11 +436,10 @@
                                         <td class="editable-cell" (click)="showEditPrice(editPrice, i)">
                                             {{data.price}}
                                         </td>
-                                        <td>
-                                            <button nz-button nzType="primary"
-                                                (click)="openPopup(quantityOfSale, i)">Quantity
-                                                Of
-                                                Sale</button>
+                                        <td class="editable-cell" *ngFor="let qo of quantityOfSales; let k = index">
+                                            <p (click)="showSalePrice(editPrice, k, i)">
+                                                {{data.pricingRules[k]?.amount ? data.pricingRules[k]?.amount : 0}}
+                                            </p>
                                         </td>
                                         <td>
                                             <button nz-button nzType="default" nzShape="circle" nz-tooltip
@@ -428,6 +477,16 @@
                         <img [src]="previewImage" [ngStyle]="{ 'width': '100%', 'height':'100%' }" />
                     </ng-template>
                 </nz-modal>
+
+                <div *ngIf="fileList.length > 0">
+                    <p>Choose Header Image:</p>
+                    <br />
+                    <nz-radio-group formControlName="radioValue" (ngModelChange)="changeImageOrder($event)">
+                        <label nz-radio [nzValue]="i" [ngStyle]="style" *ngFor="let o of fileList; let i = index">Image
+                            {{i+1}} </label>
+                    </nz-radio-group>
+                </div>
+
             </nz-card>
         </div>
     </div>
@@ -493,4 +552,48 @@
             </form>
         </div>
     </ng-template>
+
+    <ng-template #quantitySaleTemplate>
+        <div nz-row>
+            <form nz-form [formGroup]="quantitySaleForm" nzLayout="vertical">
+
+                <div nz-row [nzGutter]="16">
+                    <div nz-col class="gutter-row">
+                        <nz-form-item>
+                            <nz-form-label nzFor="from">From</nz-form-label>
+                            <nz-form-control nzErrorTip="Enter a valid number">
+                                <nz-input-number formControlName="from" [nzMin]="1" [nzStep]="1">
+                                </nz-input-number>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col class="gutter-row">
+                        <nz-form-item>
+                            <nz-form-label nzFor="to">To</nz-form-label>
+                            <nz-form-control nzErrorTip="Enter a valid number">
+                                <nz-input-number formControlName="to" [nzMin]="1" [nzStep]="1">
+                                </nz-input-number>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+
+                <!-- <div class="row">
+                    <nz-form-item class="col-md-12">
+                        <nz-form-label nzFor="type" nzRequired>Discount Type</nz-form-label>
+                        <nz-form-control nzErrorTip="Discount Type can not be empty">
+                            <nz-select formControlName="discountType">
+                                <nz-option nzLabel="Discount Amount" nzValue="discountAmount"></nz-option>
+                                <nz-option nzLabel="Discount Percent" nzValue="discountPercent"></nz-option>
+                                <nz-option nzLabel="Fixed Price" nzValue="fixedPrice"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div> -->
+
+
+            </form>
+        </div>
+    </ng-template>
+
 </form>

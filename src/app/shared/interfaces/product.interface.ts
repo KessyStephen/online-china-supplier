@@ -1,4 +1,6 @@
 export interface Product {
+    tags: string[];
+    unit: any;
     shippingCBMQuantity: any;
     shippingCBMValue: any;
     shippingWeightQuantity: any;
