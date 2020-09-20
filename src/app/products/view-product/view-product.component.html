@@ -26,7 +26,7 @@
         <nz-step nzTitle="Product Specification"></nz-step>
         <nz-step nzTitle="Option Info"></nz-step>
         <nz-step nzTitle="Price Details"></nz-step>
-        <nz-step nzTitle="Product Images"></nz-step>
+        <nz-step nzTitle="Product Photos"></nz-step>
     </nz-steps>
     <div class="steps-content">
         <div [ngSwitch]="current">
@@ -49,8 +49,8 @@
                     <nz-form-item class="col-md-12">
                         <nz-form-label nzFor="category" nzRequired>Category</nz-form-label>
                         <nz-form-control nzErrorTip="Category can not be empty">
-                            <nz-select formControlName="categoryId" class="w-100"
-                                (ngModelChange)="onCategorySelected($event)">
+                            <nz-select nzPlaceHolder="Choose Category for your product" formControlName="categoryId"
+                                class="w-100" (ngModelChange)="onCategorySelected($event)">
                                 <nz-option *ngFor='let category of categories' [nzValue]='category._id'
                                     [nzLabel]='category.translations.en.name'></nz-option>
                             </nz-select>
@@ -61,7 +61,8 @@
                 <nz-form-item>
                     <nz-form-label nzFor="productName" nzRequired>Product Name</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
-                        <input nz-input formControlName="productName" class="w-100" type="text">
+                        <input placeholder="Enter name of your product" nz-input formControlName="productName"
+                            class="w-100" type="text">
                     </nz-form-control>
                 </nz-form-item>
 
@@ -69,7 +70,7 @@
                     <nz-form-label nzFor="unit" nzRequired>Unit</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <nz-input-group>
-                            <input nz-input formControlName="unit" type="text">
+                            <input placeholder="Example: pcs, kg" nz-input formControlName="unit" type="text">
                         </nz-input-group>
 
                     </nz-form-control>
@@ -78,10 +79,11 @@
                 <nz-form-item>
                     <nz-form-label nzFor="tags">Tags (keywords) </nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-select nzMode="tags" formControlName="tags" class="w-100">
-                            <nz-option *ngFor="let option of tagss" [nzLabel]="option" [nzValue]="option">
-                            </nz-option>
-                        </nz-select>
+                        <nz-input-group>
+                            <input
+                                placeholder="Enter products keywords in comma separated values eg men shoes, sports, shoes, outdoor, casual wear"
+                                nz-input formControlName="tags" type="text">
+                        </nz-input-group>
                     </nz-form-control>
                 </nz-form-item>
 
@@ -107,10 +109,11 @@
                 </nz-form-item> -->
 
                 <nz-form-item *ngIf="canSampleRequest">
-                    <nz-form-label nzFor="price" nzRequired>Sample Price</nz-form-label>
+                    <nz-form-label nzFor="price" nzRequired>Sample Product Price</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <nz-input-group>
-                            <input nz-input formControlName="samplePrice" type="text">
+                            <input placeholder="Enter sample price in CNY" nz-input formControlName="samplePrice"
+                                type="text">
                         </nz-input-group>
 
                     </nz-form-control>
@@ -124,7 +127,7 @@
                 </nz-form-item> -->
 
                 <nz-form-item *ngIf="canSampleRequest">
-                    <nz-form-label nzFor="sampleQuantity" nzRequired>Quantity</nz-form-label>
+                    <nz-form-label nzFor="sampleQuantity" nzRequired>Sample Product Quantity</nz-form-label>
                     <nz-form-control nzErrorTip="Please input this field!">
                         <input nz-input formControlName="sampleQuantity" type="text">
                     </nz-form-control>
@@ -192,7 +195,8 @@
                     <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
                         <div nz-col>
-                            <button nz-button nzType="primary" (click)="addQuantitySaleModal(quantitySaleTemplate)">Add
+                            <button nz-button nzType="primary" (click)="addQuantitySaleModal(quantitySaleTemplate)"
+                                [disabled]="quantityOfSales.length === 3">Add
                                 Quantity of Sale</button>
                         </div>
                     </div>
@@ -219,14 +223,7 @@
                 </nz-card>
             </div>
             <nz-card *ngSwitchCase="1">
-                <div nz-row nzJustify="end" style="margin-bottom: 10px;">
-
-                    <div nz-col>
-                        <button nz-button nzType="primary" (click)="addProductSpecification(specificationTemplate)">Add
-                            Product
-                            Specification</button>
-                    </div>
-                </div>
+                
 
                 <div class="row">
                     <div class="col-md-5">
@@ -340,6 +337,13 @@
                         <input nz-input formControlName="model" type="text">
                     </nz-form-control>
                 </nz-form-item>
+                <div nz-row nzJustify="end" style="margin-bottom: 10px;">
+
+                    <div nz-col>
+                        <button nz-button nzType="primary" (click)="addProductSpecification(specificationTemplate)">Add
+                            more</button>
+                    </div>
+                </div>
 
                 <div class="row" *ngFor="let specs of specifications; let i = index">
                     <nz-card class="col-12">
@@ -466,8 +470,9 @@
                 </nz-card>
             </div>
             <nz-card *ngSwitchCase="4">
-                <nz-upload nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 15"
-                    [nzPreview]="handlePreview" [nzCustomRequest]='handleRequest'>
+                <nz-upload nzListType="picture-card" [(nzFileList)]="fileList"
+                    [nzFileType]="'image/png,image/jpeg,image/jpg'" [nzSize]='3072'
+                    [nzShowButton]="fileList.length < 15" [nzPreview]="handlePreview" [nzCustomRequest]='handleRequest'>
                     <i nz-icon nzType="plus"></i>
                     <div class="ant-upload-text">Upload</div>
                 </nz-upload>
@@ -478,6 +483,9 @@
                     </ng-template>
                 </nz-modal>
 
+                <p>* The maximum size for a single photo is 3 MB</p>
+                <p>* The following formats are supported: jpeg, jpg, png</p>
+                <p>* Use pictures with different angles so as to display your product properly</p>
                 <div *ngIf="fileList.length > 0">
                     <p>Choose Header Image:</p>
                     <br />

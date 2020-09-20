@@ -89,7 +89,7 @@ export class ViewProductComponent implements OnInit {
                 // type: [product.type, [Validators.required]],
                 price: [product.price, [Validators.required]],
                 unit: [product.unit, [Validators.required]],
-                tags: [product.tags, [Validators.required]],
+                tags: [product.tags.join(','), [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
                 length: [product.length, []],
@@ -239,6 +239,9 @@ export class ViewProductComponent implements OnInit {
 
         if (this.variationData.length > 0)
             this.product.variations = this.variationData;
+        
+        
+        this.product = this.productEditForm.value.tags.split(',');
 
 
         this.product.attributes = attr;
@@ -283,7 +286,8 @@ export class ViewProductComponent implements OnInit {
 
         if (this.variationData.length > 0)
             product.variations = this.variationData;
-
+        
+        product.tags = this.productEditForm.value.tags.split(',');
 
         product.attributes = attr;
         product.translations = {
@@ -336,7 +340,7 @@ export class ViewProductComponent implements OnInit {
     getCategories() {
         this.categoryService.getAllCategories().subscribe((result: any) => {
             if (result) {
-                this.categories = this.categoryService.childCategories;
+                this.categories = this.categoryService.categories;
             }
         });
     }
@@ -350,7 +354,7 @@ export class ViewProductComponent implements OnInit {
 
     handleRequest = (data: any) => {
         const file = data.file;
-        return this.uploadService.getUploadUrl(file.name, file.type).subscribe((result: any) => {
+        return this.uploadService.getUploadUrl('products/'+file.name, file.type).subscribe((result: any) => {
             let url = result.getUrl;
             return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
                 this.productImages.push({ src: url, position: this.productImages.length });
