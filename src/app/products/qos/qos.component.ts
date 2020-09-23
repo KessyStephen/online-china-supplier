@@ -17,19 +17,20 @@ export class QosComponent implements OnInit {
 
   @Input() from: number;
   @Input() to: number;
-  @Input() showFrom: boolean = true;
   @Input() amount: number;
   @Input() index: number;
 
-  @Output() quantityEvent = new EventEmitter<QuantityOfSale>();
+  @Input() showAmount: boolean = true;
+
+  @Output() save = new EventEmitter<QuantityOfSale>();
 
 
   constructor() { }
 
   ngOnInit(): void {}
 
-  save() {
-    this.quantityEvent.emit({ from: this.from, to: this.to, amount: this.amount, index: this.index });
+  saveData() {
+    this.save.emit({ from: this.from, to: this.to, amount: this.amount, index: this.index });
   }
 
 }

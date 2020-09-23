@@ -232,8 +232,7 @@
                                 <nz-form-label nzFor="shippingWeightQuantity" nzRequired>Quantity (Unit)</nz-form-label>
                                 <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                                     <nz-input-group>
-                                        <input nz-input type="number" formControlName="shippingWeightQuantity"
-                                        >
+                                        <input nz-input type="number" formControlName="shippingWeightQuantity">
                                     </nz-input-group>
 
                                 </nz-form-control>
@@ -392,23 +391,24 @@
                         </nz-form-item>
 
                         <div nz-row nzJustify="end" style="margin-bottom: 10px;">
-    
+
                             <div nz-col>
-                                <button nz-button nzType="primary" (click)="addQuantitySaleModal(quantitySaleTemplate)"
+                                <button nz-button nzType="primary" (click)="openPopup(quantityOfSaleToo)"
                                     [disabled]="quantityOfSales.length === 3">Add
                                     Quantity of Sale</button>
                             </div>
                         </div>
-    
+
                         <div *ngFor="let qos of quantityOfSales; let i =  index;">
                             <nz-card class="col-12">
                                 <div nz-row nzJustify="space-between">
                                     <div nz-col>
-                                        <h4 nz-typography>From: {{qos.from}} - To: {{qos.to}}</h4>
+                                        <h4 nz-typography>From: {{qos.minQuantity}} - To: {{qos.maxQuantity}}</h4>
                                     </div>
                                     <div nz-col>
                                         <a class="m-r-5" nz-button nzType="default" nzShape="circle" nz-tooltip
-                                            nzTooltipTitle="Edit" (click)="addQuantitySaleModal(quantitySaleTemplate, i)">
+                                            nzTooltipTitle="Edit"
+                                            (click)="addQuantitySaleModal(quantitySaleTemplate, i)">
                                             <i nz-icon nzType="edit" theme="outline"></i>
                                         </a>
                                         <button nz-button nzType="default" nzShape="circle" nz-tooltip
@@ -441,7 +441,7 @@
                                         <th *ngFor="let da of variationKeys;">{{da}}</th>
                                         <!-- <th *ngIf="variationKeys.length > 0">Currency</th> -->
                                         <th *ngIf="variationKeys.length > 0">Amount</th>
-                                        <th *ngFor="let qo of quantityOfSales">Price({{qo.from}} - {{qo.to}})</th>
+                                        <th *ngFor="let qo of quantityOfSales">Price({{qo.minQuantity}} - {{qo.maxQuantity}})</th>
                                         <th *ngIf="variationKeys.length > 0">Actions</th>
                                     </tr>
                                 </thead>
@@ -540,18 +540,75 @@
         <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
             <div nz-col>
-                <button nz-button nzType="primary" (click)="addQuantitySale()">Add Quantity Sale</button>
+                <button nz-button nzType="primary" [disabled]="quantityData.length === 2"
+                    (click)="addQuantitySale()">Add Quantity Sale</button>
             </div>
         </div>
         <div *ngFor="let qs of quantityData; let i = index">
-            <!-- <app-quantity-sale [minQuantity]="qs.minQuantity" [maxQuantity]="qs.maxQuantity" [amount]="qs.amount"
-                [index]="i"  (quantityEvent)="newQuantity($event)">
-
-            </app-quantity-sale> -->
-            <app-qos [from]="qs.minQuantity" [to]="qs.maxQuantity" [amount]="qs.amount" [showFrom]="qs.showFrom">
+            <app-qos [from]="qs.minQuantity" [to]="qs.maxQuantity" [amount]="qs.amount" [index]="i"
+                (save)="savePricingRules($event)">
 
             </app-qos>
+
         </div>
+        <form [formGroup]="greaterThanForm">
+            <div nz-row [nzGutter]="16" *ngIf="quantityData.length > 0">
+
+                <div nz-col class="gutter-row">
+                    <nz-form-item>
+                        <nz-form-label nzFor="from">Greater than >=</nz-form-label>
+                        <nz-form-control nzErrorTip="Enter a valid number">
+                            <nz-input-number formControlName="greaterThanTo" [nzDisabled]="true" [nzMin]="1"
+                                [nzStep]="1">
+                            </nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col class="gutter-row">
+                    <nz-form-item>
+                        <nz-form-label nzFor="amount">Amount</nz-form-label>
+                        <nz-form-control nzErrorTip="Enter a valid number">
+                            <nz-input-number formControlName="greaterThanAmount" [nzMin]="1" [nzStep]="1">
+                            </nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #quantityOfSaleToo>
+        <div nz-row nzJustify="end" style="margin-bottom: 10px;">
+
+            <div nz-col>
+                <button nz-button nzType="primary" [disabled]="quantityData.length === 2"
+                    (click)="addQuantitySale()">Add Quantity Sale</button>
+            </div>
+        </div>
+        <div *ngFor="let qs of quantityData; let i = index">
+            <app-qos [from]="qs.minQuantity" [to]="qs.maxQuantity" [amount]="qs.amount" [index]="i" [showAmount]="false"
+                (save)="savePricingRules($event)">
+
+            </app-qos>
+
+        </div>
+        <form [formGroup]="greaterThanForm">
+            <div nz-row [nzGutter]="16" *ngIf="quantityData.length > 0">
+
+                <div nz-col class="gutter-row">
+                    <nz-form-item>
+                        <nz-form-label nzFor="from">Greater than >=</nz-form-label>
+                        <nz-form-control nzErrorTip="Enter a valid number">
+                            <nz-input-number formControlName="greaterThanTo" [nzDisabled]="true" [nzMin]="1"
+                                [nzStep]="1">
+                            </nz-input-number>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+            </div>
+        </form>
     </ng-template>
 
     <ng-template #specificationTemplate>
@@ -592,21 +649,6 @@
                                 </nz-input-number>
                             </nz-form-control>
                         </nz-form-item>
-                    </div>
-                    <div nz-col class="gutter-row">
-                        <nz-form-item>
-                            <nz-form-label nzFor="to">To</nz-form-label>
-                            <nz-form-control nzErrorTip="Enter a valid number">
-                                <nz-input-number formControlName="to" [nzMin]="1" [nzStep]="1">
-                                </nz-input-number>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                </div>
-
-                <div nz-row [nzGutter]="16">
-                    <div nz-col class="gutter-row">
-                        <p style="margin-top: 50px;">Greater than >=</p>
                     </div>
                     <div nz-col class="gutter-row">
                         <nz-form-item>

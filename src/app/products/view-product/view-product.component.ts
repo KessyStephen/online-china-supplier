@@ -24,6 +24,7 @@ export class ViewProductComponent implements OnInit {
     subCategories: Category[] = [];
     attributes: FormGroup = new FormGroup({});
     variations: FormGroup = new FormGroup({});
+    greaterThanForm: FormGroup = new FormGroup({});
     specificationForm: FormGroup = new FormGroup({});
     quantitySaleForm: FormGroup = new FormGroup({});
     specifications: any[] = [];
@@ -79,6 +80,11 @@ export class ViewProductComponent implements OnInit {
     }
 
     initializeForm(product?: Product) {
+        this.greaterThanForm = this.fb.group({
+            greaterThanTo: [0, Validators.required],
+            greaterThanAmount: [0, Validators.required]
+        })
+
         if (product) {
             this.attributes = this.addProductAttributes();
             this.onProductTypeSelected(product.type);
@@ -118,6 +124,8 @@ export class ViewProductComponent implements OnInit {
                 });
                 this.attributes = this.addProductAttributes(product.attributes);
             }
+
+
 
             if (product.specifications)
                 this.specifications = product.specifications;
@@ -494,42 +502,107 @@ export class ViewProductComponent implements OnInit {
     }
 
     addQuantitySale() {
-        console.log(this.quantityData.length)
-        if (this.quantityData.length <= 3) {
-            if (this.quantityData.length <= 2)
-                this.quantityData.push({ minQuantity: this.productEditForm.value['minOrderQuantity'] + 1, maxQuantity: 100, amount: 0, discountType: 'discountAmount', showFrom: true })
-            else
-                this.quantityData.push({ maxQuantity: 0, amount: 0, discountType: 'discountAmount', showFrom: false })
+        let minQuantity = this.productEditForm.value['minOrderQuantity'] + 1
+        if (this.attributeData.length == 0) {
+            if (this.quantityData.length > 0)
+                minQuantity = this.pricingRules[this.pricingRules.length - 1].maxQuantity + 1;
+            if (this.quantityData.length < 2) {
+                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'discountAmount', showFrom: true })
+            }
+        } else {
+            if (this.quantityData.length > 0)
+                minQuantity = this.quantityOfSales[this.quantityOfSales.length - 1].maxQuantity + 1;
+            if (this.quantityData.length < 2) {
+                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'discountAmount', showFrom: true })
+            }
         }
+    }
+
+    savePricingRules(data) {
+        console.log(data);
+        if (this.attributeData.length == 0) {
+            if (this.pricingRules[data.index]) {
+                this.pricingRules[data.index] = { minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' };
+            } else {
+                this.pricingRules.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
+                this.greaterThanForm.patchValue({ greaterThanTo: data.to + 1 })
+            }
+        } else {
+            if (this.quantityOfSales[data.index]) {
+                this.quantityOfSales[data.index] = { minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' };
+            } else {
+                this.quantityOfSales.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
+                this.greaterThanForm.patchValue({ greaterThanTo: data.to + 1 })
+            }
+        }
+
 
     }
 
     openPopup(view, index?) {
-        if (this.pricingRules)
-            this.quantityData = this.pricingRules
+        // if (this.pricingRules)
+        //     this.quantityData = this.pricingRules
 
-        if (index != undefined && this.pricingRules[index])
-            this.quantityData = this.pricingRules[index];
+        // if (index != undefined && this.pricingRules[index])
+        //     this.quantityData = this.pricingRules[index];
+        if (this.attributeData.length == 0) {
 
-        const modal = this.modalService.create({
-            nzTitle: 'Quantity Of Sale',
-            nzContent: view,
-            nzFooter: [
-                {
-                    label: 'Dismiss',
-                    type: 'default',
-                    onClick: () => {
-                        this.modalService.closeAll()
-                        if (index != undefined) {
-                            this.pricingRules[index] = this.quantityData;
-                        } else {
-                            this.pricingRules = this.quantityData;
+            const modal = this.modalService.create({
+                nzTitle: 'Quantity Of Sale',
+                nzContent: view,
+                nzFooter: [
+                    {
+                        label: 'Dismiss',
+                        type: 'default',
+                        onClick: () => {
+                            this.modalService.closeAll();
+
                         }
-                    }
-                },
-            ],
-            nzWidth: 800
-        });
+                    },
+                    {
+                        label: 'Sumbit',
+                        type: 'primary',
+                        onClick: () => {
+
+                            if (this.pricingRules.length > 0 && this.greaterThanForm.valid) {
+                                this.pricingRules.push({ minQuantity: this.greaterThanForm.value['greaterThanTo'], amount: this.greaterThanForm.value['greaterThanAmount'], discountType: 'discountAmount' })
+                                this.modalService.closeAll();
+                                console.log(this.pricingRules);
+                            }
+                        }
+                    },
+                ],
+                nzWidth: 800
+            });
+        } else {
+            const modal = this.modalService.create({
+                nzTitle: 'Quantity Of Sale',
+                nzContent: view,
+                nzFooter: [
+                    {
+                        label: 'Dismiss',
+                        type: 'default',
+                        onClick: () => {
+                            this.modalService.closeAll();
+
+                        }
+                    },
+                    {
+                        label: 'Sumbit',
+                        type: 'primary',
+                        onClick: () => {
+
+                            if (this.quantityOfSales.length > 0 && this.greaterThanForm.valid) {
+                                this.quantityOfSales.push({ minQuantity: this.greaterThanForm.value['greaterThanTo'], amount: this.greaterThanForm.value['greaterThanAmount'], discountType: 'discountAmount' })
+                                this.modalService.closeAll();
+                                console.log(this.quantityOfSales);
+                            }
+                        }
+                    },
+                ],
+                nzWidth: 800
+            });
+        }
     }
 
     addProductSpecification(view, index?) {
