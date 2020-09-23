@@ -529,9 +529,9 @@ export class ViewProductComponent implements OnInit {
             }
         } else {
             if (this.quantityOfSales[data.index]) {
-                this.quantityOfSales[data.index] = { minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' };
+                this.quantityOfSales[data.index] = { minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' };
             } else {
-                this.quantityOfSales.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
+                this.quantityOfSales.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' });
                 this.greaterThanForm.patchValue({ greaterThanTo: data.to + 1 })
             }
         }
