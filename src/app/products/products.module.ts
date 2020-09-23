@@ -43,6 +43,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { QuantitySaleComponent } from './quantity-sale/quantity-sale.component';
 import { CustomAttributeComponent } from './custom-attribute/custom-attribute.component';
+import { QosComponent } from './qos/qos.component';
 
 const antdModule = [
   NzButtonModule,
@@ -75,7 +76,7 @@ const antdModule = [
   NzStepsModule
 ];
 @NgModule({
-  declarations: [ListProductsComponent, ViewProductComponent, QuantitySaleComponent, CustomAttributeComponent],
+  declarations: [ListProductsComponent, ViewProductComponent, QuantitySaleComponent, CustomAttributeComponent, QosComponent],
   imports: [SharedModule, CommonModule, ProductRoutingModule, ReactiveFormsModule, ...antdModule, QuillModule],
   providers: [ThemeConstantService, AppsService, TableService],
 })

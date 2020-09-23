@@ -23,8 +23,7 @@
 <form nz-form nzLayout="vertical" [formGroup]="productEditForm" *ngIf="!isLoading">
     <nz-steps [nzCurrent]="current" class="page-header-tab">
         <nz-step nzTitle="Basic Info"></nz-step>
-        <nz-step nzTitle="Product Specification"></nz-step>
-        <nz-step nzTitle="Option Info"></nz-step>
+        <nz-step nzTitle="Product Details"></nz-step>
         <nz-step nzTitle="Price Details"></nz-step>
         <nz-step nzTitle="Product Photos"></nz-step>
     </nz-steps>
@@ -155,7 +154,7 @@
 
 
             </nz-card>
-            <div *ngSwitchCase="2">
+            <div *ngSwitchCase="1">
                 <nz-card>
                     <div [formGroup]='attributes'>
                         <div nz-row nzJustify="end" style="margin-bottom: 10px;">
@@ -192,28 +191,146 @@
                 </nz-card>
 
                 <nz-card>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <nz-form-item>
+                                <nz-form-label nzFor="shippingCBMQuantity" nzRequired>Quantity (Unit)</nz-form-label>
+                                <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                                    <nz-input-group>
+                                        <input nz-input type="number" formControlName="shippingCBMQuantity">
+                                    </nz-input-group>
+
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-2">
+                            <div nz-row nzJustify="center">
+                                =
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <nz-form-item>
+                                <nz-form-label nzFor="shippingCBMValue" nzRequired>CBM </nz-form-label>
+                                <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                                    <nz-input-group>
+                                        <input nz-input type="number" formControlName="shippingCBMValue">
+                                    </nz-input-group>
+
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <p>
+                            specify the amount of products (Quantity) that will be equivalent to the specified number of
+                            CBM
+                            e.g 200 pcs = 0.5 CBM
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <nz-form-item>
+                                <nz-form-label nzFor="shippingWeightQuantity" nzRequired>Quantity (Unit)</nz-form-label>
+                                <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                                    <nz-input-group>
+                                        <input nz-input type="number" formControlName="shippingWeightQuantity"
+                                        >
+                                    </nz-input-group>
+
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-2">
+                            <div nz-row nzJustify="center">
+                                =
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <nz-form-item>
+                                <nz-form-label nzFor="shippingWeightValue" nzRequired>Weight (kg) </nz-form-label>
+                                <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                                    <nz-input-group>
+                                        <input nz-input type="number" formControlName="shippingWeightValue">
+                                    </nz-input-group>
+
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <p>
+                            Specify the amount of Quantity that will be equivalent to the specified number of weight
+                            (kg)
+                            e.g 200 pcs = 5kg
+                        </p>
+                    </div>
+                    <nz-form-item>
+                        <nz-form-label nzFor="length" nzRequired>Length (cm)</nz-form-label>
+                        <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                            <nz-input-group>
+                                <input nz-input type="number" formControlName="length">
+                            </nz-input-group>
+
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="width" nzRequired>Width (cm)</nz-form-label>
+                        <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                            <nz-input-group>
+                                <input nz-input type="number" formControlName="width">
+                            </nz-input-group>
+
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="height" nzRequired>Height (cm)</nz-form-label>
+                        <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                            <nz-input-group>
+                                <input nz-input type="number" formControlName="height">
+                            </nz-input-group>
+
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label nzFor="weight" nzRequired>Weight (Kg)</nz-form-label>
+                        <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                            <nz-input-group>
+                                <input nz-input type="number" formControlName="weight">
+                            </nz-input-group>
+
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <!-- <nz-form-item>
+                        <nz-form-label nzFor="model" nzRequired>Model</nz-form-label>
+                        <nz-form-control nzErrorTip="Please input this field!">
+                            <input nz-input formControlName="model" type="text">
+                        </nz-form-control>
+                    </nz-form-item> -->
                     <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
                         <div nz-col>
-                            <button nz-button nzType="primary" (click)="addQuantitySaleModal(quantitySaleTemplate)"
-                                [disabled]="quantityOfSales.length === 3">Add
-                                Quantity of Sale</button>
+                            <button nz-button nzType="primary"
+                                (click)="addProductSpecification(specificationTemplate)">Add
+                                more</button>
                         </div>
                     </div>
 
-                    <div *ngFor="let qos of quantityOfSales; let i =  index;">
+                    <div class="row" *ngFor="let specs of specifications; let i = index">
                         <nz-card class="col-12">
                             <div nz-row nzJustify="space-between">
                                 <div nz-col>
-                                    <h4 nz-typography>From: {{qos.from}} - To: {{qos.to}}</h4>
+                                    <h4 nz-typography>{{specs.key}}</h4>
+                                    <h5 nz-typography>{{specs.value}}</h5>
                                 </div>
                                 <div nz-col>
                                     <a class="m-r-5" nz-button nzType="default" nzShape="circle" nz-tooltip
-                                        nzTooltipTitle="Edit" (click)="addQuantitySaleModal(quantitySaleTemplate, i)">
+                                        nzTooltipTitle="Edit"
+                                        (click)="addProductSpecification(specificationTemplate, i)">
                                         <i nz-icon nzType="edit" theme="outline"></i>
                                     </a>
                                     <button nz-button nzType="default" nzShape="circle" nz-tooltip
-                                        nzTooltipTitle="Delete" (click)="deleteQos(i)">
+                                        nzTooltipTitle="Delete" (click)="deleteSpec(i)">
                                         <i nz-icon nzType="delete" theme="outline"></i>
                                     </button>
                                 </div>
@@ -222,152 +339,7 @@
                     </div>
                 </nz-card>
             </div>
-            <nz-card *ngSwitchCase="1">
-                
-
-                <div class="row">
-                    <div class="col-md-5">
-                        <nz-form-item>
-                            <nz-form-label nzFor="shippingCBMQuantity" nzRequired>Quantity</nz-form-label>
-                            <nz-form-control nzErrorTip="Please input this field!">
-                                <nz-input-group>
-                                    <input nz-input formControlName="shippingCBMQuantity" type="text">
-                                </nz-input-group>
-
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                    <div class="col-md-2">
-                        <div nz-row nzJustify="center">
-                            =
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <nz-form-item>
-                            <nz-form-label nzFor="shippingCBMValue" nzRequired>CBM </nz-form-label>
-                            <nz-form-control nzErrorTip="Please input this field!">
-                                <nz-input-group>
-                                    <input nz-input formControlName="shippingCBMValue" type="text">
-                                </nz-input-group>
-
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-5">
-                        <nz-form-item>
-                            <nz-form-label nzFor="shippingWeightQuantity" nzRequired>Quantity</nz-form-label>
-                            <nz-form-control nzErrorTip="Please input this field!">
-                                <nz-input-group>
-                                    <input nz-input formControlName="shippingWeightQuantity" type="text">
-                                </nz-input-group>
-
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                    <div class="col-md-2">
-                        <div nz-row nzJustify="center">
-                            =
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <nz-form-item>
-                            <nz-form-label nzFor="shippingWeightValue" nzRequired>Weight (kg) </nz-form-label>
-                            <nz-form-control nzErrorTip="Please input this field!">
-                                <nz-input-group>
-                                    <input nz-input formControlName="shippingWeightValue" type="text">
-                                </nz-input-group>
-
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                </div>
-                <nz-form-item>
-                    <nz-form-label nzFor="length" nzRequired>Length (cm)</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-input-group>
-                            <input nz-input formControlName="length" type="text">
-                        </nz-input-group>
-
-                    </nz-form-control>
-                </nz-form-item>
-
-                <nz-form-item>
-                    <nz-form-label nzFor="width" nzRequired>Width (cm)</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-input-group>
-                            <input nz-input formControlName="width" type="text">
-                        </nz-input-group>
-
-                    </nz-form-control>
-                </nz-form-item>
-
-                <nz-form-item>
-                    <nz-form-label nzFor="height" nzRequired>Height (cm)</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-input-group>
-                            <input nz-input formControlName="height" type="text">
-                        </nz-input-group>
-
-                    </nz-form-control>
-                </nz-form-item>
-
-                <nz-form-item>
-                    <nz-form-label nzFor="weight" nzRequired>Weight (Kg)</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <nz-input-group>
-                            <input nz-input formControlName="weight" type="text">
-                        </nz-input-group>
-
-                    </nz-form-control>
-                </nz-form-item>
-
-                <nz-form-item>
-                    <nz-form-label nzFor="moq" nzRequired>M.O.Q</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <input nz-input formControlName="moq" type="text">
-                    </nz-form-control>
-                </nz-form-item>
-
-                <nz-form-item>
-                    <nz-form-label nzFor="model" nzRequired>Model</nz-form-label>
-                    <nz-form-control nzErrorTip="Please input this field!">
-                        <input nz-input formControlName="model" type="text">
-                    </nz-form-control>
-                </nz-form-item>
-                <div nz-row nzJustify="end" style="margin-bottom: 10px;">
-
-                    <div nz-col>
-                        <button nz-button nzType="primary" (click)="addProductSpecification(specificationTemplate)">Add
-                            more</button>
-                    </div>
-                </div>
-
-                <div class="row" *ngFor="let specs of specifications; let i = index">
-                    <nz-card class="col-12">
-                        <div nz-row nzJustify="space-between">
-                            <div nz-col>
-                                <h4 nz-typography>{{specs.key}}</h4>
-                                <h5 nz-typography>{{specs.value}}</h5>
-                            </div>
-                            <div nz-col>
-                                <a class="m-r-5" nz-button nzType="default" nzShape="circle" nz-tooltip
-                                    nzTooltipTitle="Edit" (click)="addProductSpecification(specificationTemplate, i)">
-                                    <i nz-icon nzType="edit" theme="outline"></i>
-                                </a>
-                                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete"
-                                    (click)="deleteSpec(i)">
-                                    <i nz-icon nzType="delete" theme="outline"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </nz-card>
-                </div>
-
-            </nz-card>
-            <div *ngSwitchCase="3">
+            <div *ngSwitchCase="2">
                 <nz-card *ngIf="attributeData.length === 0">
                     <!-- <nz-form-item>
                         <nz-form-label nzFor="currency" nzRequired>Currency</nz-form-label>
@@ -381,6 +353,12 @@
                             </nz-select>
                         </nz-form-control>
                     </nz-form-item> -->
+                    <nz-form-item>
+                        <nz-form-label nzFor="minOrderQuantity" nzRequired>M.O.Q</nz-form-label>
+                        <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                            <input nz-input type="number" formControlName="minOrderQuantity">
+                        </nz-form-control>
+                    </nz-form-item>
 
                     <nz-form-item>
                         <nz-form-label nzFor="price" nzRequired>Price</nz-form-label>
@@ -405,6 +383,43 @@
                 </nz-card>
 
                 <nz-card *ngIf="attributeData.length > 0">
+                    <nz-card>
+                        <nz-form-item>
+                            <nz-form-label nzFor="minOrderQuantity" nzRequired>M.O.Q</nz-form-label>
+                            <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
+                                <input nz-input type="number" formControlName="minOrderQuantity" type="text">
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <div nz-row nzJustify="end" style="margin-bottom: 10px;">
+    
+                            <div nz-col>
+                                <button nz-button nzType="primary" (click)="addQuantitySaleModal(quantitySaleTemplate)"
+                                    [disabled]="quantityOfSales.length === 3">Add
+                                    Quantity of Sale</button>
+                            </div>
+                        </div>
+    
+                        <div *ngFor="let qos of quantityOfSales; let i =  index;">
+                            <nz-card class="col-12">
+                                <div nz-row nzJustify="space-between">
+                                    <div nz-col>
+                                        <h4 nz-typography>From: {{qos.from}} - To: {{qos.to}}</h4>
+                                    </div>
+                                    <div nz-col>
+                                        <a class="m-r-5" nz-button nzType="default" nzShape="circle" nz-tooltip
+                                            nzTooltipTitle="Edit" (click)="addQuantitySaleModal(quantitySaleTemplate, i)">
+                                            <i nz-icon nzType="edit" theme="outline"></i>
+                                        </a>
+                                        <button nz-button nzType="default" nzShape="circle" nz-tooltip
+                                            nzTooltipTitle="Delete" (click)="deleteQos(i)">
+                                            <i nz-icon nzType="delete" theme="outline"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </nz-card>
+                        </div>
+                    </nz-card>
                     <div class="d-md-flex m-b-15 align-items-center justify-content-between">
                         <div>
                             <nz-divider nzText="Product Variations" style="margin-top: 10px;" nzOrientation="left">
@@ -469,7 +484,7 @@
                     </div>
                 </nz-card>
             </div>
-            <nz-card *ngSwitchCase="4">
+            <nz-card *ngSwitchCase="3">
                 <nz-upload nzListType="picture-card" [(nzFileList)]="fileList"
                     [nzFileType]="'image/png,image/jpeg,image/jpg'" [nzSize]='3072'
                     [nzShowButton]="fileList.length < 15" [nzPreview]="handlePreview" [nzCustomRequest]='handleRequest'>
@@ -502,7 +517,7 @@
         <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
             <span>Previous</span>
         </button>
-        <button nz-button nzType="default" (click)="next()" *ngIf="current < 4">
+        <button nz-button nzType="default" (click)="next()" *ngIf="current < 3">
             <span>Next</span>
         </button>
         <!-- <button nz-button nzType="primary" (click)="done()" *ngIf="current === 5">
@@ -510,12 +525,12 @@
         </button> -->
 
         <button [nzLoading]="saveLoading" nz-button nzType="primary"
-            [disabled]="productEditForm.invalid && productImages.length == 0" *ngIf="!isEdit && current === 4"
+            [disabled]="productEditForm.invalid && productImages.length == 0" *ngIf="!isEdit && current === 3"
             (click)="save()">
             <i nz-icon nzType="save" theme="outline"></i>
             <span>Save</span>
         </button>
-        <button nz-button nzType="default" *ngIf="isEdit && current === 5" (click)="edit()">
+        <button nz-button nzType="default" *ngIf="isEdit && current === 4" (click)="edit()">
             <i nz-icon nzType="edit" theme="outline"></i>
             <span>Update</span>
         </button>
@@ -529,10 +544,13 @@
             </div>
         </div>
         <div *ngFor="let qs of quantityData; let i = index">
-            <app-quantity-sale [minQuantity]="qs.minQuantity" [maxQuantity]="qs.maxQuantity" [amount]="qs.amount"
-                [index]="i" [discountType]="qs.discountType" (quantityEvent)="newQuantity($event)">
+            <!-- <app-quantity-sale [minQuantity]="qs.minQuantity" [maxQuantity]="qs.maxQuantity" [amount]="qs.amount"
+                [index]="i"  (quantityEvent)="newQuantity($event)">
 
-            </app-quantity-sale>
+            </app-quantity-sale> -->
+            <app-qos [from]="qs.minQuantity" [to]="qs.maxQuantity" [amount]="qs.amount" [showFrom]="qs.showFrom">
+
+            </app-qos>
         </div>
     </ng-template>
 
@@ -570,10 +588,25 @@
                         <nz-form-item>
                             <nz-form-label nzFor="from">From</nz-form-label>
                             <nz-form-control nzErrorTip="Enter a valid number">
-                                <nz-input-number formControlName="from" [nzMin]="1" [nzStep]="1">
+                                <nz-input-number formControlName="from" [nzMin]="1" [nzDisabled]="true" [nzStep]="1">
                                 </nz-input-number>
                             </nz-form-control>
                         </nz-form-item>
+                    </div>
+                    <div nz-col class="gutter-row">
+                        <nz-form-item>
+                            <nz-form-label nzFor="to">To</nz-form-label>
+                            <nz-form-control nzErrorTip="Enter a valid number">
+                                <nz-input-number formControlName="to" [nzMin]="1" [nzStep]="1">
+                                </nz-input-number>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+
+                <div nz-row [nzGutter]="16">
+                    <div nz-col class="gutter-row">
+                        <p style="margin-top: 50px;">Greater than >=</p>
                     </div>
                     <div nz-col class="gutter-row">
                         <nz-form-item>

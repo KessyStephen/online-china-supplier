@@ -1,0 +1,33 @@
+<div nz-row [nzGutter]="16">
+    <div nz-col class="gutter-row">
+        <nz-form-item *ngIf="showFrom">
+            <nz-form-label nzFor="from">From</nz-form-label>
+            <nz-form-control nzErrorTip="Enter a valid number">
+                <nz-input-number [(ngModel)]="from" [nzMin]="1" [nzDisabled]="true" [nzStep]="1">
+                </nz-input-number>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <div nz-col class="gutter-row" *ngIf="!showFrom">
+        <p style="margin-top: 50px;">Greater than >=</p>
+    </div>
+    <div nz-col class="gutter-row">
+        <nz-form-item>
+            <nz-form-label nzFor="to">To</nz-form-label>
+            <nz-form-control nzErrorTip="Enter a valid number">
+                <nz-input-number [(ngModel)]="to" [nzMin]="1" [nzStep]="1">
+                </nz-input-number>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <div nz-col class="gutter-row">
+        <nz-form-item>
+            <nz-form-label nzFor="amount">Amount</nz-form-label>
+            <nz-form-control nzErrorTip="Enter a valid number">
+                <nz-input-number [(ngModel)]="amount" [nzMin]="1" [nzStep]="1">
+                </nz-input-number>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <button nz-button style="margin-left: 10px;" nzType="primary" (click)="save()" nzSize="small"><i nz-icon nzType="check"></i></button>
+</div>

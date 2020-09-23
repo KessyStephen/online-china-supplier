@@ -92,26 +92,24 @@ export class ViewProductComponent implements OnInit {
                 tags: [product.tags.join(','), [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
-                length: [product.length, []],
-                width: [product.width, []],
-                height: [product.height, []],
-                weight: [product.weight, []],
-                moq: [product.moq, []],
-                model: [product.model, []],
+                length: [product.length, [Validators.pattern("^[0-9]*$")]],
+                width: [product.width, [Validators.pattern("^[0-9]*$")]],
+                height: [product.height, [Validators.pattern("^[0-9]*$")]],
+                weight: [product.weight, [Validators.pattern("^[0-9]*$")]],
                 radioValue: [],
                 // quality: [product.quality, [Validators.required]],
                 samplePrice: [product.samplePrice, this.canSampleRequest ? [Validators.required] : []],
-                // minOrderQuantity: [product.minOrderQuantity, []],
+                minOrderQuantity: [product.minOrderQuantity, [Validators.pattern("^[0-9]*$")]],
                 // minOrderUnit: [product.minOrderUnit, []],
                 sampleCurrency: [product.sampleCurrency, this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: [product.sampleQuantity, this.canSampleRequest ? [Validators.required] : []],
                 // sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
                 // description: [product.translations.en.description, [Validators.required]],
                 variations: [product.variations, []],
-                shippingCBMQuantity: [product.shippingCBMQuantity, []],
-                shippingCBMValue: [product.shippingCBMValue, []],
-                shippingWeightQuantity: [product.shippingWeightQuantity, []],
-                shippingWeightValue: [product.shippingWeightValue, []],
+                shippingCBMQuantity: [product.shippingCBMQuantity, [Validators.pattern("^[0-9]*$")]],
+                shippingCBMValue: [product.shippingCBMValue, [Validators.pattern("^[0-9]*$")]],
+                shippingWeightQuantity: [product.shippingWeightQuantity, [Validators.pattern("^[0-9]*$")]],
+                shippingWeightValue: [product.shippingWeightValue, [Validators.pattern("^[0-9]*$")]],
             });
             const sub = this.categoryService.categories.find(sub => sub._id === product.categoryId);
             if (sub.attributes) {
@@ -157,22 +155,21 @@ export class ViewProductComponent implements OnInit {
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
                 sku: ['', []],
-                length: ['', []],
-                width: ['', []],
-                height: ['', []],
-                weight: ['', []],
-                moq: ['', []],
+                length: [null, [Validators.pattern("^[0-9]*$")]],
+                width: [null, [Validators.pattern("^[0-9]*$")]],
+                height: [null, [Validators.pattern("^[0-9]*$")]],
+                weight: [null, [Validators.pattern("^[0-9]*$")]],
+                moq: [null, [Validators.pattern("^[0-9]*$")]],
                 radioValue: [],
-                model: ['', []],
-                shippingCBMQuantity: ['', []],
-                shippingCBMValue: ['', []],
-                shippingWeightQuantity: ['', []],
-                shippingWeightValue: ['', []],
+                shippingCBMQuantity: [null, [Validators.pattern("^[0-9]*$")]],
+                shippingCBMValue: [null, [Validators.pattern("^[0-9]*$")]],
+                shippingWeightQuantity: [null, [Validators.pattern("^[0-9]*$")]],
+                shippingWeightValue: [null, [Validators.pattern("^[0-9]*$")]],
                 // quality: ['', [Validators.required]],
                 // description: ['', [Validators.required]],
                 samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
-                minOrderUnit: ['', []],
-                // minOrderQuantity: ['', []],
+                // minOrderUnit: ['', []],
+                minOrderQuantity: ['', [Validators.pattern("^[0-9]*$")]],
                 sampleCurrency: ['', this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
                 // sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
@@ -239,8 +236,8 @@ export class ViewProductComponent implements OnInit {
 
         if (this.variationData.length > 0)
             this.product.variations = this.variationData;
-        
-        
+
+
         this.product = this.productEditForm.value.tags.split(',');
 
 
@@ -286,7 +283,7 @@ export class ViewProductComponent implements OnInit {
 
         if (this.variationData.length > 0)
             product.variations = this.variationData;
-        
+
         product.tags = this.productEditForm.value.tags.split(',');
 
         product.attributes = attr;
@@ -354,7 +351,7 @@ export class ViewProductComponent implements OnInit {
 
     handleRequest = (data: any) => {
         const file = data.file;
-        return this.uploadService.getUploadUrl('products/'+file.name, file.type).subscribe((result: any) => {
+        return this.uploadService.getUploadUrl('products/' + file.name, file.type).subscribe((result: any) => {
             let url = result.getUrl;
             return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
                 this.productImages.push({ src: url, position: this.productImages.length });
@@ -497,15 +494,22 @@ export class ViewProductComponent implements OnInit {
     }
 
     addQuantitySale() {
-        this.quantityData.push({ minQuantity: 1, maxQuantity: 100, amount: 0 })
+        console.log(this.quantityData.length)
+        if (this.quantityData.length <= 3) {
+            if (this.quantityData.length <= 2)
+                this.quantityData.push({ minQuantity: this.productEditForm.value['minOrderQuantity'] + 1, maxQuantity: 100, amount: 0, discountType: 'discountAmount', showFrom: true })
+            else
+                this.quantityData.push({ maxQuantity: 0, amount: 0, discountType: 'discountAmount', showFrom: false })
+        }
+
     }
 
     openPopup(view, index?) {
         if (this.pricingRules)
             this.quantityData = this.pricingRules
 
-        if (index != undefined && this.variationData[index].pricingRules)
-            this.quantityData = this.variationData[index].pricingRules;
+        if (index != undefined && this.pricingRules[index])
+            this.quantityData = this.pricingRules[index];
 
         const modal = this.modalService.create({
             nzTitle: 'Quantity Of Sale',
@@ -517,7 +521,7 @@ export class ViewProductComponent implements OnInit {
                     onClick: () => {
                         this.modalService.closeAll()
                         if (index != undefined) {
-                            this.variationData[index].pricingRules = this.quantityData;
+                            this.pricingRules[index] = this.quantityData;
                         } else {
                             this.pricingRules = this.quantityData;
                         }
@@ -583,7 +587,7 @@ export class ViewProductComponent implements OnInit {
             })
         } else {
             this.quantitySaleForm = this.fb.group({
-                from: [null, Validators.required],
+                from: [this.productEditForm.value['minOrderQuantity'] + 1, Validators.required],
                 to: [null, Validators.required],
             })
         }

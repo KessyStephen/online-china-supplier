@@ -56,7 +56,7 @@
                     </div>
                 </td>
                 <td>{{getCategoryName(item.categoryId)}}</td>
-                <td *ngIf="item.type === 'simple'">{{item.price | currency: item.currency}}</td>
+                <td *ngIf="item.type === 'simple'">{{item.price | currency: 'CNY':'symbol-narrow'}}</td>
                 <td *ngIf="item.type === 'variable'">{{getPriceRange(item.variations) }}</td>
 
                 <td>
