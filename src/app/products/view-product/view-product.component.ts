@@ -14,6 +14,9 @@ import { ProductsService } from 'src/app/shared/services/products.service';
     styleUrls: ['./view-product.component.css']
 })
 export class ViewProductComponent implements OnInit {
+    isShowAmount: boolean = false;
+    isMoreAdded: boolean = false;
+    moq: number = 1;
     listOfTagOptions = [];
     isEdit: boolean = false;
     isCreate: boolean = false;
@@ -52,6 +55,8 @@ export class ViewProductComponent implements OnInit {
         height: '30px',
         lineHeight: '30px'
     };
+
+    qosData: any;
 
     current: number = 0;
 
@@ -177,7 +182,7 @@ export class ViewProductComponent implements OnInit {
                 // description: ['', [Validators.required]],
                 samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
                 // minOrderUnit: ['', []],
-                minOrderQuantity: ['', [Validators.pattern("^[0-9]*$")]],
+                minOrderQuantity: [1, [Validators.pattern("^[0-9]*$")]],
                 sampleCurrency: ['', this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
                 // sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
@@ -185,6 +190,13 @@ export class ViewProductComponent implements OnInit {
                 variations: [],
             });
         }
+        const moqCtrl = this.productEditForm.get('minOrderQuantity')
+        moqCtrl.valueChanges.subscribe(value => {
+            if (value) {
+                this.productService.changeMOQ(value+1);
+            }
+        })
+
     }
 
     addProductAttributes(data?) {
@@ -246,7 +258,7 @@ export class ViewProductComponent implements OnInit {
             this.product.variations = this.variationData;
 
 
-        this.product = this.productEditForm.value.tags.split(',');
+        this.product.tags = this.productEditForm.value.tags.split(',');
 
 
         this.product.attributes = attr;
@@ -337,7 +349,6 @@ export class ViewProductComponent implements OnInit {
     }
 
     handlePreview = (file: UploadFile) => {
-        console.log(this.fileList)
         this.previewImage = file.url || file.thumbUrl;
         this.previewVisible = true;
     }
@@ -386,7 +397,6 @@ export class ViewProductComponent implements OnInit {
     getProduct(id: string) {
         this.productService.getProduct(id).subscribe((product: Product) => {
             this.isLoading = false
-            console.log(product);
             this.product = product;
             this.initializeForm(product);
 
@@ -518,8 +528,24 @@ export class ViewProductComponent implements OnInit {
         }
     }
 
+    switchForms(data?) {
+        if (this.attributeData.length == 0) {
+            this.isShowAmount = true;
+            if (data) {
+                this.qosData = { from: data.from, to: data.to, amount: data.amount, fromTwo: data.to + 1 };
+            }
+
+            this.isMoreAdded = !this.isMoreAdded;
+        } else {
+            this.isShowAmount = false;
+            if (data) {
+                this.qosData = { from: data.from, to: data.to, amount: data.amount, fromTwo: data.to + 1 };
+            }
+            this.isMoreAdded = !this.isMoreAdded;
+        }
+    }
+
     savePricingRules(data) {
-        console.log(data);
         if (this.attributeData.length == 0) {
             if (this.pricingRules[data.index]) {
                 this.pricingRules[data.index] = { minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' };
@@ -540,65 +566,92 @@ export class ViewProductComponent implements OnInit {
     }
 
     openPopup(view, index?) {
-        // if (this.pricingRules)
-        //     this.quantityData = this.pricingRules
-
-        // if (index != undefined && this.pricingRules[index])
-        //     this.quantityData = this.pricingRules[index];
+        // this.productService.changeMOQ(this.productEditForm.value['minOrderQuantity']+1);
         if (this.attributeData.length == 0) {
+            this.isShowAmount = true;
+
+            if (this.pricingRules.length > 0) {
+                this.qosData = {};
+                if (parseInt(this.pricingRules[0].minQuantity) != parseInt(this.productEditForm.value['minOrderQuantity']) + 1)
+                    this.pricingRules = [];
+
+
+                if (this.pricingRules.length > 2) {
+                    this.isMoreAdded = true;
+                    this.pricingRules.forEach((data, index) => {
+                        if (index == 0) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
+                        }
+                        if (index == 1) {
+                            Object.assign(this.qosData, { fromTwo: data.minQuantity, toTwo: data.maxQuantity, amountTwo: data.amount })
+                        }
+                        if (index == 2) {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+                        }
+                    })
+                } else {
+                    this.isMoreAdded = false;
+                    this.pricingRules.forEach((data) => {
+                        if (data.maxQuantity) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
+                        }
+                        else {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+
+                        }
+                    })
+                }
+
+            }
+
 
             const modal = this.modalService.create({
                 nzTitle: 'Quantity Of Sale',
                 nzContent: view,
                 nzFooter: [
-                    {
-                        label: 'Dismiss',
-                        type: 'default',
-                        onClick: () => {
-                            this.modalService.closeAll();
 
-                        }
-                    },
-                    {
-                        label: 'Sumbit',
-                        type: 'primary',
-                        onClick: () => {
-
-                            if (this.pricingRules.length > 0 && this.greaterThanForm.valid) {
-                                this.pricingRules.push({ minQuantity: this.greaterThanForm.value['greaterThanTo'], amount: this.greaterThanForm.value['greaterThanAmount'], discountType: 'discountAmount' })
-                                this.modalService.closeAll();
-                                console.log(this.pricingRules);
-                            }
-                        }
-                    },
                 ],
                 nzWidth: 800
             });
         } else {
+            this.isShowAmount = false;
+            if (this.quantityOfSales.length > 0) {
+                this.qosData = {};
+
+                if (parseInt(this.quantityOfSales[0].minQuantity) !== parseInt(this.productEditForm.value['minOrderQuantity']))
+                    this.quantityOfSales = [];
+
+                if (this.quantityOfSales.length > 2) {
+                    this.isMoreAdded = true;
+                    this.quantityOfSales.forEach((data) => {
+                        if (index == 0) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
+                        }
+                        if (index == 1) {
+                            Object.assign(this.qosData, { fromTwo: data.minQuantity, toTwo: data.maxQuantity, amountTwo: data.amount })
+                        }
+                        if (index == 2) {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+                        }
+                    })
+                } else {
+                    this.isMoreAdded = false;
+                    this.quantityOfSales.forEach((data) => {
+                        if (data.maxQuantity) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
+                        }
+                        else {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+
+                        }
+                    })
+                }
+            }
+
             const modal = this.modalService.create({
                 nzTitle: 'Quantity Of Sale',
                 nzContent: view,
                 nzFooter: [
-                    {
-                        label: 'Dismiss',
-                        type: 'default',
-                        onClick: () => {
-                            this.modalService.closeAll();
-
-                        }
-                    },
-                    {
-                        label: 'Sumbit',
-                        type: 'primary',
-                        onClick: () => {
-
-                            if (this.quantityOfSales.length > 0 && this.greaterThanForm.valid) {
-                                this.quantityOfSales.push({ minQuantity: this.greaterThanForm.value['greaterThanTo'], amount: this.greaterThanForm.value['greaterThanAmount'], discountType: 'discountAmount' })
-                                this.modalService.closeAll();
-                                console.log(this.quantityOfSales);
-                            }
-                        }
-                    },
                 ],
                 nzWidth: 800
             });
@@ -713,7 +766,6 @@ export class ViewProductComponent implements OnInit {
     }
 
     saveAttributes(data) {
-        console.log(data);
         const { title, options, index } = data;
         Object.assign(this.attributeData[index], { name: title, options });
     }
@@ -745,5 +797,36 @@ export class ViewProductComponent implements OnInit {
             }
         });
 
+    }
+
+    saveNewQos(data) {
+        const pricingRulesData = [];
+        if (this.attributeData.length == 0) {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'discountAmount' })
+            this.pricingRules = pricingRulesData;
+        } else {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'discountAmount' })
+            this.quantityOfSales = pricingRulesData;
+        }
+        this.modalService.closeAll();
+    }
+
+    saveNewQosTwo(data) {
+        const pricingRulesData = [];
+
+        if (this.attributeData.length == 0) {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
+            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, amount: data.amountTwo, discountType: 'discountAmount' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'discountAmount' })
+            this.pricingRules = pricingRulesData;
+        } else {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' });
+            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, discountType: 'discountAmount' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'discountAmount' })
+            this.quantityOfSales = pricingRulesData;
+        }
+        this.modalService.closeAll();
     }
 }

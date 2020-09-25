@@ -1,0 +1,90 @@
+<div [formGroup]="qosForm">
+
+    <div nz-row [nzGutter]="16">
+        <div nz-col class="gutter-row">
+            <nz-form-item>
+                <nz-form-label nzFor="from">From</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="from" [nzMin]="1" [nzDisabled]="true" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col class="gutter-row">
+            <nz-form-item>
+                <nz-form-label nzFor="to">To</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="to" [nzMin]="1" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col class="gutter-row" *ngIf="showAmount">
+            <nz-form-item>
+                <nz-form-label nzFor="amount">Amount</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="amount" [nzMin]="1" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <div nz-row [nzGutter]="16">
+        <div nz-col class="gutter-row">
+            <nz-form-item>
+                <nz-form-label nzFor="from">From</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="fromTwo" [nzMin]="1" [nzDisabled]="true" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col class="gutter-row">
+            <nz-form-item>
+                <nz-form-label nzFor="to">To</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="toTwo" [nzMin]="1" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col class="gutter-row" *ngIf="showAmount">
+            <nz-form-item>
+                <nz-form-label nzFor="amount">Amount</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="amountTwo" [nzMin]="1" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <button nz-button style="margin-left: 10px;" nzType="primary" (click)="switchForm()" nzSize="small"><i nz-icon
+            nzType="check"></i> Remove</button>
+    </div>
+
+    <div nz-row [nzGutter]="16">
+
+        <div nz-col class="gutter-row">
+            <nz-form-item>
+                <nz-form-label nzFor="from">Greater than >=</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="greaterThanTo" [nzDisabled]="true" [nzMin]="1" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div nz-col class="gutter-row" *ngIf="showAmount">
+            <nz-form-item>
+                <nz-form-label nzFor="amount">Amount</nz-form-label>
+                <nz-form-control nzErrorTip="Enter a valid number">
+                    <nz-input-number formControlName="greaterThanAmount" [nzMin]="1" [nzStep]="1">
+                    </nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+
+    <div class="row">
+        <button nz-button nzType="primary" [disabled]="qosForm.invalid" nzBlock (click)="saveData()"><i nz-icon nzType="save"></i>Save</button>
+    </div>
+</div>

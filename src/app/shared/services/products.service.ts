@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Product } from '../interfaces/product.interface';
 import { environment } from 'src/environments/environment';
@@ -11,8 +11,15 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ProductsService {
+  private currentMOQSubject: BehaviorSubject<number>;
 
-  constructor(private http: HttpClient, private notificationService: NzNotificationService) { }
+  constructor(private http: HttpClient, private notificationService: NzNotificationService) {
+    this.currentMOQSubject = new BehaviorSubject<number>(1);
+  }
+
+  public get currentMOQValue(): number {
+    return this.currentMOQSubject.value;
+  }
 
   productList: Product[] = []
 
@@ -77,6 +84,10 @@ export class ProductsService {
       this.notificationService.error('Error', result.message);
       return false;
     }));
+  }
+
+  changeMOQ(moq: number) {
+    this.currentMOQSubject.next(moq);
   }
 
 }

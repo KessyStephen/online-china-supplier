@@ -44,6 +44,8 @@ import { SharedModule } from '../shared/shared.module';
 import { QuantitySaleComponent } from './quantity-sale/quantity-sale.component';
 import { CustomAttributeComponent } from './custom-attribute/custom-attribute.component';
 import { QosComponent } from './qos/qos.component';
+import { QosOneComponent } from './qos-one/qos-one.component';
+import { QosTwoComponent } from './qos-two/qos-two.component';
 
 const antdModule = [
   NzButtonModule,
@@ -76,7 +78,7 @@ const antdModule = [
   NzStepsModule
 ];
 @NgModule({
-  declarations: [ListProductsComponent, ViewProductComponent, QuantitySaleComponent, CustomAttributeComponent, QosComponent],
+  declarations: [ListProductsComponent, ViewProductComponent, QuantitySaleComponent, CustomAttributeComponent, QosComponent, QosOneComponent, QosTwoComponent],
   imports: [SharedModule, CommonModule, ProductRoutingModule, ReactiveFormsModule, ...antdModule, QuillModule],
   providers: [ThemeConstantService, AppsService, TableService],
 })
