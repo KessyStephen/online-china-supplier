@@ -268,12 +268,16 @@
                                             </nz-form-control>
                                         </nz-form-item>
 
+
                                         <nz-form-item>
-                                            <nz-form-label nzRequired nzFor="acceptedPaymentType">Accepted Payment Type
-                                            </nz-form-label>
-                                            <nz-form-control nzErrorTip="Please input your Accepted Payment Type!">
-                                                <input type="text" nz-input formControlName="acceptedPaymentType"
-                                                    placeholder="Accepted Payment Type" id="acceptedPaymentType">
+                                            <nz-form-label nzFor="acceptedPaymentType" nzRequired>Accepted Payment Type</nz-form-label>
+                                            <nz-form-control nzErrorTip="Please input this field!">
+                                                <nz-select style="min-width: 220px;" formControlName="acceptedPaymentType"
+                                                    class="w-100" nzPlaceHolder="Accepted Payment Type">
+                                                    <nz-option nzLabel="T/T" nzValue="T/T"></nz-option>
+                                                    <nz-option nzLabel="Paypal" nzValue="Paypal"></nz-option>
+                                                    <nz-option nzLabel="Banking Transfer" nzValue="Bank Transfer"></nz-option>
+                                                </nz-select>
                                             </nz-form-control>
                                         </nz-form-item>
 
