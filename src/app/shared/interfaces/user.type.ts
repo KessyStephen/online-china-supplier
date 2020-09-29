@@ -5,4 +5,5 @@ export interface User {
     role?: string;
     accessToken?: string;
     refreshToken?: string;
+    isApproved?: boolean;
 }

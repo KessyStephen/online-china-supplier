@@ -25,6 +25,7 @@ export class ViewProductComponent implements OnInit {
     previewVisible: boolean = false;
     categories: Category[] = [];
     subCategories: Category[] = [];
+    tree: any[] = [];
     attributes: FormGroup = new FormGroup({});
     variations: FormGroup = new FormGroup({});
     greaterThanForm: FormGroup = new FormGroup({});
@@ -357,6 +358,7 @@ export class ViewProductComponent implements OnInit {
         this.categoryService.getAllCategories().subscribe((result: any) => {
             if (result) {
                 this.categories = this.categoryService.categories;
+                this.tree = this.categoryService.tree;
             }
         });
     }
@@ -828,5 +830,9 @@ export class ViewProductComponent implements OnInit {
             this.quantityOfSales = pricingRulesData;
         }
         this.modalService.closeAll();
+    }
+
+    onChange(data) {
+        console.log(data);
     }
 }

@@ -31,9 +31,6 @@ export class AuthenticationService {
         return this.http.post<any>(environment.url + '/login', { email, password })
             .pipe(map(result => {
                 if (result.success && result.accessToken) {
-                    if(!result.isApproved) {
-                        return {success: false, message: 'Please wait as we verify your account information.'}
-                    }
                     const user: User = { ...result, email: email }
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);

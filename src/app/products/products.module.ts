@@ -38,6 +38,7 @@ import {
   NzInputNumberModule,
   NzTypographyModule,
   NzStepsModule,
+  NzTreeSelectModule,
 } from 'ng-zorro-antd';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
@@ -75,7 +76,8 @@ const antdModule = [
   NzMessageModule,
   NzInputNumberModule,
   NzTypographyModule,
-  NzStepsModule
+  NzStepsModule,
+  NzTreeSelectModule
 ];
 @NgModule({
   declarations: [ListProductsComponent, ViewProductComponent, QuantitySaleComponent, CustomAttributeComponent, QosComponent, QosOneComponent, QosTwoComponent],
