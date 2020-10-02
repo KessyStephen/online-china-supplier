@@ -138,7 +138,17 @@ export class ViewProductComponent implements OnInit {
 
             if (product.variations.length > 0) {
                 this.variationData = product.variations;
+                for (let i = 0; i < this.variationData[0].pricingRules.length; i++) {
+                    const element = this.variationData[0].pricingRules[i];
+                    this.quantityOfSales.push(element);
+
+                }
             }
+
+            if (product.pricingRules.length > 0) {
+                this.pricingRules = product.pricingRules;
+            }
+
             this.attributeData.forEach((attr) => {
                 if (attr.options.length > 0) {
                     this.variationKeys.push(attr.name);
@@ -194,7 +204,7 @@ export class ViewProductComponent implements OnInit {
         const moqCtrl = this.productEditForm.get('minOrderQuantity')
         moqCtrl.valueChanges.subscribe(value => {
             if (value) {
-                this.productService.changeMOQ(value+1);
+                this.productService.changeMOQ(value);
             }
         })
 
@@ -302,8 +312,15 @@ export class ViewProductComponent implements OnInit {
             product.type = 'simple';
         }
 
-        if (this.variationData.length > 0)
+        if (this.variationData.length > 0) {
             product.variations = this.variationData;
+            if (this.quantityOfSales.length > 0) {
+                for (let i = 0; i < this.variationData.length; i++) {
+                    const data = this.variationData[i];
+                    data.price = parseFloat(data.pricingRules[0].amount);
+                }
+            }
+        }
 
         product.tags = this.productEditForm.value.tags.split(',');
 
@@ -519,13 +536,13 @@ export class ViewProductComponent implements OnInit {
             if (this.quantityData.length > 0)
                 minQuantity = this.pricingRules[this.pricingRules.length - 1].maxQuantity + 1;
             if (this.quantityData.length < 2) {
-                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'discountAmount', showFrom: true })
+                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'fixedPrice', showFrom: true })
             }
         } else {
             if (this.quantityData.length > 0)
                 minQuantity = this.quantityOfSales[this.quantityOfSales.length - 1].maxQuantity + 1;
             if (this.quantityData.length < 2) {
-                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'discountAmount', showFrom: true })
+                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'fixedPrice', showFrom: true })
             }
         }
     }
@@ -550,16 +567,16 @@ export class ViewProductComponent implements OnInit {
     savePricingRules(data) {
         if (this.attributeData.length == 0) {
             if (this.pricingRules[data.index]) {
-                this.pricingRules[data.index] = { minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' };
+                this.pricingRules[data.index] = { minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' };
             } else {
-                this.pricingRules.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
+                this.pricingRules.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' });
                 this.greaterThanForm.patchValue({ greaterThanTo: data.to + 1 })
             }
         } else {
             if (this.quantityOfSales[data.index]) {
-                this.quantityOfSales[data.index] = { minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' };
+                this.quantityOfSales[data.index] = { minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' };
             } else {
-                this.quantityOfSales.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' });
+                this.quantityOfSales.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' });
                 this.greaterThanForm.patchValue({ greaterThanTo: data.to + 1 })
             }
         }
@@ -649,6 +666,7 @@ export class ViewProductComponent implements OnInit {
                     })
                 }
             }
+            console.log(this.qosData);
 
             const modal = this.modalService.create({
                 nzTitle: 'Quantity Of Sale',
@@ -733,7 +751,7 @@ export class ViewProductComponent implements OnInit {
                                 this.quantityOfSales[index] = this.quantitySaleForm.value;
                                 this.modalService.closeAll();
                             } else {
-                                this.quantitySaleForm.value['discountType'] = 'discountAmount'
+                                this.quantitySaleForm.value['discountType'] = 'fixedPrice'
                                 this.quantityOfSales.push(this.quantitySaleForm.value);
                                 this.modalService.closeAll();
                             }
@@ -804,12 +822,12 @@ export class ViewProductComponent implements OnInit {
     saveNewQos(data) {
         const pricingRulesData = [];
         if (this.attributeData.length == 0) {
-            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
-            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'discountAmount' })
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'fixedPrice' })
             this.pricingRules = pricingRulesData;
         } else {
-            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' });
-            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'discountAmount' })
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'fixedPrice' })
             this.quantityOfSales = pricingRulesData;
         }
         this.modalService.closeAll();
@@ -819,14 +837,14 @@ export class ViewProductComponent implements OnInit {
         const pricingRulesData = [];
 
         if (this.attributeData.length == 0) {
-            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'discountAmount' });
-            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, amount: data.amountTwo, discountType: 'discountAmount' });
-            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'discountAmount' })
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, amount: data.amountTwo, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'fixedPrice' })
             this.pricingRules = pricingRulesData;
         } else {
-            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'discountAmount' });
-            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, discountType: 'discountAmount' });
-            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'discountAmount' })
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'fixedPrice' })
             this.quantityOfSales = pricingRulesData;
         }
         this.modalService.closeAll();

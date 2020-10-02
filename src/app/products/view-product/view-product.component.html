@@ -47,8 +47,8 @@
                 <div class='row'>
                     <nz-form-item class="col-md-12">
                         <nz-form-label nzFor="category" nzRequired>Category</nz-form-label>
-                        <nz-tree-select [nzNodes]="tree" [nzHideUnMatched]="true"
-                            nzShowSearch nzPlaceHolder="Choose Category for your product" formControlName="categoryId"
+                        <nz-tree-select [nzNodes]="tree" [nzHideUnMatched]="true" nzShowSearch
+                            nzPlaceHolder="Choose Category for your product" formControlName="categoryId"
                             (ngModelChange)="onCategorySelected($event)">
                         </nz-tree-select>
                     </nz-form-item>
@@ -370,10 +370,12 @@
                     </nz-form-item>
 
                     <nz-form-item>
-                        <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" (click)="openPopup(quantityOfSale)"
-                            *ngIf="pricingRules.length === 0">Add Quantity Sale</button>
-                        <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" (click)="openPopup(quantityOfSale)"
-                            *ngIf="pricingRules.length > 0">Edit Quantity Sale</button>
+                        <button nz-button nzType="default" style="background-color: #E94A1C; color: white;"
+                            (click)="openPopup(quantityOfSale)" *ngIf="pricingRules.length === 0">Add Quantity
+                            Sale</button>
+                        <button nz-button nzType="default" style="background-color: #E94A1C; color: white;"
+                            (click)="openPopup(quantityOfSale)" *ngIf="pricingRules.length > 0">Edit Quantity
+                            Sale</button>
                     </nz-form-item>
 
                     <!-- <nz-form-item>
@@ -396,13 +398,15 @@
 
                         <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
-                            <div nz-col *ngIf="qosData">
-                                <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" (click)="openPopup(quantityOfSale)">Edit
+                            <div nz-col *ngIf="quantityOfSales.length  > 0">
+                                <button nz-button nzType="default" style="background-color: #E94A1C; color: white;"
+                                    (click)="openPopup(quantityOfSale)">Edit
                                     Quantity of Sale</button>
                             </div>
 
-                            <div nz-col *ngIf="!qosData">
-                                <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" (click)="openPopup(quantityOfSale)">Add
+                            <div nz-col *ngIf="quantityOfSales.length == 0">
+                                <button nz-button nzType="default" style="background-color: #E94A1C; color: white;"
+                                    (click)="openPopup(quantityOfSale)">Add
                                     Quantity of Sale</button>
                             </div>
                         </div>
@@ -434,7 +438,8 @@
                             </nz-divider>
                         </div>
                         <div>
-                            <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" nzSize="small" [disabled]="checkIfAttributesIsEmpty()"
+                            <button nz-button nzType="default" style="background-color: #E94A1C; color: white;"
+                                nzSize="small" [disabled]="checkIfAttributesIsEmpty()"
                                 (click)="generateVariationsArray()"><i nz-icon nzType="download"></i>Generate
                                 Variations</button>
                         </div>
@@ -448,7 +453,7 @@
                                     <tr>
                                         <th *ngFor="let da of variationKeys;">{{da}}</th>
                                         <!-- <th *ngIf="variationKeys.length > 0">Currency</th> -->
-                                        <th *ngIf="variationKeys.length > 0">Amount</th>
+                                        <th *ngIf="variationKeys.length > 0 && quantityOfSales.length == 0">Amount</th>
                                         <th *ngFor="let qo of quantityOfSales">Price({{qo.minQuantity}} -
                                             {{qo.maxQuantity}})</th>
                                         <th *ngIf="variationKeys.length > 0">Actions</th>
@@ -461,7 +466,8 @@
                                         <!-- <td>
                                             {{data.currency}}
                                         </td> -->
-                                        <td class="editable-cell" (click)="showEditPrice(editPrice, i)">
+                                        <td class="editable-cell" *ngIf="quantityOfSales.length == 0"
+                                            (click)="showEditPrice(editPrice, i)">
                                             {{data.price}}
                                         </td>
                                         <td class="editable-cell" *ngFor="let qo of quantityOfSales; let k = index">
@@ -470,8 +476,9 @@
                                             </p>
                                         </td>
                                         <td>
-                                            <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" nzShape="circle" nz-tooltip
-                                                nzTooltipTitle="Delete" (click)="deleteVariation(i)">
+                                            <button nz-button nzType="default"
+                                                style="background-color: #E94A1C; color: white;" nzShape="circle"
+                                                nz-tooltip nzTooltipTitle="Delete" (click)="deleteVariation(i)">
                                                 <i nz-icon nzType="delete" theme="outline"></i>
                                             </button>
                                         </td>
@@ -526,7 +533,8 @@
         <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
             <span>Previous</span>
         </button>
-        <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" (click)="next()" *ngIf="current < 3">
+        <button nz-button nzType="default" style="background-color: #E94A1C; color: white;" (click)="next()"
+            *ngIf="current < 3">
             <span>Next</span>
         </button>
         <!-- <button nz-button nzType="primary" (click)="done()" *ngIf="current === 5">
