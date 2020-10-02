@@ -111,7 +111,7 @@ export class ViewProductComponent implements OnInit {
                 radioValue: [],
                 // quality: [product.quality, [Validators.required]],
                 samplePrice: [product.samplePrice, this.canSampleRequest ? [Validators.required] : []],
-                minOrderQuantity: [product.minOrderQuantity, [Validators.pattern("^[0-9]*$")]],
+                minOrderQuantity: [product.minOrderQuantity, [Validators.required, Validators.pattern("^[0-9]*$")]],
                 // minOrderUnit: [product.minOrderUnit, []],
                 sampleCurrency: [product.sampleCurrency, this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: [product.sampleQuantity, this.canSampleRequest ? [Validators.required] : []],
@@ -179,11 +179,11 @@ export class ViewProductComponent implements OnInit {
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
                 sku: ['', []],
-                length: [null, [Validators.pattern("^[0-9]*$")]],
-                width: [null, [Validators.pattern("^[0-9]*$")]],
-                height: [null, [Validators.pattern("^[0-9]*$")]],
-                weight: [null, [Validators.pattern("^[0-9]*$")]],
-                moq: [null, [Validators.pattern("^[0-9]*$")]],
+                length: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+                width: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+                height: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+                weight: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+                moq: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
                 radioValue: [],
                 shippingCBMQuantity: [null, [Validators.pattern("^[0-9]*$")]],
                 shippingCBMValue: [null, [Validators.pattern("^[0-9]*$")]],
@@ -193,7 +193,7 @@ export class ViewProductComponent implements OnInit {
                 // description: ['', [Validators.required]],
                 samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
                 // minOrderUnit: ['', []],
-                minOrderQuantity: [1, [Validators.pattern("^[0-9]*$")]],
+                minOrderQuantity: [1, [Validators.required, Validators.pattern("^[0-9]*$")]],
                 sampleCurrency: ['', this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
                 // sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
@@ -430,40 +430,55 @@ export class ViewProductComponent implements OnInit {
 
 
         this.attributeData.forEach((attr) => {
-            if (attr.options.length > 0) {
+            if (attr.options) {
                 parts.push(attr.options);
                 this.variationKeys.push(attr.name);
             }
         })
-        result = parts.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []));
-        for (let i = 0; i < result.length; i++) {
-            let obj = {
-                price: 0,
-                currency: 'CNY',
-                attributes: [],
-                pricingRules: []
-            };
-            if (Array.isArray(result[i])) {
-                for (let j = 0; j < result[i].length; j++) {
-                    const element = result[i][j];
-                    let d = { name: this.variationKeys[j], value: element };
+        if (parts.length > 0) {
+            result = parts.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []));
+            for (let i = 0; i < result.length; i++) {
+                let obj = {
+                    price: 0,
+                    currency: 'CNY',
+                    attributes: [],
+                    pricingRules: []
+                };
+                if (Array.isArray(result[i])) {
+                    for (let j = 0; j < result[i].length; j++) {
+                        const element = result[i][j];
+                        let d = { name: this.variationKeys[j], value: element };
+                        obj.attributes.push(d);
+                    }
+                } else {
+                    const element = result[i];
+                    let d = {};
+                    if (this.variationKeys.length == 1)
+                        d = { name: this.variationKeys[0], value: element };
+                    else
+                        d = { name: this.variationKeys[i], value: element };
                     obj.attributes.push(d);
                 }
-            } else {
-                const element = result[i];
-                let d = {};
-                if (this.variationKeys.length == 1)
-                    d = { name: this.variationKeys[0], value: element };
-                else
-                    d = { name: this.variationKeys[i], value: element };
-                obj.attributes.push(d);
-            }
 
-            data.push(obj)
+                data.push(obj)
+            }
+            this.variationData = data;
+        } else {
+            this.notificationService.error('Error Generating Variations', 'Please fill in the options for the attributes in the previous step!');
         }
-        this.variationData = data;
     }
     onRequestSampleChanged(value) {
+        if (value) {
+            this.productEditForm.get('samplePrice').setValidators(Validators.required);
+            this.productEditForm.get('samplePrice').updateValueAndValidity();
+            this.productEditForm.get('sampleQuantity').setValidators(Validators.required)
+            this.productEditForm.get('sampleQuantity').updateValueAndValidity();
+        } else {
+            this.productEditForm.get('samplePrice').setValidators([]);
+            this.productEditForm.get('samplePrice').updateValueAndValidity();
+            this.productEditForm.get('sampleQuantity').setValidators([])
+            this.productEditForm.get('sampleQuantity').updateValueAndValidity();
+        }
         this.canSampleRequest = value;
     }
 
@@ -796,7 +811,24 @@ export class ViewProductComponent implements OnInit {
     }
 
     next(): void {
-        this.current += 1;
+        switch (this.current) {
+            case 0:
+                if (this.validateFirstStep())
+                    this.current += 1;
+                break;
+            case 1:
+                if (this.validateSecondStep())
+                    this.current += 1;
+                break;
+            case 2:
+                if (this.validateThirdStep())
+                    this.current += 1;
+                break;
+
+            default:
+                break;
+        }
+
         // this.changeContent();
     }
 
@@ -850,7 +882,68 @@ export class ViewProductComponent implements OnInit {
         this.modalService.closeAll();
     }
 
-    onChange(data) {
-        console.log(data);
+    validateFirstStep() {
+        if (this.productEditForm.get('categoryId').invalid ||
+            this.productEditForm.get('productName').invalid ||
+            this.productEditForm.get('unit').invalid ||
+            this.productEditForm.get('samplePrice').invalid ||
+            this.productEditForm.get('sampleQuantity').invalid) {
+            const array = ['categoryId', 'productName', 'unit', 'samplePrice', 'sampleQuantity'];
+            for (let index = 0; index < array.length; index++) {
+                const fieldName = array[index];
+                this.productEditForm.get(fieldName).markAsDirty();
+                this.productEditForm.get(fieldName).updateValueAndValidity();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    validateSecondStep() {
+        if (this.productEditForm.get('length').invalid ||
+            this.productEditForm.get('width').invalid ||
+            this.productEditForm.get('height').invalid ||
+            this.productEditForm.get('weight').invalid) {
+            const array = ['length', 'width', 'height', 'weight'];
+            for (let index = 0; index < array.length; index++) {
+                const fieldName = array[index];
+                this.productEditForm.get(fieldName).markAsDirty();
+                this.productEditForm.get(fieldName).updateValueAndValidity();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    validateThirdStep() {
+        if (this.attributeData.length > 0) {
+            if (this.productEditForm.get('minOrderQuantity').invalid) {
+                this.productEditForm.get('minOrderQuantity').markAsDirty();
+                this.productEditForm.get('minOrderQuantity').updateValueAndValidity();
+
+                return false;
+            }
+
+        } else {
+            if (this.productEditForm.get('minOrderQuantity').invalid ||
+                this.productEditForm.get('price').invalid) {
+                const array = ['minOrderQuantity', 'price'];
+                for (let index = 0; index < array.length; index++) {
+                    const fieldName = array[index];
+                    this.productEditForm.get(fieldName).markAsDirty();
+                    this.productEditForm.get(fieldName).updateValueAndValidity();
+                }
+
+                return false;
+            }
+
+        }
+        return true;
+
+
     }
 }

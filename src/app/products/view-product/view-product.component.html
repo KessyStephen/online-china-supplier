@@ -47,10 +47,13 @@
                 <div class='row'>
                     <nz-form-item class="col-md-12">
                         <nz-form-label nzFor="category" nzRequired>Category</nz-form-label>
-                        <nz-tree-select [nzNodes]="tree" [nzHideUnMatched]="true" nzShowSearch
-                            nzPlaceHolder="Choose Category for your product" formControlName="categoryId"
-                            (ngModelChange)="onCategorySelected($event)">
-                        </nz-tree-select>
+                        <nz-form-control nzErrorTip="Please input this field!">
+
+                            <nz-tree-select [nzNodes]="tree" [nzHideUnMatched]="true" nzShowSearch
+                                nzPlaceHolder="Choose Category for your product" formControlName="categoryId"
+                                (ngModelChange)="onCategorySelected($event)">
+                            </nz-tree-select>
+                        </nz-form-control>
                     </nz-form-item>
                 </div>
 
@@ -191,7 +194,7 @@
                     <div class="row">
                         <div class="col-md-5">
                             <nz-form-item>
-                                <nz-form-label nzFor="shippingCBMQuantity" nzRequired>Quantity (Unit)</nz-form-label>
+                                <nz-form-label nzFor="shippingCBMQuantity">Quantity (Unit)</nz-form-label>
                                 <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                                     <nz-input-group>
                                         <input nz-input type="number" formControlName="shippingCBMQuantity">
@@ -207,7 +210,7 @@
                         </div>
                         <div class="col-md-5">
                             <nz-form-item>
-                                <nz-form-label nzFor="shippingCBMValue" nzRequired>CBM </nz-form-label>
+                                <nz-form-label nzFor="shippingCBMValue">CBM </nz-form-label>
                                 <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                                     <nz-input-group>
                                         <input nz-input type="number" formControlName="shippingCBMValue">
@@ -226,7 +229,7 @@
                     <div class="row">
                         <div class="col-md-5">
                             <nz-form-item>
-                                <nz-form-label nzFor="shippingWeightQuantity" nzRequired>Quantity (Unit)</nz-form-label>
+                                <nz-form-label nzFor="shippingWeightQuantity">Quantity (Unit)</nz-form-label>
                                 <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                                     <nz-input-group>
                                         <input nz-input type="number" formControlName="shippingWeightQuantity">
@@ -242,7 +245,7 @@
                         </div>
                         <div class="col-md-5">
                             <nz-form-item>
-                                <nz-form-label nzFor="shippingWeightValue" nzRequired>Weight (kg) </nz-form-label>
+                                <nz-form-label nzFor="shippingWeightValue">Weight (kg) </nz-form-label>
                                 <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                                     <nz-input-group>
                                         <input nz-input type="number" formControlName="shippingWeightValue">
@@ -398,13 +401,13 @@
 
                         <div nz-row nzJustify="end" style="margin-bottom: 10px;">
 
-                            <div nz-col *ngIf="quantityOfSales.length  > 0">
+                            <div nz-col *ngIf="quantityOfSales.length > 0 || pricingRules.length > 0">
                                 <button nz-button nzType="default" style="background-color: #E94A1C; color: white;"
                                     (click)="openPopup(quantityOfSale)">Edit
                                     Quantity of Sale</button>
                             </div>
 
-                            <div nz-col *ngIf="quantityOfSales.length == 0">
+                            <div nz-col *ngIf="quantityOfSales.length == 0 || pricingRules.length > 0">
                                 <button nz-button nzType="default" style="background-color: #E94A1C; color: white;"
                                     (click)="openPopup(quantityOfSale)">Add
                                     Quantity of Sale</button>
@@ -501,6 +504,10 @@
                 </nz-card>
             </div>
             <nz-card *ngSwitchCase="3">
+                <p>* The maximum size for a single photo is 3 MB</p>
+                <p>* The following formats are supported: jpeg, jpg, png</p>
+                <p>* Use pictures with different angles so as to display your product properly</p>
+                
                 <nz-upload nzListType="picture-card" [(nzFileList)]="fileList"
                     [nzFileType]="'image/png,image/jpeg,image/jpg'" [nzSize]='3072'
                     [nzShowButton]="fileList.length < 15" [nzPreview]="handlePreview" [nzCustomRequest]='handleRequest'>
@@ -514,11 +521,9 @@
                     </ng-template>
                 </nz-modal>
 
-                <p>* The maximum size for a single photo is 3 MB</p>
-                <p>* The following formats are supported: jpeg, jpg, png</p>
-                <p>* Use pictures with different angles so as to display your product properly</p>
+
                 <div *ngIf="fileList.length > 0">
-                    <p>Choose Header Image:</p>
+                    <p>Choose Main Image:</p>
                     <br />
                     <nz-radio-group formControlName="radioValue" (ngModelChange)="changeImageOrder($event)">
                         <label nz-radio [nzValue]="i" [ngStyle]="style" *ngFor="let o of fileList; let i = index">Image
