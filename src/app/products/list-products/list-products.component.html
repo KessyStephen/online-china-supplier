@@ -52,7 +52,7 @@
                 <td>
                     <div class="d-flex align-items-center">
                         <nz-avatar nzShape="square" [nzSize]="60" nzIcon="picture" [nzSrc]="item.thumbnail"></nz-avatar>
-                        <span class="m-l-10">{{item.translations.en.name}}</span>
+                        <span class="m-l-10">{{item?.translations?.en?.name}}</span>
                     </div>
                 </td>
                 <td>{{getCategoryName(item.categoryId)}}</td>

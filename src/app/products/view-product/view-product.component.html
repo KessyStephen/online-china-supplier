@@ -323,7 +323,7 @@
                         <nz-card class="col-12">
                             <div nz-row nzJustify="space-between">
                                 <div nz-col>
-                                    <h4 nz-typography>{{specs.key}}</h4>
+                                    <h4 nz-typography>{{specs.name}}</h4>
                                     <h5 nz-typography>{{specs.value}}</h5>
                                 </div>
                                 <div nz-col>
@@ -620,9 +620,9 @@
 
                 <div class="row">
                     <nz-form-item class="col-md-12">
-                        <nz-form-label nzFor="key" nzRequired>Key</nz-form-label>
+                        <nz-form-label nzFor="name" nzRequired>name</nz-form-label>
                         <nz-form-control nzErrorTip="Please input this field!">
-                            <input nz-input formControlName="key" type="text">
+                            <input nz-input formControlName="name" type="text">
                         </nz-form-control>
                     </nz-form-item>
                 </div>

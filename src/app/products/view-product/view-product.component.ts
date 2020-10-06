@@ -696,12 +696,12 @@ export class ViewProductComponent implements OnInit {
     addProductSpecification(view, index?) {
         if (index != undefined) {
             this.specificationForm = this.fb.group({
-                key: [this.specifications[index].key, Validators.required],
+                name: [this.specifications[index].name, Validators.required],
                 value: [this.specifications[index].value, Validators.required]
             })
         } else {
             this.specificationForm = this.fb.group({
-                key: [null, Validators.required],
+                name: [null, Validators.required],
                 value: [null, Validators.required]
             })
         }
