@@ -104,10 +104,10 @@ export class ViewProductComponent implements OnInit {
                 tags: [product.tags.join(','), [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
-                length: [product.length, [Validators.pattern("^[0-9]*$")]],
-                width: [product.width, [Validators.pattern("^[0-9]*$")]],
-                height: [product.height, [Validators.pattern("^[0-9]*$")]],
-                weight: [product.weight, [Validators.pattern("^[0-9]*$")]],
+                length: [product.length, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                width: [product.width, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                height: [product.height, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                weight: [product.weight, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
                 radioValue: [],
                 // quality: [product.quality, [Validators.required]],
                 samplePrice: [product.samplePrice, this.canSampleRequest ? [Validators.required] : []],
@@ -118,10 +118,10 @@ export class ViewProductComponent implements OnInit {
                 // sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
                 // description: [product.translations.en.description, [Validators.required]],
                 variations: [product.variations, []],
-                shippingCBMQuantity: [product.shippingCBMQuantity, [Validators.pattern("^[0-9]*$")]],
-                shippingCBMValue: [product.shippingCBMValue, [Validators.pattern("^[0-9]*$")]],
-                shippingWeightQuantity: [product.shippingWeightQuantity, [Validators.pattern("^[0-9]*$")]],
-                shippingWeightValue: [product.shippingWeightValue, [Validators.pattern("^[0-9]*$")]],
+                shippingCBMQuantity: [product.shippingCBMQuantity, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingCBMValue: [product.shippingCBMValue, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightQuantity: [product.shippingWeightQuantity, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightValue: [product.shippingWeightValue, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
             });
             const sub = this.categoryService.categories.find(sub => sub._id === product.categoryId);
             if (sub.attributes) {
@@ -179,16 +179,16 @@ export class ViewProductComponent implements OnInit {
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
                 sku: ['', []],
-                length: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
-                width: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
-                height: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
-                weight: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+                length: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                width: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                height: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                weight: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
                 moq: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
                 radioValue: [],
-                shippingCBMQuantity: [null, [Validators.pattern("^[0-9]*$")]],
-                shippingCBMValue: [null, [Validators.pattern("^[0-9]*$")]],
-                shippingWeightQuantity: [null, [Validators.pattern("^[0-9]*$")]],
-                shippingWeightValue: [null, [Validators.pattern("^[0-9]*$")]],
+                shippingCBMQuantity: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingCBMValue: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightQuantity: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightValue: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
                 // quality: ['', [Validators.required]],
                 // description: ['', [Validators.required]],
                 samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
@@ -206,6 +206,11 @@ export class ViewProductComponent implements OnInit {
             if (value) {
                 this.productService.changeMOQ(value);
             }
+        });
+
+        const lenCtrl = this.productEditForm.get('length');
+        lenCtrl.valueChanges.subscribe(value=>{
+            console.log(this.productEditForm.get('length').errors)
         })
 
     }
@@ -465,6 +470,30 @@ export class ViewProductComponent implements OnInit {
             this.variationData = data;
         } else {
             this.notificationService.error('Error Generating Variations', 'Please fill in the options for the attributes in the previous step!');
+        }
+    }
+
+    checkAttributesLength() {
+        if (this.attributeData.length === 0) {
+            return false;
+        }
+
+        let parts = [];
+        let result = [];
+        let data = [];
+        this.variationKeys = [];
+
+
+        this.attributeData.forEach((attr) => {
+            if (attr.options) {
+                parts.push(attr.options);
+                this.variationKeys.push(attr.name);
+            }
+        })
+        if (parts.length === 0) {
+            return false;
+        } else {
+            return true;
         }
     }
     onRequestSampleChanged(value) {
@@ -817,7 +846,7 @@ export class ViewProductComponent implements OnInit {
                     this.current += 1;
                 break;
             case 1:
-                if (this.validateSecondStep())
+                if (true)
                     this.current += 1;
                 break;
             case 2:

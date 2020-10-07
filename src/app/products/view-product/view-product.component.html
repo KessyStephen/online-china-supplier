@@ -261,7 +261,7 @@
                         </p>
                     </div>
                     <nz-form-item>
-                        <nz-form-label nzFor="length" nzRequired>Length (cm)</nz-form-label>
+                        <nz-form-label nzFor="length">Length (cm)</nz-form-label>
                         <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                             <nz-input-group>
                                 <input nz-input type="number" placeholder=" Enter length of the single package."
@@ -272,7 +272,7 @@
                     </nz-form-item>
 
                     <nz-form-item>
-                        <nz-form-label nzFor="width" nzRequired>Width (cm)</nz-form-label>
+                        <nz-form-label nzFor="width">Width (cm)</nz-form-label>
                         <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                             <nz-input-group>
                                 <input nz-input type="number" placeholder=" Enter width of the single package."
@@ -283,7 +283,7 @@
                     </nz-form-item>
 
                     <nz-form-item>
-                        <nz-form-label nzFor="height" nzRequired>Height (cm)</nz-form-label>
+                        <nz-form-label nzFor="height">Height (cm)</nz-form-label>
                         <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                             <nz-input-group>
                                 <input nz-input type="number" placeholder=" Enter height of the single package."
@@ -294,7 +294,7 @@
                     </nz-form-item>
 
                     <nz-form-item>
-                        <nz-form-label nzFor="weight" nzRequired>Weight (Kg)</nz-form-label>
+                        <nz-form-label nzFor="weight">Weight (Kg)</nz-form-label>
                         <nz-form-control nzErrorTip="Invalid value, Value must be numerical!">
                             <nz-input-group>
                                 <input nz-input type="number" placeholder=" Enter weight of the single package."
@@ -343,7 +343,7 @@
                 </nz-card>
             </div>
             <div *ngSwitchCase="2">
-                <nz-card *ngIf="attributeData.length === 0">
+                <nz-card *ngIf="!checkAttributesLength()">
                     <!-- <nz-form-item>
                         <nz-form-label nzFor="currency" nzRequired>Currency</nz-form-label>
                         <nz-form-control nzErrorTip="Please input this field!">
@@ -390,7 +390,7 @@
 
                 </nz-card>
 
-                <nz-card *ngIf="attributeData.length > 0">
+                <nz-card *ngIf="checkAttributesLength()">
                     <nz-card>
                         <nz-form-item>
                             <nz-form-label nzFor="minOrderQuantity" nzRequired>M.O.Q</nz-form-label>
@@ -507,7 +507,7 @@
                 <p>* The maximum size for a single photo is 3 MB</p>
                 <p>* The following formats are supported: jpeg, jpg, png</p>
                 <p>* Use pictures with different angles so as to display your product properly</p>
-                
+
                 <nz-upload nzListType="picture-card" [(nzFileList)]="fileList"
                     [nzFileType]="'image/png,image/jpeg,image/jpg'" [nzSize]='3072'
                     [nzShowButton]="fileList.length < 15" [nzPreview]="handlePreview" [nzCustomRequest]='handleRequest'>
