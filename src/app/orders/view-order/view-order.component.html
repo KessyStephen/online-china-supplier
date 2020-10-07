@@ -35,8 +35,8 @@
                 <td *ngIf="!item.attributes">
                   -</td>
                 <td>{{ item.quantity }}</td>
-                <td>${{ item.price | number: "3.2-5" }}</td>
-                <td>${{ item.quantity * item.price | number: "3.2-5" }}</td>
+                <td>${{ item.supplierPrice | number: "3.2-5" }}</td>
+                <td>${{ item.quantity * item.supplierPrice | number: "3.2-5" }}</td>
               </tr>
             </tbody>
           </nz-table>
@@ -48,7 +48,7 @@
                 <!-- <hr /> -->
                 <h3>
                   <span class="font-weight-semibold text-dark">Total :</span>
-                  {{order.total | currency: order.totalCurrency}}
+                  {{order.supplierTotalPrice | currency: order.supplierTotalPriceCurrency}}
                 </h3>
               </div>
             </div>
