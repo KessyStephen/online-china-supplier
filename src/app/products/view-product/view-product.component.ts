@@ -175,7 +175,7 @@ export class ViewProductComponent implements OnInit {
                 // currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
                 unit: ['', [Validators.required]],
-                tags: [[]],
+                tags: [null, []],
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
                 sku: ['', []],
@@ -209,7 +209,7 @@ export class ViewProductComponent implements OnInit {
         });
 
         const lenCtrl = this.productEditForm.get('length');
-        lenCtrl.valueChanges.subscribe(value=>{
+        lenCtrl.valueChanges.subscribe(value => {
             console.log(this.productEditForm.get('length').errors)
         })
 
@@ -262,7 +262,7 @@ export class ViewProductComponent implements OnInit {
         });
         const attr = [];
 
-        if (this.attributeData.length > 0)
+        if (this.attributeData.length > 0 && this.checkAttributesLength())
             this.attributeData.forEach((attribute) => {
                 attr.push({
                     name: attribute.name,
@@ -274,7 +274,7 @@ export class ViewProductComponent implements OnInit {
             this.product.variations = this.variationData;
 
 
-        this.product.tags = this.productEditForm.value.tags.split(',');
+        this.product.tags = this.productEditForm.value.tags ? this.productEditForm.value.tags.split(',') : '';
 
 
         this.product.attributes = attr;
@@ -305,7 +305,7 @@ export class ViewProductComponent implements OnInit {
 
         product.images = this.productImages;
         const attr = [];
-        if (this.attributeData.length > 0) {
+        if (this.attributeData.length > 0 && this.checkAttributesLength()) {
             product.type = 'variable';
             this.attributeData.forEach((attribute) => {
                 attr.push({
@@ -327,7 +327,7 @@ export class ViewProductComponent implements OnInit {
             }
         }
 
-        product.tags = this.productEditForm.value.tags.split(',');
+        product.tags = this.productEditForm.value.tags ? this.productEditForm.value.tags.split(',') : '';
 
         product.attributes = attr;
         product.translations = {
@@ -479,8 +479,6 @@ export class ViewProductComponent implements OnInit {
         }
 
         let parts = [];
-        let result = [];
-        let data = [];
         this.variationKeys = [];
 
 
