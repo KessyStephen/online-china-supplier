@@ -264,10 +264,11 @@ export class ViewProductComponent implements OnInit {
 
         if (this.attributeData.length > 0 && this.checkAttributesLength())
             this.attributeData.forEach((attribute) => {
-                attr.push({
-                    name: attribute.name,
-                    value: attribute.options
-                })
+                if (attribute.options)
+                    attr.push({
+                        name: attribute.name,
+                        value: attribute.options
+                    })
             })
 
         if (this.variationData.length > 0)
@@ -308,10 +309,11 @@ export class ViewProductComponent implements OnInit {
         if (this.attributeData.length > 0 && this.checkAttributesLength()) {
             product.type = 'variable';
             this.attributeData.forEach((attribute) => {
-                attr.push({
-                    name: attribute.name,
-                    value: attribute.options
-                })
+                if (attribute.options)
+                    attr.push({
+                        name: attribute.name,
+                        value: attribute.options
+                    })
             })
         } else {
             product.type = 'simple';
