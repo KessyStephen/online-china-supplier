@@ -317,6 +317,7 @@ export class ViewProductComponent implements OnInit {
             })
         } else {
             product.type = 'simple';
+            product.currency = 'CNY';
         }
 
         if (this.variationData.length > 0) {
