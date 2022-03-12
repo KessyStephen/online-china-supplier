@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  url: 'https://api.shamwaa.com/cms/supplier'
+  url: 'https://api.shamwaa.shop/cms/supplier'
 };

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  url: 'https://api.shamwaa.com/cms/supplier'
+  url: 'https://api.shamwaa.shop/cms/supplier'
 };
 /*
  * In development mode, to ignore zone related error stack frames such as
