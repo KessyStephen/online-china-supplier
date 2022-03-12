@@ -14,6 +14,7 @@ export class CategoryService {
   categories: Category[] = [];
   childCategories: Category[] = [];
   parentCategories: Category[] = [];
+  tree: any[] = [];
 
   constructor(private http: HttpClient, private notificationService: NzNotificationService) {
 
@@ -103,6 +104,9 @@ export class CategoryService {
       if (result.status === 200 && result.success) {
         this.categories = result.data;
         this.childCategories = this.categories.filter((category) => { if (category.parentId) return category });
+        this.parentCategories = this.categories.filter((category) => { if (category.parentId == undefined) return category; });
+        if (this.tree.length == 0)
+          this.generateTree(this.parentCategories, this.childCategories);
         return true;
       }
       this.notificationService.error('Error', result.message);
@@ -111,5 +115,18 @@ export class CategoryService {
     }));
   }
 
+
+  generateTree(parents: Category[], children: Category[]) {
+    for (let index = 0; index < parents.length; index++) {
+      const parent = parents[index];
+      const childCats = children.filter(child => child.parentId === parent._id);
+
+      this.tree.push({
+        title: parent.translations.en.name, key: parent._id, children: childCats.map((category) => {
+          return { title: category.translations.en.name, key: category._id, isLeaf: true }
+        })
+      });
+    }
+  }
 
 }

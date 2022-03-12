@@ -149,8 +149,13 @@ export class ListProductsComponent implements OnInit {
     }
 
     getPriceRange(variations: any[]) {
-        const prices = variations.map((variation) => variation.price);
-        prices.sort((a, b) => a - b);
-        return `$${prices[0]} - $${prices[prices.length - 1]}`
+        if(variations && variations.length > 0) {
+            const prices = variations.map((variation) => variation.price);
+            prices.sort((a, b) => a - b);
+            return `¥${prices[0]} - ¥${prices[prices.length - 1]}`
+        }else{
+            return '';
+        }
+        
     }
 }    

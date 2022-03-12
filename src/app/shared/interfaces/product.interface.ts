@@ -32,9 +32,10 @@ export interface Product {
     minOrderUnit: string;
     sampleCurrency: string;
     sampleUnit: string;
-    attributes: Attribute[],
-    variations: any[],
-    specifications: any[]
+    attributes: Attribute[];
+    variations: any[];
+    specifications: any[];
+    pricingRules: any[]
 }
 
 interface Attribute {

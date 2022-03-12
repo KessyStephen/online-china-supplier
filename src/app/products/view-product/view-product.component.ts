@@ -14,6 +14,9 @@ import { ProductsService } from 'src/app/shared/services/products.service';
     styleUrls: ['./view-product.component.css']
 })
 export class ViewProductComponent implements OnInit {
+    isShowAmount: boolean = false;
+    isMoreAdded: boolean = false;
+    moq: number = 1;
     listOfTagOptions = [];
     isEdit: boolean = false;
     isCreate: boolean = false;
@@ -22,8 +25,10 @@ export class ViewProductComponent implements OnInit {
     previewVisible: boolean = false;
     categories: Category[] = [];
     subCategories: Category[] = [];
+    tree: any[] = [];
     attributes: FormGroup = new FormGroup({});
     variations: FormGroup = new FormGroup({});
+    greaterThanForm: FormGroup = new FormGroup({});
     specificationForm: FormGroup = new FormGroup({});
     quantitySaleForm: FormGroup = new FormGroup({});
     specifications: any[] = [];
@@ -52,6 +57,8 @@ export class ViewProductComponent implements OnInit {
         lineHeight: '30px'
     };
 
+    qosData: any;
+
     current: number = 0;
 
     productData: Product;
@@ -79,6 +86,11 @@ export class ViewProductComponent implements OnInit {
     }
 
     initializeForm(product?: Product) {
+        this.greaterThanForm = this.fb.group({
+            greaterThanTo: [0, Validators.required],
+            greaterThanAmount: [0, Validators.required]
+        })
+
         if (product) {
             this.attributes = this.addProductAttributes();
             this.onProductTypeSelected(product.type);
@@ -92,26 +104,24 @@ export class ViewProductComponent implements OnInit {
                 tags: [product.tags.join(','), [Validators.required]],
                 categoryId: [product.categoryId, [Validators.required]],
                 sku: [product.sku, [Validators.required]],
-                length: [product.length, []],
-                width: [product.width, []],
-                height: [product.height, []],
-                weight: [product.weight, []],
-                moq: [product.moq, []],
-                model: [product.model, []],
+                length: [product.length, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                width: [product.width, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                height: [product.height, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                weight: [product.weight, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
                 radioValue: [],
                 // quality: [product.quality, [Validators.required]],
                 samplePrice: [product.samplePrice, this.canSampleRequest ? [Validators.required] : []],
-                // minOrderQuantity: [product.minOrderQuantity, []],
+                minOrderQuantity: [product.minOrderQuantity, [Validators.required, Validators.pattern("^[0-9]*$")]],
                 // minOrderUnit: [product.minOrderUnit, []],
                 sampleCurrency: [product.sampleCurrency, this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: [product.sampleQuantity, this.canSampleRequest ? [Validators.required] : []],
                 // sampleUnit: [product.sampleUnit, this.canSampleRequest ? [Validators.required] : []],
                 // description: [product.translations.en.description, [Validators.required]],
                 variations: [product.variations, []],
-                shippingCBMQuantity: [product.shippingCBMQuantity, []],
-                shippingCBMValue: [product.shippingCBMValue, []],
-                shippingWeightQuantity: [product.shippingWeightQuantity, []],
-                shippingWeightValue: [product.shippingWeightValue, []],
+                shippingCBMQuantity: [product.shippingCBMQuantity, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingCBMValue: [product.shippingCBMValue, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightQuantity: [product.shippingWeightQuantity, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightValue: [product.shippingWeightValue, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
             });
             const sub = this.categoryService.categories.find(sub => sub._id === product.categoryId);
             if (sub.attributes) {
@@ -121,12 +131,24 @@ export class ViewProductComponent implements OnInit {
                 this.attributes = this.addProductAttributes(product.attributes);
             }
 
+
+
             if (product.specifications)
                 this.specifications = product.specifications;
 
             if (product.variations.length > 0) {
                 this.variationData = product.variations;
+                for (let i = 0; i < this.variationData[0].pricingRules.length; i++) {
+                    const element = this.variationData[0].pricingRules[i];
+                    this.quantityOfSales.push(element);
+
+                }
             }
+
+            if (product.pricingRules.length > 0) {
+                this.pricingRules = product.pricingRules;
+            }
+
             this.attributeData.forEach((attr) => {
                 if (attr.options.length > 0) {
                     this.variationKeys.push(attr.name);
@@ -153,26 +175,25 @@ export class ViewProductComponent implements OnInit {
                 // currency: ['', [Validators.required]],
                 price: ['', [Validators.required]],
                 unit: ['', [Validators.required]],
-                tags: [[]],
+                tags: [null, []],
                 canRequestSample: [false, [Validators.required]],
                 categoryId: ['', [Validators.required]],
                 sku: ['', []],
-                length: ['', []],
-                width: ['', []],
-                height: ['', []],
-                weight: ['', []],
-                moq: ['', []],
+                length: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                width: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                height: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                weight: [null, [Validators.required, Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                moq: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
                 radioValue: [],
-                model: ['', []],
-                shippingCBMQuantity: ['', []],
-                shippingCBMValue: ['', []],
-                shippingWeightQuantity: ['', []],
-                shippingWeightValue: ['', []],
+                shippingCBMQuantity: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingCBMValue: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightQuantity: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
+                shippingWeightValue: [null, [Validators.pattern(/^(0|[1-9]\d*)(\.\d+)?$/)]],
                 // quality: ['', [Validators.required]],
                 // description: ['', [Validators.required]],
                 samplePrice: ['', this.canSampleRequest ? [Validators.required] : []],
-                minOrderUnit: ['', []],
-                // minOrderQuantity: ['', []],
+                // minOrderUnit: ['', []],
+                minOrderQuantity: [1, [Validators.required, Validators.pattern("^[0-9]*$")]],
                 sampleCurrency: ['', this.canSampleRequest ? [Validators.required] : []],
                 sampleQuantity: ['', this.canSampleRequest ? [Validators.required] : []],
                 // sampleUnit: ['', this.canSampleRequest ? [Validators.required] : []],
@@ -180,6 +201,18 @@ export class ViewProductComponent implements OnInit {
                 variations: [],
             });
         }
+        const moqCtrl = this.productEditForm.get('minOrderQuantity')
+        moqCtrl.valueChanges.subscribe(value => {
+            if (value) {
+                this.productService.changeMOQ(value);
+            }
+        });
+
+        const lenCtrl = this.productEditForm.get('length');
+        lenCtrl.valueChanges.subscribe(value => {
+            console.log(this.productEditForm.get('length').errors)
+        })
+
     }
 
     addProductAttributes(data?) {
@@ -229,19 +262,20 @@ export class ViewProductComponent implements OnInit {
         });
         const attr = [];
 
-        if (this.attributeData.length > 0)
+        if (this.attributeData.length > 0 && this.checkAttributesLength())
             this.attributeData.forEach((attribute) => {
-                attr.push({
-                    name: attribute.name,
-                    value: attribute.options
-                })
+                if (attribute.options)
+                    attr.push({
+                        name: attribute.name,
+                        value: attribute.options
+                    })
             })
 
         if (this.variationData.length > 0)
             this.product.variations = this.variationData;
-        
-        
-        this.product = this.productEditForm.value.tags.split(',');
+
+
+        this.product.tags = this.productEditForm.value.tags ? this.productEditForm.value.tags.split(',') : '';
 
 
         this.product.attributes = attr;
@@ -272,22 +306,31 @@ export class ViewProductComponent implements OnInit {
 
         product.images = this.productImages;
         const attr = [];
-        if (this.attributeData.length > 0) {
+        if (this.attributeData.length > 0 && this.checkAttributesLength()) {
             product.type = 'variable';
             this.attributeData.forEach((attribute) => {
-                attr.push({
-                    name: attribute.name,
-                    value: attribute.options
-                })
+                if (attribute.options)
+                    attr.push({
+                        name: attribute.name,
+                        value: attribute.options
+                    })
             })
         } else {
             product.type = 'simple';
+            product.currency = 'CNY';
         }
 
-        if (this.variationData.length > 0)
+        if (this.variationData.length > 0) {
             product.variations = this.variationData;
-        
-        product.tags = this.productEditForm.value.tags.split(',');
+            if (this.quantityOfSales.length > 0) {
+                for (let i = 0; i < this.variationData.length; i++) {
+                    const data = this.variationData[i];
+                    data.price = parseFloat(data.pricingRules[0].amount);
+                }
+            }
+        }
+
+        product.tags = this.productEditForm.value.tags ? this.productEditForm.value.tags.split(',') : '';
 
         product.attributes = attr;
         product.translations = {
@@ -332,7 +375,6 @@ export class ViewProductComponent implements OnInit {
     }
 
     handlePreview = (file: UploadFile) => {
-        console.log(this.fileList)
         this.previewImage = file.url || file.thumbUrl;
         this.previewVisible = true;
     }
@@ -341,6 +383,7 @@ export class ViewProductComponent implements OnInit {
         this.categoryService.getAllCategories().subscribe((result: any) => {
             if (result) {
                 this.categories = this.categoryService.categories;
+                this.tree = this.categoryService.tree;
             }
         });
     }
@@ -354,7 +397,7 @@ export class ViewProductComponent implements OnInit {
 
     handleRequest = (data: any) => {
         const file = data.file;
-        return this.uploadService.getUploadUrl('products/'+file.name, file.type).subscribe((result: any) => {
+        return this.uploadService.getUploadUrl('products/' + file.name, file.type).subscribe((result: any) => {
             let url = result.getUrl;
             return this.uploadService.uploadFile(file, result).subscribe((res: any) => {
                 this.productImages.push({ src: url, position: this.productImages.length });
@@ -381,7 +424,6 @@ export class ViewProductComponent implements OnInit {
     getProduct(id: string) {
         this.productService.getProduct(id).subscribe((product: Product) => {
             this.isLoading = false
-            console.log(product);
             this.product = product;
             this.initializeForm(product);
 
@@ -396,40 +438,77 @@ export class ViewProductComponent implements OnInit {
 
 
         this.attributeData.forEach((attr) => {
-            if (attr.options.length > 0) {
+            if (attr.options) {
                 parts.push(attr.options);
                 this.variationKeys.push(attr.name);
             }
         })
-        result = parts.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []));
-        for (let i = 0; i < result.length; i++) {
-            let obj = {
-                price: 0,
-                currency: 'CNY',
-                attributes: [],
-                pricingRules: []
-            };
-            if (Array.isArray(result[i])) {
-                for (let j = 0; j < result[i].length; j++) {
-                    const element = result[i][j];
-                    let d = { name: this.variationKeys[j], value: element };
+        if (parts.length > 0) {
+            result = parts.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), []));
+            for (let i = 0; i < result.length; i++) {
+                let obj = {
+                    price: 0,
+                    currency: 'CNY',
+                    attributes: [],
+                    pricingRules: []
+                };
+                if (Array.isArray(result[i])) {
+                    for (let j = 0; j < result[i].length; j++) {
+                        const element = result[i][j];
+                        let d = { name: this.variationKeys[j], value: element };
+                        obj.attributes.push(d);
+                    }
+                } else {
+                    const element = result[i];
+                    let d = {};
+                    if (this.variationKeys.length == 1)
+                        d = { name: this.variationKeys[0], value: element };
+                    else
+                        d = { name: this.variationKeys[i], value: element };
                     obj.attributes.push(d);
                 }
-            } else {
-                const element = result[i];
-                let d = {};
-                if (this.variationKeys.length == 1)
-                    d = { name: this.variationKeys[0], value: element };
-                else
-                    d = { name: this.variationKeys[i], value: element };
-                obj.attributes.push(d);
-            }
 
-            data.push(obj)
+                data.push(obj)
+            }
+            this.variationData = data;
+        } else {
+            this.notificationService.error('Error Generating Variations', 'Please fill in the options for the attributes in the previous step!');
         }
-        this.variationData = data;
+    }
+
+    checkAttributesLength() {
+        if (this.attributeData.length === 0) {
+            return false;
+        }
+
+        let parts = [];
+        this.variationKeys = [];
+
+
+        this.attributeData.forEach((attr) => {
+            if (attr.options) {
+                parts.push(attr.options);
+                this.variationKeys.push(attr.name);
+            }
+        })
+        if (parts.length === 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
     onRequestSampleChanged(value) {
+        if (value) {
+            this.productEditForm.get('samplePrice').setValidators(Validators.required);
+            this.productEditForm.get('samplePrice').updateValueAndValidity();
+            this.productEditForm.get('sampleQuantity').setValidators(Validators.required)
+            this.productEditForm.get('sampleQuantity').updateValueAndValidity();
+        } else {
+            this.productEditForm.get('samplePrice').setValidators([]);
+            this.productEditForm.get('samplePrice').updateValueAndValidity();
+            this.productEditForm.get('sampleQuantity').setValidators([])
+            this.productEditForm.get('sampleQuantity').updateValueAndValidity();
+        }
         this.canSampleRequest = value;
     }
 
@@ -497,46 +576,162 @@ export class ViewProductComponent implements OnInit {
     }
 
     addQuantitySale() {
-        this.quantityData.push({ minQuantity: 1, maxQuantity: 100, amount: 0 })
+        let minQuantity = this.productEditForm.value['minOrderQuantity'] + 1
+        if (this.attributeData.length == 0) {
+            if (this.quantityData.length > 0)
+                minQuantity = this.pricingRules[this.pricingRules.length - 1].maxQuantity + 1;
+            if (this.quantityData.length < 2) {
+                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'fixedPrice', showFrom: true })
+            }
+        } else {
+            if (this.quantityData.length > 0)
+                minQuantity = this.quantityOfSales[this.quantityOfSales.length - 1].maxQuantity + 1;
+            if (this.quantityData.length < 2) {
+                this.quantityData.push({ minQuantity: minQuantity, maxQuantity: 0, amount: 0, discountType: 'fixedPrice', showFrom: true })
+            }
+        }
+    }
+
+    switchForms(data?) {
+        if (this.attributeData.length == 0) {
+            this.isShowAmount = true;
+            if (data) {
+                this.qosData = { from: data.from, to: data.to, amount: data.amount, fromTwo: data.to + 1 };
+            }
+
+            this.isMoreAdded = !this.isMoreAdded;
+        } else {
+            this.isShowAmount = false;
+            if (data) {
+                this.qosData = { from: data.from, to: data.to, amount: data.amount, fromTwo: data.to + 1 };
+            }
+            this.isMoreAdded = !this.isMoreAdded;
+        }
+    }
+
+    savePricingRules(data) {
+        if (this.attributeData.length == 0) {
+            if (this.pricingRules[data.index]) {
+                this.pricingRules[data.index] = { minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' };
+            } else {
+                this.pricingRules.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' });
+                this.greaterThanForm.patchValue({ greaterThanTo: data.to + 1 })
+            }
+        } else {
+            if (this.quantityOfSales[data.index]) {
+                this.quantityOfSales[data.index] = { minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' };
+            } else {
+                this.quantityOfSales.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' });
+                this.greaterThanForm.patchValue({ greaterThanTo: data.to + 1 })
+            }
+        }
+
+
     }
 
     openPopup(view, index?) {
-        if (this.pricingRules)
-            this.quantityData = this.pricingRules
+        // this.productService.changeMOQ(this.productEditForm.value['minOrderQuantity']+1);
+        if (this.attributeData.length == 0) {
+            this.isShowAmount = true;
 
-        if (index != undefined && this.variationData[index].pricingRules)
-            this.quantityData = this.variationData[index].pricingRules;
+            if (this.pricingRules.length > 0) {
+                this.qosData = {};
+                if (parseInt(this.pricingRules[0].minQuantity) != parseInt(this.productEditForm.value['minOrderQuantity']) + 1)
+                    this.pricingRules = [];
 
-        const modal = this.modalService.create({
-            nzTitle: 'Quantity Of Sale',
-            nzContent: view,
-            nzFooter: [
-                {
-                    label: 'Dismiss',
-                    type: 'default',
-                    onClick: () => {
-                        this.modalService.closeAll()
-                        if (index != undefined) {
-                            this.variationData[index].pricingRules = this.quantityData;
-                        } else {
-                            this.pricingRules = this.quantityData;
+
+                if (this.pricingRules.length > 2) {
+                    this.isMoreAdded = true;
+                    this.pricingRules.forEach((data, index) => {
+                        if (index == 0) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
                         }
-                    }
-                },
-            ],
-            nzWidth: 800
-        });
+                        if (index == 1) {
+                            Object.assign(this.qosData, { fromTwo: data.minQuantity, toTwo: data.maxQuantity, amountTwo: data.amount })
+                        }
+                        if (index == 2) {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+                        }
+                    })
+                } else {
+                    this.isMoreAdded = false;
+                    this.pricingRules.forEach((data) => {
+                        if (data.maxQuantity) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
+                        }
+                        else {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+
+                        }
+                    })
+                }
+
+            }
+
+
+            const modal = this.modalService.create({
+                nzTitle: 'Quantity Of Sale',
+                nzContent: view,
+                nzFooter: [
+
+                ],
+                nzWidth: 800
+            });
+        } else {
+            this.isShowAmount = false;
+            if (this.quantityOfSales.length > 0) {
+                this.qosData = {};
+
+                if (parseInt(this.quantityOfSales[0].minQuantity) !== parseInt(this.productEditForm.value['minOrderQuantity']))
+                    this.quantityOfSales = [];
+
+                if (this.quantityOfSales.length > 2) {
+                    this.isMoreAdded = true;
+                    this.quantityOfSales.forEach((data) => {
+                        if (index == 0) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
+                        }
+                        if (index == 1) {
+                            Object.assign(this.qosData, { fromTwo: data.minQuantity, toTwo: data.maxQuantity, amountTwo: data.amount })
+                        }
+                        if (index == 2) {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+                        }
+                    })
+                } else {
+                    this.isMoreAdded = false;
+                    this.quantityOfSales.forEach((data) => {
+                        if (data.maxQuantity) {
+                            Object.assign(this.qosData, { from: data.minQuantity, to: data.maxQuantity, amount: data.amount })
+                        }
+                        else {
+                            Object.assign(this.qosData, { greaterThanTo: data.minQuantity, greaterThanAmount: data.amount })
+
+                        }
+                    })
+                }
+            }
+            console.log(this.qosData);
+
+            const modal = this.modalService.create({
+                nzTitle: 'Quantity Of Sale',
+                nzContent: view,
+                nzFooter: [
+                ],
+                nzWidth: 800
+            });
+        }
     }
 
     addProductSpecification(view, index?) {
         if (index != undefined) {
             this.specificationForm = this.fb.group({
-                key: [this.specifications[index].key, Validators.required],
+                name: [this.specifications[index].name, Validators.required],
                 value: [this.specifications[index].value, Validators.required]
             })
         } else {
             this.specificationForm = this.fb.group({
-                key: [null, Validators.required],
+                name: [null, Validators.required],
                 value: [null, Validators.required]
             })
         }
@@ -583,7 +778,7 @@ export class ViewProductComponent implements OnInit {
             })
         } else {
             this.quantitySaleForm = this.fb.group({
-                from: [null, Validators.required],
+                from: [this.productEditForm.value['minOrderQuantity'] + 1, Validators.required],
                 to: [null, Validators.required],
             })
         }
@@ -601,7 +796,7 @@ export class ViewProductComponent implements OnInit {
                                 this.quantityOfSales[index] = this.quantitySaleForm.value;
                                 this.modalService.closeAll();
                             } else {
-                                this.quantitySaleForm.value['discountType'] = 'discountAmount'
+                                this.quantitySaleForm.value['discountType'] = 'fixedPrice'
                                 this.quantityOfSales.push(this.quantitySaleForm.value);
                                 this.modalService.closeAll();
                             }
@@ -636,7 +831,6 @@ export class ViewProductComponent implements OnInit {
     }
 
     saveAttributes(data) {
-        console.log(data);
         const { title, options, index } = data;
         Object.assign(this.attributeData[index], { name: title, options });
     }
@@ -647,7 +841,24 @@ export class ViewProductComponent implements OnInit {
     }
 
     next(): void {
-        this.current += 1;
+        switch (this.current) {
+            case 0:
+                if (this.validateFirstStep())
+                    this.current += 1;
+                break;
+            case 1:
+                if (true)
+                    this.current += 1;
+                break;
+            case 2:
+                if (this.validateThirdStep())
+                    this.current += 1;
+                break;
+
+            default:
+                break;
+        }
+
         // this.changeContent();
     }
 
@@ -667,6 +878,102 @@ export class ViewProductComponent implements OnInit {
                 return productImage;
             }
         });
+
+    }
+
+    saveNewQos(data) {
+        const pricingRulesData = [];
+        if (this.attributeData.length == 0) {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'fixedPrice' })
+            this.pricingRules = pricingRulesData;
+        } else {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'fixedPrice' })
+            this.quantityOfSales = pricingRulesData;
+        }
+        this.modalService.closeAll();
+    }
+
+    saveNewQosTwo(data) {
+        const pricingRulesData = [];
+
+        if (this.attributeData.length == 0) {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, amount: data.amount, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, amount: data.amountTwo, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, amount: data.greaterThanAmount, discountType: 'fixedPrice' })
+            this.pricingRules = pricingRulesData;
+        } else {
+            pricingRulesData.push({ minQuantity: data.from, maxQuantity: data.to, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.fromTwo, maxQuantity: data.toTwo, discountType: 'fixedPrice' });
+            pricingRulesData.push({ minQuantity: data.greaterThanTo, discountType: 'fixedPrice' })
+            this.quantityOfSales = pricingRulesData;
+        }
+        this.modalService.closeAll();
+    }
+
+    validateFirstStep() {
+        if (this.productEditForm.get('categoryId').invalid ||
+            this.productEditForm.get('productName').invalid ||
+            this.productEditForm.get('unit').invalid ||
+            this.productEditForm.get('samplePrice').invalid ||
+            this.productEditForm.get('sampleQuantity').invalid) {
+            const array = ['categoryId', 'productName', 'unit', 'samplePrice', 'sampleQuantity'];
+            for (let index = 0; index < array.length; index++) {
+                const fieldName = array[index];
+                this.productEditForm.get(fieldName).markAsDirty();
+                this.productEditForm.get(fieldName).updateValueAndValidity();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    validateSecondStep() {
+        if (this.productEditForm.get('length').invalid ||
+            this.productEditForm.get('width').invalid ||
+            this.productEditForm.get('height').invalid ||
+            this.productEditForm.get('weight').invalid) {
+            const array = ['length', 'width', 'height', 'weight'];
+            for (let index = 0; index < array.length; index++) {
+                const fieldName = array[index];
+                this.productEditForm.get(fieldName).markAsDirty();
+                this.productEditForm.get(fieldName).updateValueAndValidity();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    validateThirdStep() {
+        if (this.attributeData.length > 0) {
+            if (this.productEditForm.get('minOrderQuantity').invalid) {
+                this.productEditForm.get('minOrderQuantity').markAsDirty();
+                this.productEditForm.get('minOrderQuantity').updateValueAndValidity();
+
+                return false;
+            }
+
+        } else {
+            if (this.productEditForm.get('minOrderQuantity').invalid ||
+                this.productEditForm.get('price').invalid) {
+                const array = ['minOrderQuantity', 'price'];
+                for (let index = 0; index < array.length; index++) {
+                    const fieldName = array[index];
+                    this.productEditForm.get(fieldName).markAsDirty();
+                    this.productEditForm.get(fieldName).updateValueAndValidity();
+                }
+
+                return false;
+            }
+
+        }
+        return true;
+
 
     }
 }

@@ -28,5 +28,9 @@ export interface Order {
     timeline?: [{
         title: string;
         createdAt: string;
-    }]
+    }];
+    supplierTotalPrice: number;
+    supplierTotalPriceCurrency: string;
+    supplierPrice: number;
+    supplierPriceCurrency: number;
 }

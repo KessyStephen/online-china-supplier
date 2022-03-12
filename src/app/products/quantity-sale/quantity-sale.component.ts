@@ -4,7 +4,6 @@ export interface QuantityOfSale {
 
   minQuantity: number;
   maxQuantity: number;
-  discountType: string;
   amount: number;
   index?: number;
 }
@@ -20,7 +19,6 @@ export class QuantitySaleComponent implements OnInit {
   @Input() maxQuantity: number;
   @Input() index: number;
   @Input() amount: number;
-  @Input() discountType: string;
 
   disabled: boolean = false;
 
@@ -33,7 +31,7 @@ export class QuantitySaleComponent implements OnInit {
 
   save() {
     this.disabled = !this.disabled;
-    this.quantityEvent.emit({ minQuantity: this.minQuantity, maxQuantity: this.maxQuantity, discountType: this.discountType, amount: this.amount, index: this.index });
+    this.quantityEvent.emit({ minQuantity: this.minQuantity, maxQuantity: this.maxQuantity, amount: this.amount, index: this.index });
   }
 
   edit() {

@@ -1,13 +1,14 @@
 <div class="row" style="margin-bottom: 20px;">
     <div class="col-md-12">
-        <p nz-typography nzEditable [(nzContent)]="title"></p>
+        <p nz-typography [(nzContent)]="title"></p>
     </div>
     <div class="col-md-12">
         <nz-select nzMode="tags" [(ngModel)]="options" class="w-80">
             <nz-option *ngFor="let option of options" [nzLabel]="option" [nzValue]="option"></nz-option>
         </nz-select>
-        
-        <button nz-button style="margin-left: 10px;" nzType="primary" (click)="save()" nzSize="small"><i nz-icon nzType="check"></i></button>
+
+        <button nz-button style="margin-left: 10px;" nzType="primary" (click)="save()" nzSize="small"><i nz-icon
+                nzType="check"></i></button>
 
     </div>
 
